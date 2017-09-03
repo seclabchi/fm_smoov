@@ -14,15 +14,12 @@
 
 using namespace std;
 
-void callback_pcm_out(snd_async_handler_t* cb_pcm);
 int16_t buf_out[BUFFER_SIZE_BYTES];
 
 typedef struct
 {
     snd_pcm_t* out;
-    snd_async_handler_t* cb_out;
     snd_pcm_t* in;
-    snd_async_handler_t* cb_in;
 } PCM_DEV;
 
 void get_card_names()
@@ -110,7 +107,6 @@ void setup_hardware(PCM_DEV* pcm_dev)
     snd_pcm_hw_params_malloc(&hw_params);
     
     snd_pcm_t* pcm_subdev = pcm_dev->out;
-    snd_async_handler_t* pcm_cb = pcm_dev->cb_out;
     
     retval = snd_pcm_hw_params_any(pcm_subdev, hw_params);
     if(0 > retval)
@@ -171,9 +167,7 @@ void setup_hardware(PCM_DEV* pcm_dev)
     snd_pcm_sw_params_t* sw_params = 0;
     snd_pcm_sw_params_malloc(&sw_params);
     snd_pcm_sw_params_current(pcm_subdev, sw_params);
-    
-    snd_async_add_pcm_handler(&pcm_cb, pcm_subdev, callback_pcm_out, NULL);
-    
+        
     retval = snd_pcm_hw_params(pcm_subdev, hw_params);
     if(0 > retval)
     {
@@ -276,18 +270,121 @@ void close_pcm(PCM_DEV* pcm_dev)
     printf("PCM closed.\n");
 }
 
-void callback_pcm_out(snd_async_handler_t* pcm_cb)
+int wait_for_poll(snd_pcm_t *handle, struct pollfd *ufds, unsigned int count)
 {
-    printf("PCM OUT CB\n");
-    snd_pcm_t *pcm_handle = snd_async_handler_get_pcm(pcm_cb);
-    snd_pcm_sframes_t avail;
-
-    avail = snd_pcm_avail_update(pcm_handle);
-    while (avail >= PERIOD_SIZE) 
+    unsigned short revents;
+    while (1) 
     {
-        snd_pcm_writei(pcm_handle, buf_out, PERIOD_SIZE);
-        avail = snd_pcm_avail_update(pcm_handle);
+        poll(ufds, count, -1);
+        snd_pcm_poll_descriptors_revents(handle, ufds, count, &revents);
+        if (revents & POLLERR)
+                return -EIO;
+        if (revents & POLLOUT)
+                return 0;
     }
+}
+
+/*
+ *   Underrun and suspend recovery
+ */
+ 
+int xrun_recovery(snd_pcm_t *handle, int err)
+{
+        printf("stream recovery\n");
+        if (err == -EPIPE) {    /* under-run */
+                err = snd_pcm_prepare(handle);
+                if (err < 0)
+                        printf("Can't recovery from underrun, prepare failed: %s\n", snd_strerror(err));
+                return 0;
+        } else if (err == -ESTRPIPE) {
+                while ((err = snd_pcm_resume(handle)) == -EAGAIN)
+                        sleep(1);       /* wait until the suspend flag is released */
+                if (err < 0) {
+                        err = snd_pcm_prepare(handle);
+                        if (err < 0)
+                                printf("Can't recovery from suspend, prepare failed: %s\n", snd_strerror(err));
+                }
+                return 0;
+        }
+        return err;
+}
+
+int write_and_poll_loop(snd_pcm_t *handle)
+{
+        struct pollfd *ufds;
+        signed short *ptr;
+        int err, count, cptr, init;
+        int channels = 2;
+        count = snd_pcm_poll_descriptors_count (handle);
+        if (count <= 0) {
+                printf("Invalid poll descriptors count\n");
+                return count;
+        }
+        ufds = (struct pollfd*)malloc(sizeof(struct pollfd) * count);
+        if (ufds == (struct pollfd*)NULL) {
+                printf("No enough memory\n");
+                return -ENOMEM;
+        }
+        if ((err = snd_pcm_poll_descriptors(handle, ufds, count)) < 0) {
+                printf("Unable to obtain poll descriptors for playback: %s\n", snd_strerror(err));
+                return err;
+        }
+        init = 1;
+        while (1) {
+                if (!init) {
+                        err = wait_for_poll(handle, ufds, count);
+                        if (err < 0) {
+                                if (snd_pcm_state(handle) == SND_PCM_STATE_XRUN ||
+                                    snd_pcm_state(handle) == SND_PCM_STATE_SUSPENDED) {
+                                        err = snd_pcm_state(handle) == SND_PCM_STATE_XRUN ? -EPIPE : -ESTRPIPE;
+                                        if (xrun_recovery(handle, err) < 0) {
+                                                printf("Write error: %s\n", snd_strerror(err));
+                                                exit(EXIT_FAILURE);
+                                        }
+                                        init = 1;
+                                } else {
+                                        printf("Wait for poll failed\n");
+                                        return err;
+                                }
+                        }
+                }
+                ptr = buf_out;
+                cptr = PERIOD_SIZE;
+                while (cptr > 0) {
+                        err = snd_pcm_writei(handle, ptr, cptr);
+                        if (err < 0) {
+                                if (xrun_recovery(handle, err) < 0) {
+                                        printf("Write error: %s\n", snd_strerror(err));
+                                        exit(EXIT_FAILURE);
+                                }
+                                init = 1;
+                                break;  /* skip one period */
+                        }
+                        if (snd_pcm_state(handle) == SND_PCM_STATE_RUNNING)
+                                init = 0;
+                        ptr += err * channels;
+                        cptr -= err;
+                        if (cptr == 0)
+                                break;
+                        /* it is possible, that the initial buffer cannot store */
+                        /* all data from the last period, so wait awhile */
+                        err = wait_for_poll(handle, ufds, count);
+                        if (err < 0) {
+                                if (snd_pcm_state(handle) == SND_PCM_STATE_XRUN ||
+                                    snd_pcm_state(handle) == SND_PCM_STATE_SUSPENDED) {
+                                        err = snd_pcm_state(handle) == SND_PCM_STATE_XRUN ? -EPIPE : -ESTRPIPE;
+                                        if (xrun_recovery(handle, err) < 0) {
+                                                printf("Write error: %s\n", snd_strerror(err));
+                                                exit(EXIT_FAILURE);
+                                        }
+                                        init = 1;
+                                } else {
+                                        printf("Wait for poll failed\n");
+                                        return err;
+                                }
+                        }
+                }
+        }
 }
 
 int main(int argc, char **argv)
@@ -322,7 +419,7 @@ int main(int argc, char **argv)
         open_pcm(bi_cards.at(0), pcm_dev);
         setup_hardware(pcm_dev);
         start_pcm(pcm_dev);
-        getchar();
+        write_and_poll_loop(pcm_dev->out);
         stop_pcm(pcm_dev);
         close_pcm(pcm_dev);
     }
