@@ -7,12 +7,22 @@
 #include <string>
 #include <vector>
 
+#define BUFFER_SIZE 48000
+#define PERIOD_SIZE 4800
+
+#define BUFFER_SIZE_BYTES BUFFER_SIZE * sizeof(int16_t) * 2
+
 using namespace std;
+
+void callback_pcm_out(snd_async_handler_t* cb_pcm);
+int16_t buf_out[BUFFER_SIZE_BYTES];
 
 typedef struct
 {
     snd_pcm_t* out;
+    snd_async_handler_t* cb_out;
     snd_pcm_t* in;
+    snd_async_handler_t* cb_in;
 } PCM_DEV;
 
 void get_card_names()
@@ -100,6 +110,7 @@ void setup_hardware(PCM_DEV* pcm_dev)
     snd_pcm_hw_params_malloc(&hw_params);
     
     snd_pcm_t* pcm_subdev = pcm_dev->out;
+    snd_async_handler_t* pcm_cb = pcm_dev->cb_out;
     
     retval = snd_pcm_hw_params_any(pcm_subdev, hw_params);
     if(0 > retval)
@@ -143,6 +154,26 @@ void setup_hardware(PCM_DEV* pcm_dev)
         return;
     }
     
+    retval = snd_pcm_hw_params_set_buffer_size(pcm_subdev, hw_params, BUFFER_SIZE);
+    if(0 > retval)
+    {
+        printf("Error %d setting PCM hw param 'buffer_size' for device: %s\n", retval, snd_strerror(retval));
+        return;
+    }
+    
+    retval = snd_pcm_hw_params_set_period_size(pcm_subdev, hw_params, PERIOD_SIZE, 0);
+    if(0 > retval)
+    {
+        printf("Error %d setting PCM hw param 'period_size' for device: %s\n", retval, snd_strerror(retval));
+        return;
+    }
+    
+    snd_pcm_sw_params_t* sw_params = 0;
+    snd_pcm_sw_params_malloc(&sw_params);
+    snd_pcm_sw_params_current(pcm_subdev, sw_params);
+    
+    snd_async_add_pcm_handler(&pcm_cb, pcm_subdev, callback_pcm_out, NULL);
+    
     retval = snd_pcm_hw_params(pcm_subdev, hw_params);
     if(0 > retval)
     {
@@ -169,7 +200,26 @@ void setup_hardware(PCM_DEV* pcm_dev)
         return;
     }
     
-    printf("PCM HW buffer time is %d us.", buftime);
+    printf("PCM HW buffer time is %d us.\n", buftime);
+    
+    snd_pcm_uframes_t persize = 0;
+    retval = snd_pcm_hw_params_get_period_size(hw_params, &persize, 0);
+    if(0 > retval)
+    {
+        printf("Error %d getting PCM hw params 'period_size' for device: %s\n", retval, snd_strerror(retval));
+        return;
+    }
+    printf("PCM HW period size is %lu frames.\n", persize);
+    
+    unsigned int pertime = 0;
+    retval = snd_pcm_hw_params_get_period_time(hw_params, &pertime, 0);
+    if(0 > retval)
+    {
+        printf("Error %d getting PCM hw params 'period_time' for device: %s\n", retval, snd_strerror(retval));
+        return;
+    }
+    
+    printf("PCM HW period time is %d us.\n", pertime);
     
         
     snd_pcm_hw_params_free(hw_params);
@@ -202,24 +252,52 @@ void open_pcm(string* dev_name, PCM_DEV* pcm_dev)
 
 void start_pcm(PCM_DEV* pcm_dev)
 {
-    
+    printf("Starting PCM...\n");
+    snd_pcm_prepare(pcm_dev->in);
+    snd_pcm_prepare(pcm_dev->out);
+    snd_pcm_writei (pcm_dev->out, buf_out, 2 * PERIOD_SIZE);
+    snd_pcm_start(pcm_dev->out);
+    printf("PCM started.\n");
 }
 
 void stop_pcm(PCM_DEV* pcm_dev)
 {
-    
+    printf("Stopping PCM...\n");
+    snd_pcm_drop(pcm_dev->in);
+    snd_pcm_drain(pcm_dev->out);
+    printf("PCM stopped.\n");
 }
 
 void close_pcm(PCM_DEV* pcm_dev)
 {
-    printf("Closing PCM devices.\n");
+    printf("Closing PCM...\n");
     snd_pcm_close(pcm_dev->in);
     snd_pcm_close(pcm_dev->out);
+    printf("PCM closed.\n");
+}
+
+void callback_pcm_out(snd_async_handler_t* pcm_cb)
+{
+    printf("PCM OUT CB\n");
+    snd_pcm_t *pcm_handle = snd_async_handler_get_pcm(pcm_cb);
+    snd_pcm_sframes_t avail;
+
+    avail = snd_pcm_avail_update(pcm_handle);
+    while (avail >= PERIOD_SIZE) 
+    {
+        snd_pcm_writei(pcm_handle, buf_out, PERIOD_SIZE);
+        avail = snd_pcm_avail_update(pcm_handle);
+    }
 }
 
 int main(int argc, char **argv)
 {
     PCM_DEV* pcm_dev = new PCM_DEV();
+    
+    for(int16_t* ptr = buf_out; ptr < buf_out + BUFFER_SIZE_BYTES; ptr++)
+    {
+        *ptr = (int16_t)(((int32_t)(rand()) % 65535) - 32767);
+    }
     
     vector<string*> bi_cards;
 	printf("Hello.\n");
@@ -244,10 +322,12 @@ int main(int argc, char **argv)
         open_pcm(bi_cards.at(0), pcm_dev);
         setup_hardware(pcm_dev);
         start_pcm(pcm_dev);
+        getchar();
         stop_pcm(pcm_dev);
         close_pcm(pcm_dev);
     }
-    
+    printf("Enter any key to quit.\n");
+    getchar();
     printf("Goodbye.\n");
 	return 0;
 }
