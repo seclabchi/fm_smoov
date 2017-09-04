@@ -59,7 +59,7 @@ void get_bi_pcm_devices(vector<string*>* bi_cards)
     int hint_num = 0;
     void *hint = 0;
     
-    string search_str("hw:");
+    string search_str("default:");
     
     do
     {
@@ -150,14 +150,16 @@ void setup_hardware(PCM_DEV* pcm_dev)
         return;
     }
     
-    retval = snd_pcm_hw_params_set_buffer_size(pcm_subdev, hw_params, BUFFER_SIZE);
+    snd_pcm_uframes_t buf_size_tmp = BUFFER_SIZE;
+    retval = snd_pcm_hw_params_set_buffer_size_near(pcm_subdev, hw_params, &buf_size_tmp);
     if(0 > retval)
     {
         printf("Error %d setting PCM hw param 'buffer_size' for device: %s\n", retval, snd_strerror(retval));
         return;
     }
     
-    retval = snd_pcm_hw_params_set_period_size(pcm_subdev, hw_params, PERIOD_SIZE, 0);
+    snd_pcm_uframes_t per_size_tmp = PERIOD_SIZE;
+    retval = snd_pcm_hw_params_set_period_size_near(pcm_subdev, hw_params, &per_size_tmp, 0);
     if(0 > retval)
     {
         printf("Error %d setting PCM hw param 'period_size' for device: %s\n", retval, snd_strerror(retval));
