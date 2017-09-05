@@ -372,7 +372,7 @@ int write_and_poll_loop(snd_pcm_t *handle)
                         cptr -= err;
                         if (cptr == 0)
                                 break;
-                        /* it is possible, that the initial buffer cannot store */
+                        /* it is possible that the initial buffer cannot store */
                         /* all data from the last period, so wait awhile */
                         err = wait_for_poll(handle, ufds, count);
                         if (err < 0) {
