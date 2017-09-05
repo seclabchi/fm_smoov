@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#define BUFFER_SIZE 48000
+#define BUFFER_SIZE 16384
 #define PERIOD_SIZE 4800
 
 #define BUFFER_SIZE_BYTES BUFFER_SIZE * sizeof(int16_t) * 2
@@ -19,7 +19,11 @@ int16_t buf_out[BUFFER_SIZE_BYTES];
 typedef struct
 {
     snd_pcm_t* out;
+    snd_pcm_uframes_t bufsize_out;
+    snd_pcm_uframes_t persize_out;
     snd_pcm_t* in;
+    snd_pcm_uframes_t bufsize_in;
+    snd_pcm_uframes_t persize_in;
 } PCM_DEV;
 
 void get_card_names()
@@ -59,7 +63,7 @@ void get_bi_pcm_devices(vector<string*>* bi_cards)
     int hint_num = 0;
     void *hint = 0;
     
-    string search_str("default:");
+    string search_str("sysdefault:");
     
     do
     {
