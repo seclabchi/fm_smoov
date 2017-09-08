@@ -14,11 +14,10 @@
   <VirtualDirectory Name="src">
     <File Name="src/main.cpp"/>
     <File Name="src/device_db.cpp"/>
-    <File Name="src/pcm_out.cpp"/>
+    <File Name="src/pcm_device.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hdr">
     <File Name="hdr/device_db.h"/>
-    <File Name="hdr/pcm_out.h"/>
     <File Name="hdr/pcm_device.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">

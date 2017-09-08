@@ -11,8 +11,11 @@ class DeviceDb
 public:
     DeviceDb();
     virtual ~DeviceDb();
+    size_t find_bi_devices();
+    void get_device_name(size_t index, string** name);
+    void get_card_names();
 private:
-    vector<string> m_dev_names;
+    vector<string*>* m_dev_names;
     
 };
 
