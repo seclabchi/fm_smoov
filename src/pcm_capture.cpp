@@ -6,14 +6,14 @@
 
 using namespace std;
 
-PCM_Capture::PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize)
+PCM_Capture::PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize, PCM_Transfer_Interface* xfer_iface)
 {
     sem_init(&mh_sem_thread_start, 0, 1);
     mh_pcm = pcm;
     m_bufsize = bufsize;
     m_persize = persize;
     buf_in = new int16_t[2*bufsize];
-    m_cap_file = NULL;
+    m_xfer_iface = xfer_iface;
 }
 
 PCM_Capture::~PCM_Capture()
@@ -23,9 +23,7 @@ PCM_Capture::~PCM_Capture()
 }
 
 void PCM_Capture::start()
-{
-    m_cap_file = fopen("/tmp/audiod_cap.pcm", "wb");
-    
+{    
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     sem_wait(&mh_sem_thread_start);
@@ -43,9 +41,7 @@ void* PCM_Capture::stop()
     this->m_should_stop = true;
     pthread_join(mh_thread, &retval);
     cout << "Capture thread stopped." << endl;
-    
-    fclose(m_cap_file);
-    
+        
     return retval;
 }
 
@@ -150,7 +146,7 @@ void PCM_Capture::run_capture_loop()
     
     if(ptr == (buf_in + (m_bufsize*2)))
     {
-        fwrite(buf_in, sizeof(int16_t), m_bufsize*2, m_cap_file);
+        m_xfer_iface->write_buffer(buf_in, sizeof(int16_t), m_bufsize*2);
         ptr = buf_in;
     }
     cptr = m_persize;

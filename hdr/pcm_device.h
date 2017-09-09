@@ -6,6 +6,7 @@
 
 #include "pcm_playback.h"
 #include "pcm_capture.h"
+#include "audio_hub.h"
 
 using namespace std;
 
@@ -22,6 +23,8 @@ private:
     string* m_name;
     snd_pcm_t* mh_cap;
     snd_pcm_t* mh_pb;
+    
+    AudioHub* m_audio_hub;
     
     PCM_Playback* m_pcm_pb;
     PCM_Capture* m_pcm_cap;

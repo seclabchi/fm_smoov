@@ -6,10 +6,12 @@
 #include <asoundlib.h>
 #include <stdint.h>
 
+#include "pcm_transfer_interface.h"
+
 class PCM_Capture 
 {
 public:
-    PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize);
+    PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize, PCM_Transfer_Interface* xfer_iface);
     virtual ~PCM_Capture();
     void start();
     void* stop();
@@ -20,6 +22,7 @@ private:
     sem_t mh_sem_thread_start;
     bool m_should_stop;
     
+    PCM_Transfer_Interface* m_xfer_iface;
     snd_pcm_t* mh_pcm;
     snd_pcm_uframes_t m_bufsize;
     snd_pcm_uframes_t m_persize;
@@ -33,8 +36,6 @@ private:
     void run_capture_loop();
     
     int16_t* buf_in;
-    
-    FILE* m_cap_file;
 };
 
 #endif
