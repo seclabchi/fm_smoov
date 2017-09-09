@@ -28,6 +28,7 @@ void PCM_Device::open()
     }
     
     this->configure(this->mh_pb, string("playback"));
+    m_pcm_pb = new PCM_Playback(this->mh_pb, m_bufsize_pb, m_persize_pb);
     
     retval = snd_pcm_open(&mh_cap, m_name->c_str(), SND_PCM_STREAM_CAPTURE, 0);
     if(0 > retval)
@@ -38,28 +39,31 @@ void PCM_Device::open()
     {
         printf("PCM capture device opened.\n");
     }
+    
     this->configure(this->mh_cap, string("capture"));
-    
-    
-    
+    m_pcm_cap = new PCM_Capture(this->mh_cap, m_bufsize_cap, m_persize_cap);
 }
 
 void PCM_Device::start()
 {
     m_pcm_pb->start();
+    m_pcm_cap->start();
 }
 
 void PCM_Device::stop()
 {
+    m_pcm_cap->stop();
     m_pcm_pb->stop();
 }
 
 void PCM_Device::close()
 {
-    cout << "Closing PCM..." << endl;
+    cout << "Closing capture PCM..." << endl;
     snd_pcm_close(this->mh_cap);
+    cout << "Capture PCM closed." << endl;
+    cout << "Closing playback PCM..." << endl;
     snd_pcm_close(this->mh_pb);
-    cout << "PCM closed." << endl;
+    cout << "Playback PCM closed." << endl;
 }
 
 void PCM_Device::configure(snd_pcm_t* handle, string subdev_name)
@@ -111,11 +115,29 @@ void PCM_Device::configure(snd_pcm_t* handle, string subdev_name)
         throw runtime_error("Error " + to_string(retval) + " setting PCM hw param 'buffer_size' for " + subdev_name + " device: " + snd_strerror(retval));
     }
     
+    if(0 == subdev_name.compare("playback"))
+    {
+        m_bufsize_pb = buf_size_tmp;
+    }
+    else
+    {
+        m_bufsize_cap = buf_size_tmp;
+    }
+    
     snd_pcm_uframes_t per_size_tmp = PCM_Device::PERIOD_SIZE_REQ;
     retval = snd_pcm_hw_params_set_period_size_near(handle, hw_params, &per_size_tmp, 0);
     if(0 > retval)
     {
         throw runtime_error("Error " + to_string(retval) + " setting PCM hw param 'period_size' for " + subdev_name + " device: " + snd_strerror(retval));
+    }
+    
+    if(0 == subdev_name.compare("playback"))
+    {
+        m_persize_pb = buf_size_tmp;
+    }
+    else
+    {
+        m_persize_cap = buf_size_tmp;
     }
     
     snd_pcm_sw_params_t* sw_params = 0;
@@ -131,41 +153,17 @@ void PCM_Device::configure(snd_pcm_t* handle, string subdev_name)
     
     cout << "Finished setting HW params for " + subdev_name + " device." << endl;
     
-    snd_pcm_uframes_t bufsize = 0;
-    retval = snd_pcm_hw_params_get_buffer_size(hw_params, &bufsize);
-    if(0 > retval)
+    
+    if(0 == subdev_name.compare("playback"))
     {
-        throw runtime_error("Error " + to_string(retval) + " getting PCM hw params 'buffer_size' for " + subdev_name + " device: " + snd_strerror(retval));
+        cout << "PCM " + subdev_name + " HW buffer size is " + to_string(m_bufsize_pb) + " frames." << endl;
+        cout << "PCM " + subdev_name + " HW period size is " + to_string(m_persize_pb) + " frames." << endl;
     }
-    cout << "PCM " + subdev_name + " HW buffer size is " + to_string(bufsize) + " frames." << endl;
-    
-    unsigned int buftime = 0;
-    retval = snd_pcm_hw_params_get_buffer_time(hw_params, &buftime, 0);
-    if(0 > retval)
+    else
     {
-        throw runtime_error("Error " + to_string(retval) + " getting PCM hw params 'buffer_time' for " + subdev_name + " device: " + snd_strerror(retval));
+        cout << "PCM " + subdev_name + " HW buffer size is " + to_string(m_bufsize_cap) + " frames." << endl;
+        cout << "PCM " + subdev_name + " HW period size is " + to_string(m_persize_cap) + " frames." << endl;
     }
-    
-    cout << "PCM " + subdev_name + " HW buffer time is " + to_string(buftime) + " us." << endl;
-    
-    snd_pcm_uframes_t persize = 0;
-    retval = snd_pcm_hw_params_get_period_size(hw_params, &persize, 0);
-    if(0 > retval)
-    {
-        throw runtime_error("Error " + to_string(retval) + " getting PCM hw params 'period_size' for " + subdev_name + " device: " + snd_strerror(retval));
-    }
-    cout << "PCM " + subdev_name + " HW period size is " + to_string(persize) + " frames." << endl;
-    
-    unsigned int pertime = 0;
-    retval = snd_pcm_hw_params_get_period_time(hw_params, &pertime, 0);
-    if(0 > retval)
-    {
-        throw runtime_error("Error " + to_string(retval) + " getting PCM hw params 'period_time' for " + subdev_name + " device: " + snd_strerror(retval));
-    }
-    
-    cout << "PCM " + subdev_name + " HW period time is " + to_string(pertime) + "us." << endl;
     
     snd_pcm_hw_params_free(hw_params);
-    
-    m_pcm_pb = new PCM_Playback(this->mh_pb, bufsize, persize);
 }

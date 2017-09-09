@@ -47,20 +47,20 @@ void PCM_Playback::start()
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     sem_wait(&mh_sem_thread_start);
-    cout << "Starting thread..." << endl;
+    cout << "Starting playback thread..." << endl;
     pthread_create(&mh_thread, &attr, PCM_Playback::class_thread_run_thunk, (void*)this);
     sem_wait(&mh_sem_thread_start);
-    cout << "Thread started." << endl;
+    cout << "Playback thread started." << endl;
     pthread_attr_destroy(&attr);
 }
 
 void* PCM_Playback::stop()
 {
-    cout << "Stopping thread..." << endl;
+    cout << "Stopping playback thread..." << endl;
     void* retval = 0;
     this->m_should_stop = true;
     pthread_join(mh_thread, &retval);
-    cout << "Thread stopped." << endl;
+    cout << "Playback thread stopped." << endl;
     return retval;
 }
 
@@ -82,7 +82,9 @@ void* PCM_Playback::thread_run_func(void* args)
         this->run_playback_loop();
     }
     
-    cout << "Thread func exit." << endl;
+    snd_pcm_drain(mh_pcm);
+    
+    cout << "Playback thread func exit." << endl;
     return NULL;
 }
 
@@ -121,11 +123,11 @@ int PCM_Playback::wait_for_poll()
 
 int PCM_Playback::xrun_recovery(int err)
 {
-        printf("stream recovery\n");
+        printf("Playback stream recovery\n");
         if (err == -EPIPE) {    /* under-run */
                 err = snd_pcm_prepare(mh_pcm);
                 if (err < 0)
-                        printf("Can't recovery from underrun, prepare failed: %s\n", snd_strerror(err));
+                        printf("Can't recover from playback underrun, prepare failed: %s\n", snd_strerror(err));
                 return 0;
         } else if (err == -ESTRPIPE) {
                 while ((err = snd_pcm_resume(mh_pcm)) == -EAGAIN)
@@ -133,7 +135,7 @@ int PCM_Playback::xrun_recovery(int err)
                 if (err < 0) {
                         err = snd_pcm_prepare(mh_pcm);
                         if (err < 0)
-                                printf("Can't recovery from suspend, prepare failed: %s\n", snd_strerror(err));
+                                printf("Can't recover from playback suspend, prepare failed: %s\n", snd_strerror(err));
                 }
                 return 0;
         }
@@ -175,36 +177,43 @@ void PCM_Playback::run_playback_loop()
         ptr = buf_out;
     }
     cptr = m_persize;
-    while (cptr > 0) {
-            err = snd_pcm_writei(mh_pcm, ptr, cptr);
-            if (err < 0) {
-                    if (xrun_recovery(err) < 0) {
-                            printf("Write error: %s\n", snd_strerror(err));
-                            exit(EXIT_FAILURE);
-                    }
-                    init = 1;
-                    break;  /* skip one period */
+    while (cptr > 0) 
+    {
+        err = snd_pcm_writei(mh_pcm, ptr, cptr);
+        if (err < 0) 
+        {
+            if (xrun_recovery(err) < 0) 
+            {
+                throw runtime_error(string("Write error: ") + snd_strerror(err));
             }
-            if (snd_pcm_state(mh_pcm) == SND_PCM_STATE_RUNNING)
-                    init = 0;
-            ptr += err * channels;
-            cptr -= err;
-            if (cptr == 0)
-                    break;
-            /* it is possible that the initial buffer cannot store */
-            /* all data from the last period, so wait awhile */
-            err = wait_for_poll();
-            if (err < 0) {
-                    if (snd_pcm_state(mh_pcm) == SND_PCM_STATE_XRUN ||
-                        snd_pcm_state(mh_pcm) == SND_PCM_STATE_SUSPENDED) {
-                            err = snd_pcm_state(mh_pcm) == SND_PCM_STATE_XRUN ? -EPIPE : -ESTRPIPE;
-                            if (xrun_recovery(err) < 0) {
-                                    throw runtime_error(string("Write error: ") + snd_strerror(err));
-                            }
-                            init = 1;
-                    } else {
-                            throw runtime_error("Wait for poll failed");
-                    }
+            init = 1;
+            break;  /* skip one period */
+        }
+        if (snd_pcm_state(mh_pcm) == SND_PCM_STATE_RUNNING)
+                init = 0;
+        ptr += err * channels;
+        cptr -= err;
+        if (cptr == 0)
+                break;
+        /* it is possible that the initial buffer cannot store */
+        /* all data from the last period, so wait awhile */
+        err = wait_for_poll();
+        if (err < 0) 
+        {
+            if (snd_pcm_state(mh_pcm) == SND_PCM_STATE_XRUN ||
+                snd_pcm_state(mh_pcm) == SND_PCM_STATE_SUSPENDED) 
+            {
+                err = snd_pcm_state(mh_pcm) == SND_PCM_STATE_XRUN ? -EPIPE : -ESTRPIPE;
+                if (xrun_recovery(err) < 0) 
+                {
+                    throw runtime_error(string("Write error: ") + snd_strerror(err));
+                }
+                init = 1;
+            } 
+            else 
+            {
+                throw runtime_error("Wait for poll failed");
             }
+        }
     }
 }

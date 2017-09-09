@@ -45,6 +45,7 @@ size_t DeviceDb::find_bi_devices()
             char* name = snd_device_name_get_hint(hint, "NAME");
             if(NULL != name)
             {
+                cout << "NAME: " << name << endl;
                 char* ioid = snd_device_name_get_hint(hint, "IOID");
                 if(NULL == ioid)
                 {
