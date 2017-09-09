@@ -28,7 +28,7 @@ void PCM_Device::open()
     }
     
     this->configure(this->mh_pb, string("playback"));
-    m_pcm_pb = new PCM_Playback(this->mh_pb, m_bufsize_pb, m_persize_pb);
+    
     
     retval = snd_pcm_open(&mh_cap, m_name->c_str(), SND_PCM_STREAM_CAPTURE, 0);
     if(0 > retval)
@@ -41,7 +41,10 @@ void PCM_Device::open()
     }
     
     this->configure(this->mh_cap, string("capture"));
-    m_pcm_cap = new PCM_Capture(this->mh_cap, m_bufsize_cap, m_persize_cap);
+    
+    m_audio_hub = new AudioHub(m_bufsize_cap, m_persize_cap, m_bufsize_pb, m_persize_pb);
+    m_pcm_cap = new PCM_Capture(this->mh_cap, m_bufsize_cap, m_persize_cap, m_audio_hub);
+    m_pcm_pb = new PCM_Playback(this->mh_pb, m_bufsize_pb, m_persize_pb, m_audio_hub);
 }
 
 void PCM_Device::start()

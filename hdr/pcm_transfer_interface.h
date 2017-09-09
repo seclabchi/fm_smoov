@@ -8,8 +8,8 @@ class PCM_Transfer_Interface
 public:
     PCM_Transfer_Interface() {}
     virtual ~PCM_Transfer_Interface() {}
-    virtual void write_buffer(uint8_t* bufsrc, uint32_t size_bytes) = 0;
-    virtual void read_buffer(uint8_t** bufdst, uint32_t size_bytes) = 0;
+    virtual void write_buffer(const void* bufsrc, size_t size, size_t count) = 0;
+    virtual void read_buffer(void** bufdst, size_t size, size_t count) = 0;
     virtual uint32_t get_buffer_size_bytes() = 0;
     virtual uint8_t get_frame_size_bytes() = 0;
     virtual uint8_t get_buffer_size_frames() = 0;

@@ -6,10 +6,12 @@
 #include <asoundlib.h>
 #include <stdint.h>
 
+#include "pcm_transfer_interface.h"
+
 class PCM_Playback 
 {
 public:
-    PCM_Playback(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize);
+    PCM_Playback(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize, PCM_Transfer_Interface* xfer_iface);
     virtual ~PCM_Playback();
     void start();
     void* stop();
@@ -31,6 +33,8 @@ private:
     int wait_for_poll();
     int xrun_recovery(int err);
     void run_playback_loop();
+    
+    PCM_Transfer_Interface* m_xfer_iface;
     
     int16_t* buf_out;
     uint32_t sine_index;
