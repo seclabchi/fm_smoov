@@ -1,5 +1,9 @@
 #include "audio_hub.h"
 
+#include <iostream>
+
+using namespace std;
+
 AudioHub::AudioHub(snd_pcm_uframes_t bufsize_cap, snd_pcm_uframes_t persize_cap, snd_pcm_uframes_t bufsize_pb, snd_pcm_uframes_t persize_pb)
 {
     sem_init(&m_buf_sem, 0, 1);
@@ -9,29 +13,42 @@ AudioHub::AudioHub(snd_pcm_uframes_t bufsize_cap, snd_pcm_uframes_t persize_cap,
     m_bufsize_pb = bufsize_pb;
     m_persize_pb = persize_pb;
     
-    m_buf_main = new int16_t[bufsize_cap * 2];
-    
+    m_buf_index_read = 0;
+    m_buf_index_write = 0;
+    m_buf_main[0] = new int16_t[bufsize_cap * 2];
+    m_buf_main[1] = new int16_t[bufsize_cap * 2];
+    m_frame_delta = 0;
 }
 
 AudioHub::~AudioHub()
 {
     sem_destroy(&m_buf_sem);
     fclose(m_cap_file);
-    delete[] m_buf_main;
+    delete[] m_buf_main[0];
+    delete[] m_buf_main[1];
 }
 
 void AudioHub::write_buffer(const void* bufsrc, size_t size, size_t count)
 {
     sem_wait(&m_buf_sem);
+    cout << "write_buffer ENTER" << endl;
     //fwrite(bufsrc, size, count, m_cap_file);
-    memcpy(m_buf_main, bufsrc, size*count);
+    memcpy(m_buf_main[m_buf_index_write], bufsrc, size*count);
+    m_buf_index_write == 0 ? m_buf_index_write = 1 : m_buf_index_write = 0;
+    m_frame_delta++;
+    cout << "write_buffer EXIT" << endl;
     sem_post(&m_buf_sem);
 }
 
 void AudioHub::read_buffer(void** bufdst, size_t size, size_t count)
 {
     sem_wait(&m_buf_sem);
-    memcpy(*bufdst, m_buf_main, size*count);
+    cout << "read_buffer ENTER" << endl;
+    m_frame_delta--;
+    memcpy(*bufdst, m_buf_main[m_buf_index_read], size*count);
+    m_buf_index_read == 0 ? m_buf_index_read = 1 : m_buf_index_read = 0;
+    cout << "read_buffer EXIT - delta = " << m_frame_delta << endl;
+ 
     sem_post(&m_buf_sem);
 }
 

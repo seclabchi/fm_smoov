@@ -28,7 +28,11 @@ private:
     
     sem_t m_buf_sem;
     
-    int16_t* m_buf_main;
+    int16_t* m_buf_main[2];
+    uint8_t m_buf_index_read;
+    uint8_t m_buf_index_write;
+    
+    int32_t m_frame_delta;
     
     FILE* m_cap_file;
 };
