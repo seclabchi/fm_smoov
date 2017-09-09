@@ -40,16 +40,18 @@ void PCM_Device::open()
     }
     this->configure(this->mh_cap, string("capture"));
     
+    
+    
 }
 
 void PCM_Device::start()
 {
-    cout << "PCM started." << endl;
+    m_pcm_pb->start();
 }
 
 void PCM_Device::stop()
 {
-    cout << "PCM stopped." << endl;
+    m_pcm_pb->stop();
 }
 
 void PCM_Device::close()
@@ -164,4 +166,6 @@ void PCM_Device::configure(snd_pcm_t* handle, string subdev_name)
     cout << "PCM " + subdev_name + " HW period time is " + to_string(pertime) + "us." << endl;
     
     snd_pcm_hw_params_free(hw_params);
+    
+    m_pcm_pb = new PCM_Playback(this->mh_pb, bufsize, persize);
 }

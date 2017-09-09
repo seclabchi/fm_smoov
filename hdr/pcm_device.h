@@ -4,6 +4,8 @@
 #include <string>
 #include <asoundlib.h>
 
+#include "pcm_playback.h"
+
 using namespace std;
 
 class PCM_Device
@@ -19,6 +21,8 @@ private:
     string* m_name;
     snd_pcm_t* mh_cap;
     snd_pcm_t* mh_pb;
+    
+    PCM_Playback* m_pcm_pb;
     
     void configure(snd_pcm_t* handle, string subdev_name);
     

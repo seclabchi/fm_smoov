@@ -15,10 +15,13 @@
     <File Name="src/main.cpp"/>
     <File Name="src/device_db.cpp"/>
     <File Name="src/pcm_device.cpp"/>
+    <File Name="src/pcm_playback.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hdr">
     <File Name="hdr/device_db.h"/>
     <File Name="hdr/pcm_device.h"/>
+    <File Name="hdr/pcm_transfer_interface.h"/>
+    <File Name="hdr/pcm_playback.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
@@ -38,6 +41,7 @@
       <Linker Options="" Required="yes">
         <LibraryPath Value="/usr/lib/arm-linux-gnueabihf"/>
         <Library Value="asound"/>
+        <Library Value="pthread"/>
       </Linker>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
