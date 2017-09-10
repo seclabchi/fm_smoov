@@ -11,8 +11,9 @@
 class PCM_Capture 
 {
 public:
-    PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize, PCM_Transfer_Interface* xfer_iface);
+    PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize);
     virtual ~PCM_Capture();
+    void set_transfer_interface(PCM_Transfer_Interface* xfer_iface);
     void start();
     void* stop();
     static void* class_thread_run_thunk(void* args);

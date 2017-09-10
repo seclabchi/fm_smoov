@@ -18,6 +18,8 @@
     <File Name="src/pcm_playback.cpp"/>
     <File Name="src/pcm_capture.cpp"/>
     <File Name="src/audio_hub.cpp"/>
+    <File Name="src/processor_simple_gain.cpp"/>
+    <File Name="src/processor_slow_agc.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hdr">
     <File Name="hdr/device_db.h"/>
@@ -26,6 +28,9 @@
     <File Name="hdr/pcm_playback.h"/>
     <File Name="hdr/pcm_capture.h"/>
     <File Name="hdr/audio_hub.h"/>
+    <File Name="hdr/processor.h"/>
+    <File Name="hdr/processor_simple_gain.h"/>
+    <File Name="hdr/processor_slow_agc.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

@@ -4,20 +4,28 @@
 #include <stdint.h>
 #include <semaphore.h>
 #include <asoundlib.h>
+#include <vector>
 
 #include "pcm_transfer_interface.h"
+#include "processor.h"
+#include "processor_simple_gain.h"
+
+using namespace std;
 
 class AudioHub : public PCM_Transfer_Interface
 {
 public:
-    AudioHub(snd_pcm_uframes_t bufsize_cap, snd_pcm_uframes_t persize_cap, snd_pcm_uframes_t bufsize_pb, snd_pcm_uframes_t persize_pb);
+    AudioHub();
     virtual ~AudioHub();
+    virtual void configure(snd_pcm_uframes_t bufsize_cap, snd_pcm_uframes_t persize_cap, snd_pcm_uframes_t bufsize_pb, snd_pcm_uframes_t persize_pb);
     virtual void write_buffer(const void* bufsrc, size_t size, size_t count);
     virtual void read_buffer(void** bufdst, size_t size, size_t count);
     virtual uint32_t get_buffer_size_bytes();
     virtual uint8_t get_frame_size_bytes();
     virtual uint8_t get_buffer_size_frames();
     virtual uint8_t get_channels();
+    
+    virtual void add_processor(Processor* p);
 private:
     snd_pcm_uframes_t m_bufsize_cap;
     snd_pcm_uframes_t m_persize_cap;
@@ -35,6 +43,8 @@ private:
     int32_t m_frame_delta;
     
     FILE* m_cap_file;
+    vector<Processor*>* m_pchain;
+    vector<Processor*>::iterator m_pchain_it;
 };
 
 #endif

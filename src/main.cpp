@@ -12,6 +12,9 @@
 #include "pcm_device.h"
 #include "pcm_playback.h"
 
+#include "processor_simple_gain.h"
+#include "processor_slow_agc.h"
+
 using namespace std;
 
 int main(int argc, char **argv)
@@ -23,8 +26,15 @@ int main(int argc, char **argv)
     dev_db->get_device_name(0, &dev_str);
     cout << "PCM device to be used: " << *dev_str << endl;
     
+    AudioHub* audio_hub = new AudioHub();
     PCM_Device* dev = new PCM_Device(dev_str);
     dev->open();
+    dev->set_audio_hub(audio_hub);
+    
+    ProcessorSimpleGain* psg = new ProcessorSimpleGain();
+    audio_hub->add_processor(psg);
+    ProcessorSlowAGC* pslowagc = new ProcessorSlowAGC();
+    audio_hub->add_processor(pslowagc);
     
     dev->start();
     getchar();

@@ -6,20 +6,24 @@
 
 using namespace std;
 
-PCM_Capture::PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize, PCM_Transfer_Interface* xfer_iface)
+PCM_Capture::PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uframes_t persize)
 {
     sem_init(&mh_sem_thread_start, 0, 1);
     mh_pcm = pcm;
     m_bufsize = bufsize;
     m_persize = persize;
     buf_in = new int16_t[2*bufsize];
-    m_xfer_iface = xfer_iface;
 }
 
 PCM_Capture::~PCM_Capture()
 {
     sem_destroy(&mh_sem_thread_start);
     delete[] buf_in;
+}
+
+void PCM_Capture::set_transfer_interface(PCM_Transfer_Interface* xfer_iface)
+{
+    m_xfer_iface = xfer_iface;
 }
 
 void PCM_Capture::start()

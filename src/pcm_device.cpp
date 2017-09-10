@@ -3,6 +3,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "processor_simple_gain.h"
+
 PCM_Device::PCM_Device(string* name)
 {
     m_name = new string(*name);
@@ -41,10 +43,9 @@ void PCM_Device::open()
     }
     
     this->configure(this->mh_cap, string("capture"));
-    
-    m_audio_hub = new AudioHub(m_bufsize_cap, m_persize_cap, m_bufsize_pb, m_persize_pb);
-    m_pcm_cap = new PCM_Capture(this->mh_cap, m_bufsize_cap, m_persize_cap, m_audio_hub);
-    m_pcm_pb = new PCM_Playback(this->mh_pb, m_bufsize_pb, m_persize_pb, m_audio_hub);
+        
+    m_pcm_cap = new PCM_Capture(this->mh_cap, m_bufsize_cap, m_persize_cap);
+    m_pcm_pb = new PCM_Playback(this->mh_pb, m_bufsize_pb, m_persize_pb);
 }
 
 void PCM_Device::start()
@@ -169,4 +170,12 @@ void PCM_Device::configure(snd_pcm_t* handle, string subdev_name)
     }
     
     snd_pcm_hw_params_free(hw_params);
+}
+
+void PCM_Device::set_audio_hub(AudioHub* audio_hub)
+{
+    m_audio_hub = audio_hub;
+    m_audio_hub->configure(m_bufsize_cap, m_persize_cap, m_bufsize_pb, m_persize_pb);
+    m_pcm_pb->set_transfer_interface(m_audio_hub);
+    m_pcm_cap->set_transfer_interface(m_audio_hub);
 }

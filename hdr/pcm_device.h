@@ -18,6 +18,7 @@ public:
     void start();
     void stop();
     void close();
+    void set_audio_hub(AudioHub* audio_hub);
     virtual ~PCM_Device();
 private:
     string* m_name;
