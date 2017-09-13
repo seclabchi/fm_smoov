@@ -14,6 +14,7 @@
 
 #include "processor_simple_gain.h"
 #include "processor_slow_agc.h"
+#include "tone_generator.h"
 
 using namespace std;
 
@@ -31,12 +32,24 @@ int main(int argc, char **argv)
     dev->open();
     dev->set_audio_hub(audio_hub);
     
-    ProcessorSimpleGain* psg = new ProcessorSimpleGain();
+    ProcessorSimpleGain* psg = new ProcessorSimpleGain(48000);
     audio_hub->add_processor(psg);
-    ProcessorSlowAGC* pslowagc = new ProcessorSlowAGC();
+    psg->set_gain(1.0, 1.0);
+    ProcessorSlowAGC* pslowagc = new ProcessorSlowAGC(48000);
     audio_hub->add_processor(pslowagc);
+    ToneGenerator* tg = new ToneGenerator(48000);
+    //audio_hub->add_processor(tg);
     
     dev->start();
+    
+    sleep(2);
+    tg->set_frequency(500.0);
+    sleep(2);
+    tg->set_frequency(2000.0);
+    sleep(2);
+    tg->set_frequency(8000.0);
+    sleep(2);
+    tg->set_frequency(440.0);
     getchar();
     dev->stop();
     

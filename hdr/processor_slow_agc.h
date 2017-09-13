@@ -6,9 +6,9 @@
 class ProcessorSlowAGC : public Processor
 {
 public:
-    ProcessorSlowAGC();
+    ProcessorSlowAGC(uint32_t samp_rate);
     virtual ~ProcessorSlowAGC();
-    virtual void process(void** buf, size_t size, size_t count);
+    virtual void process(void* buf, size_t size, size_t count);
     virtual void set_target_gain(int16_t target);
 private:
     int16_t m_target;

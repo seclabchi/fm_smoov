@@ -43,7 +43,7 @@ void AudioHub::write_buffer(const void* bufsrc, size_t size, size_t count)
     
     for(m_pchain_it = m_pchain->begin(); m_pchain_it != m_pchain->end(); m_pchain_it++)
     {
-        (*m_pchain_it)->process((void**)&(m_buf_main[m_buf_index_write]), size, count);
+        (*m_pchain_it)->process((void*)(m_buf_main[m_buf_index_write]), size, count);
     }
     
     m_buf_index_write == 0 ? m_buf_index_write = 1 : m_buf_index_write = 0;

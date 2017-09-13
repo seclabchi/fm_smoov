@@ -2,7 +2,7 @@
 
 #include <cstdlib>
 
-ProcessorSimpleGain::ProcessorSimpleGain()
+ProcessorSimpleGain::ProcessorSimpleGain(uint32_t samp_rate)
 {
     m_gain_l = 1.0;
     m_gain_r = 1.0;     
@@ -19,10 +19,10 @@ void ProcessorSimpleGain::set_gain(float l, float r)
     m_gain_r = r;
 }
 
-void ProcessorSimpleGain::process(void** buf, size_t size, size_t count)
+void ProcessorSimpleGain::process(void* buf, size_t size, size_t count)
 {
-    int16_t* bufstart = *((int16_t**)buf);
-    int16_t* bufstop = *((int16_t**)buf) + count;
+    int16_t* bufstart = (int16_t*)buf;
+    int16_t* bufstop = (int16_t*)buf + count;
     bool leftright = false;
     
     for(int16_t* samp = bufstart; samp < bufstop; samp++)

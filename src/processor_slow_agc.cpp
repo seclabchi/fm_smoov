@@ -6,7 +6,7 @@
 
 using namespace std;
 
-ProcessorSlowAGC::ProcessorSlowAGC()
+ProcessorSlowAGC::ProcessorSlowAGC(uint32_t samp_rate)
 {
     m_target = 10000;
 }
@@ -21,11 +21,11 @@ void ProcessorSlowAGC::set_target_gain(int16_t target)
     m_target = target;
 }
 
-void ProcessorSlowAGC::process(void** buf, size_t size, size_t count)
+void ProcessorSlowAGC::process(void* buf, size_t size, size_t count)
 {
     cout << "Processing AGC with buffer size " << size << ", count " << count << endl;
-    int16_t* bufstart = *((int16_t**)buf);
-    int16_t* bufstop = *((int16_t**)buf) + count;
+    int16_t* bufstart = (int16_t*)buf;
+    int16_t* bufstop = (int16_t*)buf + count;
     
     double total_l = 0.0;
     double total_r = 0.0;

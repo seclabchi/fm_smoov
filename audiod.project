@@ -20,6 +20,7 @@
     <File Name="src/audio_hub.cpp"/>
     <File Name="src/processor_simple_gain.cpp"/>
     <File Name="src/processor_slow_agc.cpp"/>
+    <File Name="src/tone_generator.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hdr">
     <File Name="hdr/device_db.h"/>
@@ -31,6 +32,7 @@
     <File Name="hdr/processor.h"/>
     <File Name="hdr/processor_simple_gain.h"/>
     <File Name="hdr/processor_slow_agc.h"/>
+    <File Name="hdr/tone_generator.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
