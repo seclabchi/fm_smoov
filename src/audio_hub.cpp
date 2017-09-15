@@ -48,6 +48,7 @@ void AudioHub::write_buffer(const void* bufsrc, size_t size, size_t count)
     
     m_buf_index_write == 0 ? m_buf_index_write = 1 : m_buf_index_write = 0;
     m_frame_delta++;
+    cout << "Frame delta is " << m_frame_delta << endl;
     //cout << "write_buffer EXIT" << endl;
     sem_post(&m_buf_sem);
 }
@@ -94,6 +95,8 @@ void AudioHub::configure(snd_pcm_uframes_t bufsize_cap, snd_pcm_uframes_t persiz
     m_buf_index_read = 0;
     m_buf_index_write = 0;
     m_buf_main[0] = new int16_t[bufsize_cap * 2];
+    memset(m_buf_main[0], 0, bufsize_cap*2*sizeof(int16_t));
     m_buf_main[1] = new int16_t[bufsize_cap * 2];
+    memset(m_buf_main[1], 0, bufsize_cap*2*sizeof(int16_t));
     m_frame_delta = 0;
 }

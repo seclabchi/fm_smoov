@@ -23,7 +23,6 @@ void ProcessorAnalyzer::set_target_gain(int16_t target)
 
 void ProcessorAnalyzer::process(void* buf, size_t size, size_t count)
 {
-    cout << "Processing AGC with buffer size " << size << ", count " << count << endl;
     int16_t* bufstart = (int16_t*)buf;
     int16_t* bufstop = (int16_t*)buf + count;
     

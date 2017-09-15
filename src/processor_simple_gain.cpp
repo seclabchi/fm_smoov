@@ -5,8 +5,7 @@
 
 ProcessorSimpleGain::ProcessorSimpleGain(uint32_t samp_rate)
 {
-    m_gain_l = 0;
-    m_gain_r = 0;     
+    this->set_gain(0.0, 0.0);     
 }
 
 ProcessorSimpleGain::~ProcessorSimpleGain()

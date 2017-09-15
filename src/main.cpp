@@ -28,7 +28,9 @@ int main(int argc, char **argv)
     cout << "PCM device to be used: " << *dev_str << endl;
     
     AudioHub* audio_hub = new AudioHub();
+    
     PCM_Device* dev = new PCM_Device(dev_str);
+    
     dev->open();
     dev->set_audio_hub(audio_hub);
     
@@ -37,46 +39,12 @@ int main(int argc, char **argv)
     
     ProcessorAnalyzer* pslowagc = new ProcessorAnalyzer(48000);
     audio_hub->add_processor(pslowagc);
-    psg->set_gain(0.0, 0.0);
-    
-    dev->start();
-    
-    /* SIMPLE GAIN TESTS */
-    sleep(5);
-    psg->set_gain(-3.0, -3.0);
-    sleep(5);
-    psg->set_gain(-6.0, -6.0);
-    sleep(5);
-    psg->set_gain(-9.0, -9.0);
-    sleep(5);
-    psg->set_gain(-12.0, -12.0);
-    sleep(5);
-    psg->set_gain(-15.0, -15.0);
-    sleep(5);
-    psg->set_gain(-18.0, -18.0);
-    sleep(5);
-    psg->set_gain(-0.0, -0.0);
-    
-    /*sleep(2);
     
     ToneGenerator* tg = new ToneGenerator(48000);
     audio_hub->add_processor(tg);
-    tg->enable_channels(true, true);
     
-    sleep(2);
-    tg->enable_channels(true, false);
-    tg->set_frequency(500.0);
-    sleep(2);
-    tg->enable_channels(false, true);
-    tg->set_frequency(2000.0);
-    sleep(2);
-    tg->enable_channels(true, false);
-    tg->set_frequency(8000.0);
-    sleep(2);
-    tg->enable_channels(true, true);
-    tg->set_frequency(440.0);
-    sleep(2);
-    tg->enable_channels(false, false);*/
+    dev->start();
+    
     getchar();
     dev->stop();
     

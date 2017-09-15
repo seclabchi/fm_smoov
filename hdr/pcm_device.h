@@ -32,8 +32,8 @@ private:
     
     void configure(snd_pcm_t* handle, string subdev_name);
     
-    static const snd_pcm_uframes_t BUFFER_SIZE_REQ = 48000;
-    static const snd_pcm_uframes_t PERIOD_SIZE_REQ = 4800;
+    static const snd_pcm_uframes_t BUFFER_SIZE_REQ = 4096;
+    static const snd_pcm_uframes_t PERIOD_SIZE_REQ = 1024;
     
     snd_pcm_uframes_t m_bufsize_pb;
     snd_pcm_uframes_t m_persize_pb;

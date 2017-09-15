@@ -7,6 +7,8 @@ ToneGenerator::ToneGenerator(uint32_t samp_rate)
     m_samp_rate = samp_rate;
     m_freq = 1000.0;
     m_tone_pos = 0;
+    m_enable_left = false;
+    m_enable_right = false;
 }
 
 ToneGenerator::~ToneGenerator()
@@ -16,6 +18,11 @@ ToneGenerator::~ToneGenerator()
 
 void ToneGenerator::process(void* buf, size_t size, size_t count)
 {
+    if((false == m_enable_left) && (false == m_enable_right))
+    {
+        return;
+    }
+    
     int16_t* bufstart = (int16_t*)buf;
     int16_t* bufstop = (int16_t*)buf + count;
     int16_t sampval;

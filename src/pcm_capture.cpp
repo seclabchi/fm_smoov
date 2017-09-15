@@ -13,6 +13,7 @@ PCM_Capture::PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_ufra
     m_bufsize = bufsize;
     m_persize = persize;
     buf_in = new int16_t[2*bufsize];
+    memset(buf_in, 0, 2*bufsize*sizeof(int16_t));
 }
 
 PCM_Capture::~PCM_Capture()
@@ -60,11 +61,18 @@ void* PCM_Capture::thread_run_func(void* args)
     this->m_should_stop = false;
     sem_post(&mh_sem_thread_start);
     
-    this->prepare_capture_loop();
-    
-    while(false == this->m_should_stop)
+    try
     {
-        this->run_capture_loop();
+        this->prepare_capture_loop();
+        
+        while(false == this->m_should_stop)
+        {
+            this->run_capture_loop();
+        }
+    }
+    catch(std::runtime_error& excp)
+    {
+        cout << "A runtime exception was thrown from the capture loop: " << excp.what() << endl;
     }
     
     snd_pcm_drop(mh_pcm);
@@ -115,15 +123,21 @@ int PCM_Capture::xrun_recovery(int err)
         if (err == -EPIPE) {    /* under-run */
                 err = snd_pcm_prepare(mh_pcm);
                 if (err < 0)
-                        printf("Can't recover from capture underrun, prepare failed: %s\n", snd_strerror(err));
-                return 0;
+                {
+                    throw runtime_error(string("Can't recover from capture underrun, prepare failed: ") + snd_strerror(err));
+                }
         } else if (err == -ESTRPIPE) {
                 while ((err = snd_pcm_resume(mh_pcm)) == -EAGAIN)
-                        sleep(1);       /* wait until the suspend flag is released */
-                if (err < 0) {
-                        err = snd_pcm_prepare(mh_pcm);
-                        if (err < 0)
-                                printf("Can't recover from capture suspend, prepare failed: %s\n", snd_strerror(err));
+                {
+                    sleep(1);       /* wait until the suspend flag is released */
+                }
+                if (err < 0) 
+                {
+                    err = snd_pcm_prepare(mh_pcm);
+                    if (err < 0)
+                    {
+                        throw runtime_error(string("Can't recover from capture suspend, prepare failed: ") + snd_strerror(err));
+                    }
                 }
                 return 0;
         }

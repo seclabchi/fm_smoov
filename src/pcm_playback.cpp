@@ -13,7 +13,7 @@ PCM_Playback::PCM_Playback(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uf
     m_bufsize = bufsize;
     m_persize = persize;
     buf_out = new int16_t[2*bufsize];
-    memset(buf_out, 0, 2*bufsize);
+    memset(buf_out, 0, 2*bufsize*sizeof(int16_t));
 }
 
 PCM_Playback::~PCM_Playback()
@@ -60,11 +60,18 @@ void* PCM_Playback::thread_run_func(void* args)
     this->m_should_stop = false;
     sem_post(&mh_sem_thread_start);
     
-    this->prepare_playback_loop();
-    
-    while(false == this->m_should_stop)
+    try
     {
-        this->run_playback_loop();
+        this->prepare_playback_loop();
+        
+        while(false == this->m_should_stop)
+        {
+            this->run_playback_loop();
+        }
+    }
+    catch(std::runtime_error& excp)
+    {
+        cout << "A runtime exception was thrown from the playback loop: " << excp.what() << endl;
     }
     
     snd_pcm_drain(mh_pcm);
@@ -112,15 +119,22 @@ int PCM_Playback::xrun_recovery(int err)
         if (err == -EPIPE) {    /* under-run */
                 err = snd_pcm_prepare(mh_pcm);
                 if (err < 0)
-                        printf("Can't recover from playback underrun, prepare failed: %s\n", snd_strerror(err));
+                {
+                    throw runtime_error(string("Can't recover from playback underrun, prepare failed: ") + snd_strerror(err));
+                }
                 return 0;
         } else if (err == -ESTRPIPE) {
                 while ((err = snd_pcm_resume(mh_pcm)) == -EAGAIN)
-                        sleep(1);       /* wait until the suspend flag is released */
-                if (err < 0) {
-                        err = snd_pcm_prepare(mh_pcm);
-                        if (err < 0)
-                                printf("Can't recover from playback suspend, prepare failed: %s\n", snd_strerror(err));
+                {
+                    sleep(1);       /* wait until the suspend flag is released */
+                }
+                if (err < 0) 
+                {
+                    err = snd_pcm_prepare(mh_pcm);
+                    if (err < 0)
+                    {
+                        throw runtime_error(string("Can't recover from playback suspend, prepare failed: ") + snd_strerror(err));
+                    }
                 }
                 return 0;
         }
