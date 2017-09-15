@@ -1,11 +1,12 @@
 #include "processor_simple_gain.h"
 
 #include <cstdlib>
+#include <cmath>
 
 ProcessorSimpleGain::ProcessorSimpleGain(uint32_t samp_rate)
 {
-    m_gain_l = 1.0;
-    m_gain_r = 1.0;     
+    m_gain_l = 0;
+    m_gain_r = 0;     
 }
 
 ProcessorSimpleGain::~ProcessorSimpleGain()
@@ -15,8 +16,8 @@ ProcessorSimpleGain::~ProcessorSimpleGain()
 
 void ProcessorSimpleGain::set_gain(float l, float r)
 {
-    m_gain_l = l;
-    m_gain_r = r;
+    m_gain_l = powf(10.0, l/20.0);
+    m_gain_r = powf(10.0, r/20.0);
 }
 
 void ProcessorSimpleGain::process(void* buf, size_t size, size_t count)
@@ -30,13 +31,13 @@ void ProcessorSimpleGain::process(void* buf, size_t size, size_t count)
         if(false == leftright)
         {
             //left channel
-            *samp = *samp * m_gain_l;
+            *samp =  m_gain_l * (*samp);
             leftright = true;
         }
         else
         {
             //right channel
-            *samp = *samp * m_gain_r;
+            *samp =  m_gain_r * (*samp);
             leftright = false;
         }
     }

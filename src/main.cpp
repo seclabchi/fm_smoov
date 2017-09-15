@@ -13,7 +13,7 @@
 #include "pcm_playback.h"
 
 #include "processor_simple_gain.h"
-#include "processor_slow_agc.h"
+#include "processor_analyzer.h"
 #include "tone_generator.h"
 
 using namespace std;
@@ -34,22 +34,49 @@ int main(int argc, char **argv)
     
     ProcessorSimpleGain* psg = new ProcessorSimpleGain(48000);
     audio_hub->add_processor(psg);
-    psg->set_gain(1.0, 1.0);
-    ProcessorSlowAGC* pslowagc = new ProcessorSlowAGC(48000);
+    
+    ProcessorAnalyzer* pslowagc = new ProcessorAnalyzer(48000);
     audio_hub->add_processor(pslowagc);
-    ToneGenerator* tg = new ToneGenerator(48000);
-    //audio_hub->add_processor(tg);
+    psg->set_gain(0.0, 0.0);
     
     dev->start();
     
+    /* SIMPLE GAIN TESTS */
+    sleep(5);
+    psg->set_gain(-3.0, -3.0);
+    sleep(5);
+    psg->set_gain(-6.0, -6.0);
+    sleep(5);
+    psg->set_gain(-9.0, -9.0);
+    sleep(5);
+    psg->set_gain(-12.0, -12.0);
+    sleep(5);
+    psg->set_gain(-15.0, -15.0);
+    sleep(5);
+    psg->set_gain(-18.0, -18.0);
+    sleep(5);
+    psg->set_gain(-0.0, -0.0);
+    
+    /*sleep(2);
+    
+    ToneGenerator* tg = new ToneGenerator(48000);
+    audio_hub->add_processor(tg);
+    tg->enable_channels(true, true);
+    
     sleep(2);
+    tg->enable_channels(true, false);
     tg->set_frequency(500.0);
     sleep(2);
+    tg->enable_channels(false, true);
     tg->set_frequency(2000.0);
     sleep(2);
+    tg->enable_channels(true, false);
     tg->set_frequency(8000.0);
     sleep(2);
+    tg->enable_channels(true, true);
     tg->set_frequency(440.0);
+    sleep(2);
+    tg->enable_channels(false, false);*/
     getchar();
     dev->stop();
     

@@ -38,11 +38,6 @@ private:
     PCM_Transfer_Interface* m_xfer_iface;
     
     int16_t* buf_out;
-    uint32_t sine_index;
-    double* sinevals_raw;
-    double* sinevals2_raw;
-    bool swap_channels;
-    
 };
 
 #endif

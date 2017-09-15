@@ -13,34 +13,13 @@ PCM_Playback::PCM_Playback(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uf
     m_bufsize = bufsize;
     m_persize = persize;
     buf_out = new int16_t[2*bufsize];
-    
-    sinevals_raw = new double[bufsize];
-    sinevals2_raw = new double[bufsize];
-    
-    sine_index = 0;
-    
-    for(uint32_t i = 0; i < bufsize; i++)
-    {
-        sinevals_raw[i] = 32000 * sin(3.14159*2.0*1000.0*((double)sine_index)/48000.0);
-        sinevals2_raw[i] = 32000 * sin(3.14159*2.0*500.0*((double)sine_index)/48000.0);
-        sine_index++;
-    }
-    
-    for(uint32_t i = 0; i < bufsize; i++)
-    {
-        buf_out[2*i] = (int16_t)sinevals_raw[i];
-        buf_out[2*i+1] = (int16_t)sinevals2_raw[i];
-        //buf_out[2*i] = (int16_t)(rand() % 65535 - 32767);
-        //buf_out[2*i+1] = (int16_t)(rand() % 65535 - 32767);
-    }
+    memset(buf_out, 0, 2*bufsize);
 }
 
 PCM_Playback::~PCM_Playback()
 {
     sem_destroy(&mh_sem_thread_start);
     delete[] buf_out;
-    delete[] sinevals_raw;
-    delete[] sinevals2_raw;
 }
 
 void PCM_Playback::set_transfer_interface(PCM_Transfer_Interface* xfer_iface)
@@ -168,20 +147,6 @@ void PCM_Playback::run_playback_loop()
     
     if(ptr == (buf_out + (m_bufsize*2)))
     {
-        /*
-         * for(uint32_t i = 0; i < m_bufsize; i++)
-        {
-            sinevals_raw[i] = 32000 * sin(3.14159*2.0*1000.0*((double)sine_index)/48000.0);
-            sinevals2_raw[i] = 32000 * sin(3.14159*2.0*500.0*((double)sine_index)/48000.0);
-            sine_index++;
-        }
-        
-        for(uint32_t i = 0; i < m_bufsize; i++)
-        {
-            buf_out[2*i] = (int16_t)sinevals_raw[i];
-            buf_out[2*i+1] = (int16_t)sinevals2_raw[i];
-        }
-         * */
         m_xfer_iface->read_buffer((void**)&buf_out, sizeof(int16_t), m_bufsize*2);
         ptr = buf_out;
     }

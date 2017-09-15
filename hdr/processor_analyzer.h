@@ -3,11 +3,11 @@
 
 #include "processor.h"
 
-class ProcessorSlowAGC : public Processor
+class ProcessorAnalyzer : public Processor
 {
 public:
-    ProcessorSlowAGC(uint32_t samp_rate);
-    virtual ~ProcessorSlowAGC();
+    ProcessorAnalyzer(uint32_t samp_rate);
+    virtual ~ProcessorAnalyzer();
     virtual void process(void* buf, size_t size, size_t count);
     virtual void set_target_gain(int16_t target);
 private:
