@@ -23,22 +23,14 @@ void ProcessorSimpleGain::process(void* buf, size_t size, size_t count)
 {
     int16_t* bufstart = (int16_t*)buf;
     int16_t* bufstop = (int16_t*)buf + count;
-    bool leftright = false;
     
-    for(int16_t* samp = bufstart; samp < bufstop; samp++)
+    for(int16_t* samp = bufstart; samp < bufstop; samp+=2)
     {
-        if(false == leftright)
-        {
-            //left channel
-            *samp =  m_gain_l * (*samp);
-            leftright = true;
-        }
-        else
-        {
-            //right channel
-            *samp =  m_gain_r * (*samp);
-            leftright = false;
-        }
+        //left channel
+        *samp =  m_gain_l * (*samp);
+ 
+        //right channel
+        *(samp + 1) =  m_gain_r * (*(samp + 1));
     }
     
 }
