@@ -14,6 +14,7 @@
 
 #include "processor_simple_gain.h"
 #include "processor_analyzer.h"
+#include "processor_slow_agc.h"
 #include "tone_generator.h"
 
 using namespace std;
@@ -37,8 +38,13 @@ int main(int argc, char **argv)
     ProcessorSimpleGain* psg = new ProcessorSimpleGain(48000);
     audio_hub->add_processor(psg);
     
-    ProcessorAnalyzer* pslowagc = new ProcessorAnalyzer(48000);
-    audio_hub->add_processor(pslowagc);
+    ProcessorSlowAgc* psagc = new ProcessorSlowAgc(48000);
+    psagc->set_attack_release(2.0, 2.0);
+    psagc->set_target_lin(30000.0);
+    audio_hub->add_processor(psagc);
+    
+    //ProcessorAnalyzer* pa = new ProcessorAnalyzer(48000);
+    //audio_hub->add_processor(pa);
     
     ToneGenerator* tg = new ToneGenerator(48000);
     audio_hub->add_processor(tg);

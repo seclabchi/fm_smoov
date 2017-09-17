@@ -9,11 +9,12 @@ using namespace std;
 ProcessorAnalyzer::ProcessorAnalyzer(uint32_t samp_rate)
 {
     m_target = 10000;
+    m_log = new Logger(string("ProcessorAnalyzer"));
 }
 
 ProcessorAnalyzer::~ProcessorAnalyzer()
 {
-    
+    delete m_log;
 }
 
 void ProcessorAnalyzer::set_target_gain(int16_t target)
@@ -56,5 +57,5 @@ void ProcessorAnalyzer::process(void* buf, size_t size, size_t count)
     rms_l = sqrtf(total_l / (float)count/2.0);
     rms_r = sqrtf(total_r / (float)count/2.0);
     
-    cout << "Peak/RMS sample level L: " << peak_l << "/" << rms_l  << ", R: " << peak_r << "/" << rms_r << endl;
+    m_log->log_msg(string("Peak/RMS sample level L: ") + to_string(peak_l) + "/" + to_string(rms_l)  + ", R: " + to_string(peak_r) + "/" + to_string(rms_r));
 }

@@ -137,11 +137,11 @@ void PCM_Device::configure(snd_pcm_t* handle, string subdev_name)
     
     if(0 == subdev_name.compare("playback"))
     {
-        m_persize_pb = buf_size_tmp;
+        m_persize_pb = per_size_tmp;
     }
     else
     {
-        m_persize_cap = buf_size_tmp;
+        m_persize_cap = per_size_tmp;
     }
     
     snd_pcm_sw_params_t* sw_params = 0;

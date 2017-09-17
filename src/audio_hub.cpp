@@ -48,7 +48,7 @@ void AudioHub::write_buffer(const void* bufsrc, size_t size, size_t count)
     
     m_buf_index_write == 0 ? m_buf_index_write = 1 : m_buf_index_write = 0;
     m_frame_delta++;
-    cout << "Frame delta is " << m_frame_delta << endl;
+    //cout << "Frame delta is " << m_frame_delta << endl;
     //cout << "write_buffer EXIT" << endl;
     sem_post(&m_buf_sem);
 }
