@@ -7,10 +7,12 @@
 class Processor
 {
 public:
-    Processor() {};
-    Processor(uint32_t samp_rate) {};
+    Processor(uint32_t samp_rate);
     virtual ~Processor() {};
     virtual void process(void* buf, size_t size, size_t count) = 0;
+protected:
+    Processor() {};
+    uint32_t m_samp_rate;
 };
 
 #endif

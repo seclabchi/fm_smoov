@@ -15,6 +15,7 @@
 #include "processor_simple_gain.h"
 #include "processor_analyzer.h"
 #include "processor_slow_agc.h"
+#include "processor_lpf.h"
 #include "tone_generator.h"
 
 using namespace std;
@@ -37,19 +38,38 @@ int main(int argc, char **argv)
     
     ProcessorSimpleGain* psg = new ProcessorSimpleGain(48000);
     audio_hub->add_processor(psg);
+    psg->set_gain(-12.0, -12.0);
     
-    ProcessorSlowAgc* psagc = new ProcessorSlowAgc(48000);
-    psagc->set_attack_release(2.0, 2.0);
-    psagc->set_target_lin(30000.0);
-    audio_hub->add_processor(psagc);
+    ProcessorAnalyzer* pa1 = new ProcessorAnalyzer(48000);
+    audio_hub->add_processor(pa1);
     
-    //ProcessorAnalyzer* pa = new ProcessorAnalyzer(48000);
-    //audio_hub->add_processor(pa);
+    ProcessorLPF* plpf = new ProcessorLPF(48000);
+    audio_hub->add_processor(plpf);
+    //ProcessorSlowAgc* psagc = new ProcessorSlowAgc(48000);
+    //psagc->set_attack_release(2.0, 2.0);
+    //psagc->set_target_lin(30000.0);
+    //audio_hub->add_processor(psagc);
+    
+    ProcessorAnalyzer* pa2 = new ProcessorAnalyzer(48000);
+    audio_hub->add_processor(pa2);
     
     ToneGenerator* tg = new ToneGenerator(48000);
     audio_hub->add_processor(tg);
     
     dev->start();
+    
+    sleep(2);
+    plpf->enable(false);
+    sleep(2);
+    plpf->enable(true);
+    sleep(2);
+    plpf->enable(false);
+    sleep(2);
+    plpf->enable(true);
+    sleep(2);
+    plpf->enable(false);
+    sleep(2);
+    plpf->enable(true);
     
     getchar();
     dev->stop();
