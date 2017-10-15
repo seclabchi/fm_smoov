@@ -3,6 +3,15 @@
 
 #include "processor.h"
 
+/*
+ * Second-order sections for 1st-order 200 Hz butterworth lowpass
+ * 0.01292  -0.01292   0.00000   1.00000  -1.00002   0.00000
+ * 
+ * The rows correspond to biquad sections, the columns 
+ * correspond to respectively b0, b1, b2, a0, a1 and a2. 
+ * Note that the coefficients have already been normalised.
+ */
+ 
 class ProcessorLPF : public Processor
 {
 public:
@@ -12,9 +21,10 @@ public:
     virtual void enable(bool en);
 private:
     bool m_enabled;
-    int16_t m_simp_state_l;
-    int16_t m_simp_state_r;
-    int16_t m_buf[40000];
+    float B[3];
+    float A[3];
+    float m_last_output;
+    int16_t* m_buf;
 };
 
 #endif
