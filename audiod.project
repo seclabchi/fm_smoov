@@ -25,6 +25,7 @@
     <File Name="src/logger.cpp"/>
     <File Name="src/processor_lpf.cpp"/>
     <File Name="src/processor.cpp"/>
+    <File Name="src/biquad.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hdr">
     <File Name="hdr/device_db.h"/>
@@ -40,6 +41,7 @@
     <File Name="hdr/processor_slow_agc.h"/>
     <File Name="hdr/logger.h"/>
     <File Name="hdr/processor_lpf.h"/>
+    <File Name="hdr/biquad.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

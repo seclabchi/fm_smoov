@@ -2,6 +2,7 @@
 #define __PROCESSOR_LPF_H__
 
 #include "processor.h"
+#include "biquad.h"
 
 /*
  * Second-order sections for 1st-order 200 Hz butterworth lowpass
@@ -21,10 +22,7 @@ public:
     virtual void enable(bool en);
 private:
     bool m_enabled;
-    float B[3];
-    float A[3];
-    float m_last_output;
-    int16_t* m_buf;
+    BiQuad* m_bq;
 };
 
 #endif
