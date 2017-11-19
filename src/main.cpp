@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <errno.h>
 
 #include <string>
 
@@ -27,6 +28,13 @@ int main(int argc, char **argv)
     DeviceDb* dev_db = new DeviceDb();
     size_t num_devs = dev_db->find_bi_devices();
     cout << "Found " << num_devs << " bi device(s)." << endl;
+    
+    if(0 == num_devs)
+    {
+        cout << "Did not find any devices capable of playing back and recording (bi-directional devices).  Exiting." << endl;
+        return -ENODEV;
+    }
+    
     string* dev_str = 0;
     dev_db->get_device_name(0, &dev_str);
     cout << "PCM device to be used: " << *dev_str << endl;
@@ -59,10 +67,10 @@ int main(int argc, char **argv)
     //ProcessorAnalyzer* pa2 = new ProcessorAnalyzer(48000);
     //audio_hub->add_processor(pa2);
     
-    ToneGenerator* tg = new ToneGenerator(&audio_params);
-    tg->set_frequency(200.0);
-    tg->enable_channels(true, true);
-    audio_hub->add_processor(tg);
+//    ToneGenerator* tg = new ToneGenerator(&audio_params);
+//    tg->set_frequency(200.0);
+//    tg->enable_channels(true, true);
+//    audio_hub->add_processor(tg);
     
     ProcessorAnalyzer* pa1 = new ProcessorAnalyzer(&audio_params);
     audio_hub->add_processor(pa1);
