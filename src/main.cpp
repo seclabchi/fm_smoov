@@ -14,6 +14,7 @@
 #include "pcm_playback.h"
 
 #include "audio_params.h"
+#include "command_handler.h"
 
 #include "processor_simple_gain.h"
 #include "processor_analyzer.h"
@@ -40,6 +41,7 @@ int main(int argc, char **argv)
     cout << "PCM device to be used: " << *dev_str << endl;
     
     AudioHub* audio_hub = new AudioHub();
+    CommandHandler* command_handler = new CommandHandler();
     
     PCM_Device* dev = new PCM_Device(dev_str);
     
@@ -67,34 +69,27 @@ int main(int argc, char **argv)
     //ProcessorAnalyzer* pa2 = new ProcessorAnalyzer(48000);
     //audio_hub->add_processor(pa2);
     
-//    ToneGenerator* tg = new ToneGenerator(&audio_params);
-//    tg->set_frequency(200.0);
-//    tg->enable_channels(true, true);
-//    audio_hub->add_processor(tg);
+    ToneGenerator* tg = new ToneGenerator(&audio_params, "tone_gen");
+    tg->set_frequency(440.0);
+    tg->set_level(-6.0);
+    tg->enable_channels(true, true);
+    audio_hub->add_processor(tg);
+    command_handler->add_processor(tg);
     
-    ProcessorAnalyzer* pa1 = new ProcessorAnalyzer(&audio_params);
+    ProcessorAnalyzer* pa1 = new ProcessorAnalyzer(&audio_params, "analyzer");
     audio_hub->add_processor(pa1);
+    command_handler->add_processor(pa1);
     
     dev->start();
     
-//    sleep(2);
-//    plpf->enable(false);
-//    sleep(2);
-//    plpf->enable(true);
-//    sleep(2);
-//    plpf->enable(false);
-//    sleep(2);
-//    plpf->enable(true);
-//    sleep(2);
-//    plpf->enable(false);
-//    sleep(2);
-//    plpf->enable(true);
+    command_handler->go();
     
-    getchar();
     dev->stop();
     
     dev->close();
     
+    delete command_handler;
+    delete audio_hub;
     delete dev_db;
     printf("Goodbye.\n");
 	return 0;

@@ -18,15 +18,16 @@
     <File Name="src/pcm_playback.cpp"/>
     <File Name="src/pcm_capture.cpp"/>
     <File Name="src/audio_hub.cpp"/>
-    <File Name="src/processor_simple_gain.cpp"/>
+    <File Name="src/processor_simple_gain.cpp" ExcludeProjConfig="Debug"/>
     <File Name="src/tone_generator.cpp"/>
     <File Name="src/processor_analyzer.cpp"/>
-    <File Name="src/processor_slow_agc.cpp"/>
+    <File Name="src/processor_slow_agc.cpp" ExcludeProjConfig="Debug"/>
     <File Name="src/logger.cpp"/>
-    <File Name="src/processor_lpf.cpp"/>
+    <File Name="src/processor_lpf.cpp" ExcludeProjConfig="Debug"/>
     <File Name="src/processor.cpp"/>
     <File Name="src/biquad.cpp"/>
-    <File Name="src/processor_filter_1st_order.cpp"/>
+    <File Name="src/processor_filter_1st_order.cpp" ExcludeProjConfig="Debug"/>
+    <File Name="src/command_handler.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hdr">
     <File Name="hdr/device_db.h"/>
@@ -36,15 +37,16 @@
     <File Name="hdr/pcm_capture.h"/>
     <File Name="hdr/audio_hub.h"/>
     <File Name="hdr/processor.h"/>
-    <File Name="hdr/processor_simple_gain.h"/>
+    <File Name="hdr/processor_simple_gain.h" ExcludeProjConfig="Debug"/>
     <File Name="hdr/tone_generator.h"/>
     <File Name="hdr/processor_analyzer.h"/>
-    <File Name="hdr/processor_slow_agc.h"/>
+    <File Name="hdr/processor_slow_agc.h" ExcludeProjConfig="Debug"/>
     <File Name="hdr/logger.h"/>
-    <File Name="hdr/processor_lpf.h"/>
+    <File Name="hdr/processor_lpf.h" ExcludeProjConfig="Debug"/>
     <File Name="hdr/biquad.h"/>
     <File Name="hdr/audio_params.h"/>
-    <File Name="hdr/processor_filter_1st_order.h"/>
+    <File Name="hdr/processor_filter_1st_order.h" ExcludeProjConfig="Debug"/>
+    <File Name="hdr/command_handler.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

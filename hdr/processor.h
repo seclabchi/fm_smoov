@@ -4,16 +4,22 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include <string>
+
 #include "audio_params.h"
+
+using namespace std;
 
 class Processor
 {
 public:
-    Processor(audio_params_t* params);
+    Processor(audio_params_t* params, string name);
     virtual ~Processor();
     virtual void process(float* buf, size_t frames) = 0;
+    virtual string get_name();
 protected:
     Processor() {};
+    string m_name;
     audio_params_t* m_params;
     float* m_buf_in;
     float* m_buf_out;

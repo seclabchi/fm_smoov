@@ -7,7 +7,7 @@
 class ProcessorAnalyzer : public Processor
 {
 public:
-    ProcessorAnalyzer(audio_params_t* params);
+    ProcessorAnalyzer(audio_params_t* params, string name);
     virtual ~ProcessorAnalyzer();
     virtual void process(float* buf, size_t frames);
 private:

@@ -6,7 +6,7 @@
 
 using namespace std;
 
-ProcessorAnalyzer::ProcessorAnalyzer(audio_params_t* params) : Processor(params)
+ProcessorAnalyzer::ProcessorAnalyzer(audio_params_t* params, string name) : Processor(params, name)
 {
     m_log = new Logger(string("ProcessorAnalyzer"));
 }

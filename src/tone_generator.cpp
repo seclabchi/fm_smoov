@@ -2,9 +2,11 @@
 
 #include <math.h>
 
-ToneGenerator::ToneGenerator(audio_params_t* params) : Processor(params)
+ToneGenerator::ToneGenerator(audio_params_t* params, string name) : Processor(params, name)
 {
     m_freq = 1000.0;
+    m_lev_lin = 1.0;
+    m_lev_db = 0.0;
     m_tone_pos = 0;
     m_enable_left = false;
     m_enable_right = false;
@@ -56,6 +58,13 @@ void ToneGenerator::set_frequency(double freq)
 {
     m_freq = freq;
 }
+
+void ToneGenerator::set_level(double lev_db)
+{
+    m_lev_db = lev_db;
+    m_lev_lin = powf(10, lev_db/20.0);
+}
+
 
 void ToneGenerator::enable_channels(bool left, bool right)
 {
