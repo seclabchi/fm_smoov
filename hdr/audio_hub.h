@@ -6,6 +6,7 @@
 #include <asoundlib.h>
 #include <vector>
 
+#include "audio_params.h"
 #include "pcm_transfer_interface.h"
 #include "processor.h"
 #include "processor_simple_gain.h"
@@ -31,12 +32,14 @@ private:
     snd_pcm_uframes_t m_persize_cap;
     snd_pcm_uframes_t m_bufsize_pb;
     snd_pcm_uframes_t m_persize_pb;
-    int16_t** cap_bufs;
+    float** cap_bufs;
     uint8_t cap_buf_index;
+    
+    audio_params_t m_audio_params;
     
     sem_t m_buf_sem;
     
-    int16_t* m_buf_main[2];
+    float* m_buf_main[2];
     uint8_t m_buf_index_read;
     uint8_t m_buf_index_write;
     

@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <cmath>
 
-ProcessorSimpleGain::ProcessorSimpleGain(uint32_t samp_rate)
+ProcessorSimpleGain::ProcessorSimpleGain(audio_params_t* params)
 {
     this->set_gain(0.0, 0.0);     
 }
@@ -19,12 +19,12 @@ void ProcessorSimpleGain::set_gain(float l, float r)
     m_gain_r = powf(10.0, r/20.0);
 }
 
-void ProcessorSimpleGain::process(void* buf, size_t size, size_t count)
+void ProcessorSimpleGain::process(float* buf, size_t num_frames)
 {
-    int16_t* bufstart = (int16_t*)buf;
-    int16_t* bufstop = (int16_t*)buf + count;
+    float* bufstart = buf;
+    float* bufstop = buf + (num_frames * m_params->num_chans);
     
-    for(int16_t* samp = bufstart; samp < bufstop; samp+=2)
+    for(float* samp = bufstart; samp < bufstop; samp+=2)
     {
         //left channel
         *samp =  m_gain_l * (*samp);

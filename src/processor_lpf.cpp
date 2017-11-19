@@ -4,7 +4,7 @@
 #include <cstring>
 #include <cmath>
 
-ProcessorLPF::ProcessorLPF(uint32_t samp_rate)
+ProcessorLPF::ProcessorLPF(audio_params_t* params)
 {
     m_enabled = true;
     m_bq = new BiQuad(0.01292, -0.01292, 0.00000, 1.00000, -1.00002, 0.00000);
@@ -20,14 +20,14 @@ void ProcessorLPF::enable(bool en)
     m_enabled = en;
 }
 
-void ProcessorLPF::process(void* buf, size_t size, size_t count)
+void ProcessorLPF::process(float* buf, size_t num_frames)
 {
     if(true == m_enabled)
     {
-        int16_t* bufstart = (int16_t*)buf;
-        int16_t* bufstop = (int16_t*)buf + count*2;
+        float* bufstart = (float*)buf;
+        float* bufstop = (float*)buf + (num_frames * m_params->frame_size);
         
-        for(uint32_t i = 0; i < count*2; i+=2)
+        for(float* i = bufstart; i < bufstop; i+=2)
         {
             
         }

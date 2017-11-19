@@ -12,8 +12,8 @@ PCM_Playback::PCM_Playback(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_uf
     mh_pcm = pcm;
     m_bufsize = bufsize;
     m_persize = persize;
-    buf_out = new int16_t[2*bufsize];
-    memset(buf_out, 0, 2*bufsize*sizeof(int16_t));
+    buf_out = new float[2*bufsize];
+    memset(buf_out, 0, 2*bufsize*sizeof(float));
 }
 
 PCM_Playback::~PCM_Playback()
@@ -161,7 +161,7 @@ void PCM_Playback::run_playback_loop()
     
     if(ptr == (buf_out + (m_bufsize*2)))
     {
-        m_xfer_iface->read_buffer((void**)&buf_out, sizeof(int16_t), m_bufsize*2);
+        m_xfer_iface->read_buffer((void**)&buf_out, sizeof(float), m_bufsize*2);
         ptr = buf_out;
     }
     cptr = m_persize;

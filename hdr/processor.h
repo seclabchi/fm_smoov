@@ -4,15 +4,19 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "audio_params.h"
+
 class Processor
 {
 public:
-    Processor(uint32_t samp_rate);
-    virtual ~Processor() {};
-    virtual void process(void* buf, size_t size, size_t count) = 0;
+    Processor(audio_params_t* params);
+    virtual ~Processor();
+    virtual void process(float* buf, size_t frames) = 0;
 protected:
     Processor() {};
-    uint32_t m_samp_rate;
+    audio_params_t* m_params;
+    float* m_buf_in;
+    float* m_buf_out;
 };
 
 #endif

@@ -88,7 +88,7 @@ void PCM_Device::configure(snd_pcm_t* handle, string subdev_name)
         throw runtime_error("Error " + to_string(retval) + " setting PCM hw param 'access' for " + subdev_name + " device: " + snd_strerror(retval));
     }
     
-    retval = snd_pcm_hw_params_set_format(handle, hw_params, SND_PCM_FORMAT_S16_LE);
+    retval = snd_pcm_hw_params_set_format(handle, hw_params, SND_PCM_FORMAT_FLOAT_LE);
     if(0 > retval)
     {
         throw runtime_error("Error " + to_string(retval) + " setting PCM hw param 'format' for " + subdev_name + " device: " + snd_strerror(retval));

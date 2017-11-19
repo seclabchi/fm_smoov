@@ -7,11 +7,11 @@
 class ProcessorSlowAgc : public Processor
 {
 public:
-    ProcessorSlowAgc(uint32_t samp_rate);
+    ProcessorSlowAgc(audio_params_t* params);
     void set_attack_release(float attack, float release);
     void set_target_lin(float target_lin);
     virtual ~ProcessorSlowAgc();
-    virtual void process(void* buf, size_t size, size_t count);
+    virtual void process(float* buf, size_t frames);
 private:
     Logger* m_log;
     float m_peak_window;

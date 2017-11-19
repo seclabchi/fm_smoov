@@ -28,7 +28,7 @@ private:
     snd_pcm_uframes_t m_bufsize;
     snd_pcm_uframes_t m_persize;
     struct pollfd *ufds;
-    signed short *ptr;
+    float *ptr;
     int err, count, cptr, init;
     int channels = 2;
     void prepare_capture_loop();
@@ -36,7 +36,7 @@ private:
     int xrun_recovery(int err);
     void run_capture_loop();
     
-    int16_t* buf_in;
+    float* buf_in;
 };
 
 #endif

@@ -12,8 +12,8 @@ PCM_Capture::PCM_Capture(snd_pcm_t* pcm, snd_pcm_uframes_t bufsize, snd_pcm_ufra
     mh_pcm = pcm;
     m_bufsize = bufsize;
     m_persize = persize;
-    buf_in = new int16_t[2*bufsize];
-    memset(buf_in, 0, 2*bufsize*sizeof(int16_t));
+    buf_in = new float[2*bufsize];
+    memset(buf_in, 0, 2*bufsize*sizeof(float));
 }
 
 PCM_Capture::~PCM_Capture()
@@ -164,7 +164,7 @@ void PCM_Capture::run_capture_loop()
     
     if(ptr == (buf_in + (m_bufsize*2)))
     {
-        m_xfer_iface->write_buffer(buf_in, sizeof(int16_t), m_bufsize*2);
+        m_xfer_iface->write_buffer(buf_in, sizeof(float), m_bufsize*2);
         ptr = buf_in;
     }
     cptr = m_persize;

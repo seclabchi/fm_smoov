@@ -6,14 +6,13 @@
 class ToneGenerator : public Processor
 {
 public:
-    ToneGenerator(uint32_t samp_rate);
+    ToneGenerator(audio_params_t* params);
     virtual ~ToneGenerator();
-    virtual void process(void* buf, size_t size, size_t count);
+    virtual void process(float* buf, size_t frames);
     virtual void set_frequency(double freq);
     virtual void enable_channels(bool left, bool right);
 private:
     double m_freq;
-    uint32_t m_samp_rate;
     uint32_t m_tone_pos;
     
     bool m_enable_left;

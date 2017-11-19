@@ -2,9 +2,8 @@
 
 #include <math.h>
 
-ToneGenerator::ToneGenerator(uint32_t samp_rate)
+ToneGenerator::ToneGenerator(audio_params_t* params) : Processor(params)
 {
-    m_samp_rate = samp_rate;
     m_freq = 1000.0;
     m_tone_pos = 0;
     m_enable_left = false;
@@ -16,25 +15,29 @@ ToneGenerator::~ToneGenerator()
     
 }
 
-void ToneGenerator::process(void* buf, size_t size, size_t count)
+void ToneGenerator::process(float* buf, size_t num_frames)
 {
     if((false == m_enable_left) && (false == m_enable_right))
     {
         return;
     }
     
-    int16_t* bufstart = (int16_t*)buf;
-    int16_t* bufstop = (int16_t*)buf + count;
-    int16_t sampval;
+    float samp_per_chan = num_frames;
+    int32_t total_samp = num_frames * m_params->num_chans;
+        
+    float* bufstart = buf;
+    float* bufstop = buf + total_samp;
     
-    if(m_samp_rate == m_tone_pos)
+    float sampval;
+    
+    if(m_params->samp_rate == m_tone_pos)
     {
         m_tone_pos = 0;
     }
     
-    for(int16_t* samp = bufstart; samp < bufstop; samp+=2)
+    for(float* samp = bufstart; samp < bufstop; samp+=2)
     {
-        sampval = 32767 * sin(2.0*M_PI*((double)m_tone_pos/48000.0)*m_freq);
+        sampval = sin(2.0*M_PI*((double)m_tone_pos/48000.0)*m_freq);
         
         if(m_enable_left)
         {

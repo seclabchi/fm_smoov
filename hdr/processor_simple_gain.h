@@ -6,9 +6,9 @@
 class ProcessorSimpleGain : public Processor
 {
 public:
-    ProcessorSimpleGain(uint32_t samp_rate);
+    ProcessorSimpleGain(audio_params_t* params);
     virtual ~ProcessorSimpleGain();
-    virtual void process(void* buf, size_t size, size_t count);
+    virtual void process(float* buf, size_t frames);
     virtual void set_gain(float l, float r);
 private:
     float m_gain_l;

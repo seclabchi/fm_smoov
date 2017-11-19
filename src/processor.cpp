@@ -1,6 +1,14 @@
 #include "processor.h"
 
-Processor::Processor(uint32_t samp_rate)
+#include <string.h>
+
+Processor::Processor(audio_params_t* params)
 {
-    m_samp_rate = samp_rate;
+    m_params = new audio_params_t();
+    memcpy(m_params, params, sizeof(audio_params_t));
+}
+
+Processor::~Processor()
+{
+    delete m_params;
 }

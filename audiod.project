@@ -26,6 +26,7 @@
     <File Name="src/processor_lpf.cpp"/>
     <File Name="src/processor.cpp"/>
     <File Name="src/biquad.cpp"/>
+    <File Name="src/processor_filter_1st_order.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hdr">
     <File Name="hdr/device_db.h"/>
@@ -42,6 +43,8 @@
     <File Name="hdr/logger.h"/>
     <File Name="hdr/processor_lpf.h"/>
     <File Name="hdr/biquad.h"/>
+    <File Name="hdr/audio_params.h"/>
+    <File Name="hdr/processor_filter_1st_order.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

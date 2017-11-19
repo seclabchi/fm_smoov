@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-BiQuad::BiQuad(float b0, float b1, float b2, float a1, uint32_t buf_size) : m_b0(b0), m_b1(b1), m_b2(b2), m_a1(a1), m_buf_size(buf_size)
+BiQuad::BiQuad(float b0, float b1, float b2, float a1, float a0, uint32_t buf_size) : m_b0(b0), m_b1(b1), m_b2(b2), m_a1(a1), m_buf_size(buf_size)
 {
     m_buf_out = new float[m_buf_size];
 }

@@ -27,7 +27,7 @@ private:
     snd_pcm_uframes_t m_bufsize;
     snd_pcm_uframes_t m_persize;
     struct pollfd *ufds;
-    signed short *ptr;
+    float *ptr;
     int err, count, cptr, init;
     int channels = 2;
     void prepare_playback_loop();
@@ -37,7 +37,7 @@ private:
     
     PCM_Transfer_Interface* m_xfer_iface;
     
-    int16_t* buf_out;
+    float* buf_out;
 };
 
 #endif

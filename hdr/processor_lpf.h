@@ -16,9 +16,9 @@
 class ProcessorLPF : public Processor
 {
 public:
-    ProcessorLPF(uint32_t samp_rate);
+    ProcessorLPF(audio_params_t* params);
     virtual ~ProcessorLPF();
-    virtual void process(void* buf, size_t size, size_t count);
+    virtual void process(float* buf, size_t frames);
     virtual void enable(bool en);
 private:
     bool m_enabled;
