@@ -12,6 +12,7 @@ public:
     virtual void set_frequency(double freq);
     virtual void set_level(double lev_db);
     virtual void enable_channels(bool left, bool right);
+    virtual string do_command(vector<string> cmds);
 private:
     double m_freq;
     uint32_t m_tone_pos;

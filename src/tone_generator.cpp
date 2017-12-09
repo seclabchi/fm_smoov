@@ -1,6 +1,7 @@
 #include "tone_generator.h"
 
 #include <math.h>
+#include <iostream>
 
 ToneGenerator::ToneGenerator(audio_params_t* params, string name) : Processor(params, name)
 {
@@ -70,4 +71,20 @@ void ToneGenerator::enable_channels(bool left, bool right)
 {
     m_enable_left = left;
     m_enable_right = right;
+}
+
+string ToneGenerator::do_command(vector<string> cmds)
+{
+    string retval = "OK";
+    
+    if(0 == cmds.at(1).compare("freq"))
+    {
+        this->set_frequency(atof(cmds.at(2).c_str()));
+    }
+    else
+    {
+        retval = "Unknown command " + cmds.at(1);
+    }
+    
+    return retval;
 }

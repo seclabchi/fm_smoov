@@ -2,13 +2,14 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <sstream>
 #include <errno.h>
 #include <string.h>
 #include <arpa/inet.h>
 
 CommandHandler::CommandHandler()
 {
-    m_processors = new vector<Processor*>();
+    m_processors = new map<string, Processor*>();
     m_port_num = 2323;
     m_should_stop = false;
 }
@@ -20,23 +21,18 @@ CommandHandler::~CommandHandler()
 
 void CommandHandler::add_processor(Processor* p)
 {
-    vector<Processor*>::iterator it = m_processors->begin();
     bool duplicate = false;
     
-    while(it != m_processors->end())
+    map<string, Processor*>::iterator p_it = m_processors->find(p->get_name());
+    
+    if(p_it != m_processors->end())
     {
-        if(0 == p->get_name().compare((*it)->get_name()))
-        {
-            duplicate = true;
-            break;
-        }
-        
-        it++;
+        duplicate = true;
     }
     
     if(false == duplicate)
     {
-        m_processors->push_back(p);
+        m_processors->insert(make_pair(p->get_name(), p));
     }
     else
     {
@@ -56,14 +52,17 @@ void CommandHandler::thread_func()
     int cli_sock_fd = 0;
     uint8_t buffer[256];
     char ip_addr_str[32] = {'\0'};
+    int bytes_sent = 0;
+    int bytes_recvd = 0;
     
     while(false == m_should_stop)
     {
         cout << "Waiting for connection..." << endl;
         
-        listen(m_sock_fd, 5);
+        listen(m_sock_fd, 1);
                 
         socklen_t clilen = sizeof(m_cli_addr);
+        
         cli_sock_fd = accept(m_sock_fd, 
                  (struct sockaddr *) &m_cli_addr, 
                  &clilen);
@@ -77,36 +76,56 @@ void CommandHandler::thread_func()
         
         cout << "Connected to client at " << ip_addr_str << ":" << ntohs(m_cli_addr.sin_port) << endl;
         
-        string tx_msg = "Hi, Heather!\n";
-        
-        write(cli_sock_fd, tx_msg.c_str(), tx_msg.length());
-        
-        memset(buffer, 0, 256);
-        
-        int n = read(cli_sock_fd,buffer,255);
-        
-        if (n < 0) 
+        try
         {
-            throw runtime_error(string("Error ") + strerror(errno) + " reading from client.");
+            while(false == m_should_stop)
+            {
+                string tx_msg = "READY\n";
+                
+                bytes_sent = write(cli_sock_fd, tx_msg.c_str(), tx_msg.length());
+                
+                if (bytes_sent < 0) 
+                {
+                    throw runtime_error(string("Error ") + strerror(errno) + " writing to client.");
+                }
+                
+                memset(buffer, 0, 256);
+                
+                bytes_recvd = read(cli_sock_fd, buffer, 255);
+                
+                if (bytes_recvd < 0) 
+                {
+                    throw runtime_error(string("Error ") + strerror(errno) + " reading from client.");
+                }
+                
+                if(!strncmp("stop", (char*)buffer, 4))
+                {
+                    m_should_stop = true;
+                }
+                else
+                {
+                    string response = process_command((char*)buffer, bytes_recvd) + "\n";
+                    
+                    bytes_sent = write(cli_sock_fd, response.c_str(), response.length());
+                    
+                    if (bytes_sent < 0) 
+                    {
+                        throw runtime_error(string("Error ") + strerror(errno) + " writing to client.");
+                    }
+                }
+            }
+            
+            close(cli_sock_fd);
+            
         }
-        
-        cout << "Here is the message: " << buffer << endl;
-        n = write(cli_sock_fd, "I got your message\n", 18);
-        
-        if (n < 0) 
+        catch(runtime_error& err)
         {
-            throw runtime_error(string("Error ") + strerror(errno) + " writing to client.");
+            cout << "command_handler: " << err.what() << endl;
+            close(cli_sock_fd);
         }
-        
-        if(!strncmp("stop", (char*)buffer, 4))
-        {
-            m_should_stop = true;
-        }
-        
-        close(cli_sock_fd);
-        
-        cout << "Client closed." << endl;
     }
+    
+    cout << "Client closed." << endl;
     
 }
 
@@ -157,18 +176,50 @@ void CommandHandler::open_socket()
 
 vector<string> CommandHandler::get_processor_names()
 {
-    vector<Processor*>::iterator it;
+    map<string, Processor*>::iterator it;
     vector<string> proc_names;
     
     for(it = m_processors->begin(); it != m_processors->end(); it++)
     {
-        proc_names.push_back((*it)->get_name());
+        proc_names.push_back(it->first);
     }
     
     return proc_names;
 }
 
-void CommandHandler::command(string command)
+string CommandHandler::process_command(char* command, uint32_t len)
 {
+    string cmd = string(command);
     
+    /* FIXME: Assumes that the command string has a \r\n at the end.  This needs
+     * to be made more robust.
+     */
+     
+    cmd.pop_back();
+    cmd.pop_back();
+    
+    if(cmd.length() > 0)
+    {
+    
+        cout << "Command received: " << cmd << endl;
+        
+        istringstream iss(cmd);
+        string sub_cmd;
+        vector<string> cmds;
+        
+        while(getline(iss, sub_cmd, ' '))
+        {
+            cmds.push_back(sub_cmd);
+        }
+        
+        map<string, Processor*>::iterator it = m_processors->find(cmds.at(0));
+        
+        if(it != m_processors->end())
+        {
+            it->second->do_command(cmds);
+        }
+    
+    }
+    
+    return "OK";
 }

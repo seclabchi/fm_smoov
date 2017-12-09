@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include <pthread.h>
 
 #include <unistd.h>
@@ -22,15 +23,15 @@ public:
     void add_processor(Processor* p);
     void go();
     void stop();
-private:
     vector<string> get_processor_names();
-    void command(string command);
+private:
+    string process_command(char* command, uint32_t len);
     void open_socket();
     
     static void* thread_func_wrapper(void* args);
     void thread_func();
     
-    vector<Processor*>* m_processors;
+    map<string, Processor*>* m_processors;
     
     pthread_t m_thread;
     int m_sock_fd;

@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include <string>
+#include <vector>
 
 #include "audio_params.h"
 
@@ -17,6 +18,7 @@ public:
     virtual ~Processor();
     virtual void process(float* buf, size_t frames) = 0;
     virtual string get_name();
+    virtual string do_command(vector<string> cmds) = 0;
 protected:
     Processor() {};
     string m_name;
