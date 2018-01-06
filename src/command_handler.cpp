@@ -80,6 +80,8 @@ void CommandHandler::thread_func()
         {
             while(false == m_should_stop)
             {
+                try
+                {
                 string tx_msg = "READY\n";
                 
                 bytes_sent = write(cli_sock_fd, tx_msg.c_str(), tx_msg.length());
@@ -105,6 +107,19 @@ void CommandHandler::thread_func()
                 else
                 {
                     string response = process_command((char*)buffer, bytes_recvd) + "\n";
+                    
+                    bytes_sent = write(cli_sock_fd, response.c_str(), response.length());
+                    
+                    if (bytes_sent < 0) 
+                    {
+                        throw runtime_error(string("Error ") + strerror(errno) + " writing to client.");
+                    }
+                }
+                
+                }
+                catch(out_of_range& oorex)
+                {
+                    string response = string("ERROR: ") + oorex.what() + "\n";
                     
                     bytes_sent = write(cli_sock_fd, response.c_str(), response.length());
                     
@@ -190,6 +205,7 @@ vector<string> CommandHandler::get_processor_names()
 string CommandHandler::process_command(char* command, uint32_t len)
 {
     string cmd = string(command);
+    string retval = "ERROR";
     
     /* FIXME: Assumes that the command string has a \r\n at the end.  This needs
      * to be made more robust.
@@ -216,10 +232,10 @@ string CommandHandler::process_command(char* command, uint32_t len)
         
         if(it != m_processors->end())
         {
-            it->second->do_command(cmds);
+            retval = it->second->do_command(cmds);
         }
     
     }
     
-    return "OK";
+    return retval;
 }

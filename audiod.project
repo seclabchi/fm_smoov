@@ -18,7 +18,7 @@
     <File Name="src/pcm_playback.cpp"/>
     <File Name="src/pcm_capture.cpp"/>
     <File Name="src/audio_hub.cpp"/>
-    <File Name="src/processor_simple_gain.cpp" ExcludeProjConfig="Debug"/>
+    <File Name="src/processor_simple_gain.cpp" ExcludeProjConfig=""/>
     <File Name="src/tone_generator.cpp"/>
     <File Name="src/processor_analyzer.cpp"/>
     <File Name="src/processor_slow_agc.cpp" ExcludeProjConfig="Debug"/>
@@ -39,7 +39,7 @@
     <File Name="hdr/pcm_capture.h"/>
     <File Name="hdr/audio_hub.h"/>
     <File Name="hdr/processor.h"/>
-    <File Name="hdr/processor_simple_gain.h" ExcludeProjConfig="Debug"/>
+    <File Name="hdr/processor_simple_gain.h" ExcludeProjConfig=""/>
     <File Name="hdr/tone_generator.h"/>
     <File Name="hdr/processor_analyzer.h"/>
     <File Name="hdr/processor_slow_agc.h" ExcludeProjConfig="Debug"/>

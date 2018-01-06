@@ -8,7 +8,7 @@ using namespace std;
 
 ProcessorAnalyzer::ProcessorAnalyzer(audio_params_t* params, string name) : Processor(params, name)
 {
-    m_log = new Logger(string("ProcessorAnalyzer"));
+    m_log = new Logger(string(name));
     m_call_count = 0;
     m_modulus = 1;
 }
@@ -20,6 +20,11 @@ ProcessorAnalyzer::~ProcessorAnalyzer()
 
 void ProcessorAnalyzer::process(float* buf, size_t num_frames)
 {
+    if(false == m_enabled)
+    {
+        return;
+    }
+    
     if(0 == m_call_count % m_modulus)
     {
         float samp_per_chan = num_frames;
@@ -58,7 +63,7 @@ void ProcessorAnalyzer::process(float* buf, size_t num_frames)
         rms_l = sqrtf(total_l / samp_per_chan);
         rms_r = sqrtf(total_r / samp_per_chan);
         
-        m_log->log_msg(string("Peak/RMS sample level L: ") + to_string(peak_l) 
+        m_log->log_msg(this->m_name + string(" Peak/RMS sample level L: ") + to_string(peak_l) 
             + "/" + to_string(rms_l)  + ", R: " + to_string(peak_r) + "/" 
             + to_string(rms_r));
     }
@@ -81,6 +86,13 @@ void ProcessorAnalyzer::set_modulus(uint32_t modulus)
 string ProcessorAnalyzer::do_command(vector<string> cmds)
 {
     string retval = "OK";
+    
+    retval = Processor::do_command(cmds);
+    
+    if(0 == retval.compare("OK"))
+    {
+        return retval;
+    }
     
     if(0 == cmds.at(1).compare("modulus"))
     {

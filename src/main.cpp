@@ -131,11 +131,14 @@ int main(int argc, char* argv[])
     audio_params.samp_rate = 48000;
     audio_params.frame_size = 8;
     
-    //ProcessorSimpleGain* psg = new ProcessorSimpleGain(48000);
-    //audio_hub->add_processor(psg);
-    //psg->set_gain(-12.0, -12.0);
+    ProcessorAnalyzer* an0 = new ProcessorAnalyzer(&audio_params, "an0");
+    audio_hub->add_processor(an0);
+    command_handler->add_processor(an0);
     
-    
+    ProcessorSimpleGain* sg0 = new ProcessorSimpleGain(&audio_params, "sg0");
+    audio_hub->add_processor(sg0);
+    command_handler->add_processor(sg0);
+    sg0->set_gain(-12.0, -12.0);
     
     //ProcessorLPF* plpf = new ProcessorLPF(48000);
     //audio_hub->add_processor(plpf);
@@ -144,19 +147,16 @@ int main(int argc, char* argv[])
     //psagc->set_target_lin(30000.0);
     //audio_hub->add_processor(psagc);
     
-    //ProcessorAnalyzer* pa2 = new ProcessorAnalyzer(48000);
-    //audio_hub->add_processor(pa2);
+    ToneGenerator* tg1 = new ToneGenerator(&audio_params, "tg1");
+    tg1->set_frequency(440.0);
+    tg1->set_level(-6.0);
+    tg1->enable_channels(true, true);
+    audio_hub->add_processor(tg1);
+    command_handler->add_processor(tg1);
     
-    ToneGenerator* tg = new ToneGenerator(&audio_params, "tone_gen");
-    tg->set_frequency(440.0);
-    tg->set_level(-6.0);
-    tg->enable_channels(true, true);
-    //audio_hub->add_processor(tg);
-    //command_handler->add_processor(tg);
-    
-    ProcessorAnalyzer* pa1 = new ProcessorAnalyzer(&audio_params, "analyzer");
-    audio_hub->add_processor(pa1);
-    command_handler->add_processor(pa1);
+    ProcessorAnalyzer* an1 = new ProcessorAnalyzer(&audio_params, "an1");
+    audio_hub->add_processor(an1);
+    command_handler->add_processor(an1);
     
     dev->start();
     

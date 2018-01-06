@@ -44,7 +44,7 @@ void AudioHub::add_processor(Processor* p)
 void AudioHub::write_buffer(const void* bufsrc, size_t size, size_t count)
 {
     sem_wait(&m_buf_sem);
-    cout << "write_buffer ENTER" << endl;
+    //cout << "write_buffer ENTER" << endl;
     //fwrite(bufsrc, size, count, m_cap_file);
     
     memcpy(m_buf_main[m_buf_index_write % NUM_AUDIO_BUFS], bufsrc, size*count);
@@ -56,7 +56,7 @@ void AudioHub::write_buffer(const void* bufsrc, size_t size, size_t count)
     
     m_buf_index_write++;
     m_frame_delta++;
-    cout << "Frame delta is " << m_frame_delta << endl;
+    //cout << "Frame delta is " << m_frame_delta << endl;
     //cout << "write_buffer EXIT" << endl;
     //sem_post(&m_buf_sem);
 }

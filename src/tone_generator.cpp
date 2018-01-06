@@ -20,6 +20,11 @@ ToneGenerator::~ToneGenerator()
 
 void ToneGenerator::process(float* buf, size_t num_frames)
 {
+    if(false == m_enabled)
+    {
+        return;
+    }
+    
     if((false == m_enable_left) && (false == m_enable_right))
     {
         return;

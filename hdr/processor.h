@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include "audio_params.h"
 
@@ -18,10 +19,12 @@ public:
     virtual ~Processor();
     virtual void process(float* buf, size_t frames) = 0;
     virtual string get_name();
-    virtual string do_command(vector<string> cmds) = 0;
+    virtual string do_command(vector<string> cmds);
+    virtual void enable(bool enable);
 protected:
     Processor() {};
     string m_name;
+    bool m_enabled;
     audio_params_t* m_params;
     float* m_buf_in;
     float* m_buf_out;

@@ -2,9 +2,12 @@
 
 #include <cstdlib>
 #include <cmath>
+#include <sstream>
 
-ProcessorSimpleGain::ProcessorSimpleGain(audio_params_t* params)
+ProcessorSimpleGain::ProcessorSimpleGain(audio_params_t* params, string name)
+    : Processor(params, name)
 {
+    m_log = new Logger(string(name));
     this->set_gain(0.0, 0.0);     
 }
 
@@ -21,6 +24,11 @@ void ProcessorSimpleGain::set_gain(float l, float r)
 
 void ProcessorSimpleGain::process(float* buf, size_t num_frames)
 {
+    if(false == m_enabled)
+    {
+        return;
+    }
+    
     float* bufstart = buf;
     float* bufstop = buf + (num_frames * m_params->num_chans);
     
@@ -33,4 +41,28 @@ void ProcessorSimpleGain::process(float* buf, size_t num_frames)
         *(samp + 1) =  m_gain_r * (*(samp + 1));
     }
     
+}
+
+string ProcessorSimpleGain::do_command(vector<string> cmds)
+{
+    string retval = "ERROR";
+    
+    retval = Processor::do_command(cmds);
+    
+    if(0 == retval.compare("OK"))
+    {
+        return retval;
+    }
+    
+    if(0 == cmds.at(1).compare("gain"))
+    {
+        float gain_l, gain_r;
+        istringstream(cmds.at(2)) >> gain_l;
+        istringstream(cmds.at(3)) >> gain_r;
+        
+        this->set_gain(gain_l, gain_r);
+        retval = "OK";
+    }
+    
+    return retval;
 }

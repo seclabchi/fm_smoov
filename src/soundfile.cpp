@@ -19,6 +19,12 @@ uint64_t SoundFile::get_frames(uint64_t frame_count, float* buf)
 {
     sf_count_t frames_read = 0;
     
+    if(0 == m_frames_remain)
+    {
+        m_frames_remain = m_file_info.frames;
+        sf_seek(m_file, 0, SEEK_SET);
+    }
+    
     if(m_frames_remain >= frame_count)
     {
         frames_read = sf_readf_float(m_file, buf, frame_count);
