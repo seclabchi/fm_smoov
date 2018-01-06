@@ -5,9 +5,15 @@
 
 #include "processor_simple_gain.h"
 
+/* TODO: Need to open PCM capture to get buf params even though we might
+ * be using a stream.  This is very hokey...need a way to abstract away
+ * the capture parameters from the PCM device.
+ */
+
 PCM_Device::PCM_Device(string* name)
 {
     m_name = new string(*name);
+    m_stream_capture_enabled = false;
 }
 
 PCM_Device::~PCM_Device()
@@ -30,7 +36,7 @@ void PCM_Device::open()
     }
     
     this->configure(this->mh_pb, string("playback"));
-    
+    m_pcm_pb = new PCM_Playback(this->mh_pb, m_bufsize_pb, m_persize_pb);
     
     retval = snd_pcm_open(&mh_cap, m_name->c_str(), SND_PCM_STREAM_CAPTURE, 0);
     if(0 > retval)
@@ -43,31 +49,68 @@ void PCM_Device::open()
     }
     
     this->configure(this->mh_cap, string("capture"));
-        
     m_pcm_cap = new PCM_Capture(this->mh_cap, m_bufsize_cap, m_persize_cap);
-    m_pcm_pb = new PCM_Playback(this->mh_pb, m_bufsize_pb, m_persize_pb);
+    
+    if(true == m_stream_capture_enabled)
+    {
+        m_capture_stream = new StreamCapture(m_capture_stream_name, m_bufsize_cap);
+    }
 }
 
 void PCM_Device::start()
 {
+    if(true == m_stream_capture_enabled)
+    {
+        m_capture_stream->start();
+    }
+    else
+    {
+        m_pcm_cap->start();
+    }
     m_pcm_pb->start();
-    m_pcm_cap->start();
 }
 
 void PCM_Device::stop()
 {
-    m_pcm_cap->stop();
+    if(true == m_stream_capture_enabled)
+    {
+        m_capture_stream->stop();
+    }
+    else
+    {
+        m_pcm_cap->stop();
+    }
     m_pcm_pb->stop();
 }
 
 void PCM_Device::close()
 {
+    if(NULL != m_capture_stream)
+    {
+        cout << "Closing capture stream..." << endl;
+        delete m_capture_stream;
+        cout << "Capture stream closed." << endl;
+    }
+    
     cout << "Closing capture PCM..." << endl;
     snd_pcm_close(this->mh_cap);
     cout << "Capture PCM closed." << endl;
+
     cout << "Closing playback PCM..." << endl;
     snd_pcm_close(this->mh_pb);
     cout << "Playback PCM closed." << endl;
+    
+    
+}
+
+void PCM_Device::set_capture_mode_stream()
+{
+    m_stream_capture_enabled = true;
+}
+
+void PCM_Device::set_capture_stream(string stream_name)
+{
+    m_capture_stream_name = stream_name;
 }
 
 void PCM_Device::configure(snd_pcm_t* handle, string subdev_name)
@@ -177,5 +220,12 @@ void PCM_Device::set_audio_hub(AudioHub* audio_hub)
     m_audio_hub = audio_hub;
     m_audio_hub->configure(m_bufsize_cap, m_persize_cap, m_bufsize_pb, m_persize_pb);
     m_pcm_pb->set_transfer_interface(m_audio_hub);
-    m_pcm_cap->set_transfer_interface(m_audio_hub);
+    if(true == m_stream_capture_enabled)
+    {
+        m_capture_stream->set_transfer_interface(m_audio_hub);
+    }
+    else
+    {
+        m_pcm_cap->set_transfer_interface(m_audio_hub);
+    }
 }

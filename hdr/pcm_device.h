@@ -7,6 +7,7 @@
 #include "pcm_playback.h"
 #include "pcm_capture.h"
 #include "audio_hub.h"
+#include "stream_capture.h"
 
 using namespace std;
 
@@ -18,6 +19,8 @@ public:
     void start();
     void stop();
     void close();
+    void set_capture_mode_stream();
+    void set_capture_stream(string stream_name);
     void set_audio_hub(AudioHub* audio_hub);
     virtual ~PCM_Device();
 private:
@@ -29,6 +32,10 @@ private:
     
     PCM_Playback* m_pcm_pb;
     PCM_Capture* m_pcm_cap;
+    
+    StreamCapture* m_capture_stream;
+    bool m_stream_capture_enabled;
+    string m_capture_stream_name;
     
     void configure(snd_pcm_t* handle, string subdev_name);
     

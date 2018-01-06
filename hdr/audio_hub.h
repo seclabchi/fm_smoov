@@ -13,6 +13,8 @@
 
 using namespace std;
 
+#define NUM_AUDIO_BUFS 2
+
 class AudioHub : public PCM_Transfer_Interface
 {
 public:
@@ -39,7 +41,7 @@ private:
     
     sem_t m_buf_sem;
     
-    float* m_buf_main[2];
+    float** m_buf_main;
     uint8_t m_buf_index_read;
     uint8_t m_buf_index_write;
     
