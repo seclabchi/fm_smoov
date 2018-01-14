@@ -80,7 +80,14 @@ void ToneGenerator::enable_channels(bool left, bool right)
 
 string ToneGenerator::do_command(vector<string> cmds)
 {
-    string retval = "OK";
+    string retval = "ERROR";
+    
+    retval = Processor::do_command(cmds);
+    
+    if(0 == retval.compare("OK"))
+    {
+        return retval;
+    }
     
     if(0 == cmds.at(1).compare("freq"))
     {
