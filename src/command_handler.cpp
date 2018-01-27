@@ -59,7 +59,7 @@ void CommandHandler::thread_func()
     {
         cout << "Waiting for connection..." << endl;
         
-        listen(m_sock_fd, 10);
+        listen(m_sock_fd, 1);
                 
         socklen_t clilen = sizeof(m_cli_addr);
         
