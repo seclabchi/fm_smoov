@@ -80,7 +80,7 @@ void ToneGenerator::enable_channels(bool left, bool right)
 
 string ToneGenerator::do_command(vector<string> cmds)
 {
-    string retval = "ERROR";
+    string retval = "OK";
     
     retval = Processor::do_command(cmds);
     

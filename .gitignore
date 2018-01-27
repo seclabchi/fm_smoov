@@ -3,4 +3,9 @@ Release/
 audiod.txt
 .codelite/
 *.workspace
-
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake-build-Debug/
+cmake_install.cmake
+compile_commands.json
