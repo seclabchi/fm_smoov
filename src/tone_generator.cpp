@@ -92,6 +92,7 @@ string ToneGenerator::do_command(vector<string> cmds)
     if(0 == cmds.at(1).compare("freq"))
     {
         this->set_frequency(atof(cmds.at(2).c_str()));
+        retval = "OK";
     }
     else
     {

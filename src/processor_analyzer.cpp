@@ -97,6 +97,7 @@ string ProcessorAnalyzer::do_command(vector<string> cmds)
     if(0 == cmds.at(1).compare("modulus"))
     {
         this->set_modulus(atoi(cmds.at(2).c_str()));
+        retval = "OK";
     }
     else
     {
