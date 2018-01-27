@@ -1,6 +1,5 @@
 Debug/
 Release/
-*.mk
 audiod.txt
 .codelite/
 *.workspace
