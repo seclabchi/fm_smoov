@@ -1,9 +1,12 @@
+mkdir -p outputs
+
 cmake .
 make
-cp ./cmake-build-Debug/output/fmsmoovd ./outputs/
+mv ./cmake-build-Debug/output/fmsmoovd ./outputs/
 
 cd fmsmoov_ui
 cmake .
 make
-cp ./cmake-build-Debug/output/fmsmoov_ui ../outputs/
+cd ..
+mv ./cmake-build-Debug/output/fmsmoov_ui ./outputs/
 

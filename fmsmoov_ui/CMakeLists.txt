@@ -25,6 +25,6 @@ set(SOURCES
     src/main.cpp )
     
 add_executable(fmsmoov_ui ${SOURCES})
-#target_link_libraries(fmsmoov_ui pthread sndfile)
+target_link_libraries(fmsmoov_ui fltk Xext X11 pthread m)
 
 # Top project

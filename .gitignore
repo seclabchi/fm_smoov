@@ -9,3 +9,5 @@ Makefile
 cmake-build-Debug/
 cmake_install.cmake
 compile_commands.json
+fltk/
+outputs/
