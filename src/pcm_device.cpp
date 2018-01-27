@@ -14,6 +14,7 @@ PCM_Device::PCM_Device(string* name)
 {
     m_name = new string(*name);
     m_stream_capture_enabled = false;
+    m_capture_stream = 0;
 }
 
 PCM_Device::~PCM_Device()

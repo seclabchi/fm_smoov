@@ -59,7 +59,7 @@ void CommandHandler::thread_func()
     {
         cout << "Waiting for connection..." << endl;
         
-        listen(m_sock_fd, 1);
+        listen(m_sock_fd, 10);
                 
         socklen_t clilen = sizeof(m_cli_addr);
         
@@ -235,6 +235,10 @@ string CommandHandler::process_command(char* command, uint32_t len)
             retval = it->second->do_command(cmds);
         }
     
+    }
+    else
+    {
+        cout << "command length was 0" << endl;
     }
     
     return retval;

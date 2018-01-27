@@ -58,12 +58,12 @@ void AudioHub::write_buffer(const void* bufsrc, size_t size, size_t count)
     m_frame_delta++;
     //cout << "Frame delta is " << m_frame_delta << endl;
     //cout << "write_buffer EXIT" << endl;
-    //sem_post(&m_buf_sem);
+    sem_post(&m_buf_sem);
 }
 
 void AudioHub::read_buffer(void** bufdst, size_t size, size_t count)
 {
-    //sem_wait(&m_buf_sem);
+    sem_wait(&m_buf_sem);
     //cout << "read_buffer ENTER" << endl;
     m_frame_delta--;
     memcpy(*bufdst, m_buf_main[m_buf_index_read % NUM_AUDIO_BUFS], size*count);

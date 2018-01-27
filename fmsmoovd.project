@@ -210,4 +210,25 @@
       </Completion>
     </Configuration>
   </Settings>
+  <VirtualDirectory Name="hdr">
+    <File Name="hdr/device_db.h"/>
+    <File Name="hdr/pcm_device.h"/>
+    <File Name="hdr/processor_slow_agc.h"/>
+    <File Name="hdr/logger.h"/>
+    <File Name="hdr/processor_simple_gain.h"/>
+    <File Name="hdr/biquad.h"/>
+    <File Name="hdr/audio_hub.h"/>
+    <File Name="hdr/pcm_playback.h"/>
+    <File Name="hdr/processor_filter_1st_order.h"/>
+    <File Name="hdr/pcm_transfer_interface.h"/>
+    <File Name="hdr/command_handler.h"/>
+    <File Name="hdr/processor_lpf.h"/>
+    <File Name="hdr/processor_analyzer.h"/>
+    <File Name="hdr/pcm_capture.h"/>
+    <File Name="hdr/tone_generator.h"/>
+    <File Name="hdr/processor.h"/>
+    <File Name="hdr/audio_params.h"/>
+    <File Name="hdr/soundfile.h"/>
+    <File Name="hdr/stream_capture.h"/>
+  </VirtualDirectory>
 </CodeLite_Project>
