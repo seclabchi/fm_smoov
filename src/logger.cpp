@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+using namespace Tonekids;
+
 Logger::Logger(string name)
 {
     m_raw_time = new time_t;

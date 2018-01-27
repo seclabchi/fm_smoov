@@ -4,6 +4,8 @@
 #include "processor.h"
 #include "logger.h"
 
+using namespace Tonekids;
+
 class ProcessorAnalyzer : public Processor
 {
 public:

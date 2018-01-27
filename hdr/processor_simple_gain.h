@@ -7,6 +7,7 @@
 #include <string>
 
 using namespace std;
+using namespace Tonekids;
 
 class ProcessorSimpleGain : public Processor
 {

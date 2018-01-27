@@ -6,6 +6,22 @@
 
 using namespace std;
 
+namespace Tonekids
+{
+    
+enum LogLevel
+{
+    ALL,
+    DEBUG_LOW,
+    DEBUG,
+    DEBUG_HIGH,
+    INFO,
+    WARN,
+    ERROR,
+    CRITICAL,
+    NONE
+};
+
 class Logger
 {
 public:
@@ -17,5 +33,7 @@ private:
     struct tm* m_time;
     string* m_name;
 };
+
+}
 
 #endif
