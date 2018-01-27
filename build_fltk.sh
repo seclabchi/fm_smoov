@@ -1,6 +1,9 @@
 PACKAGE_TARBALL_NAME=fltk-1.3.4-2-source.tar.gz
 PACKAGE_PATH=http://fltk.org/pub/fltk/1.3.4/$PACKAGE_TARBALL_NAME
 
+sudo apt-get update
+sudo apt-get install xorg-dev
+
 mkdir fltk
 cd fltk
 wget $PACKAGE_PATH .
