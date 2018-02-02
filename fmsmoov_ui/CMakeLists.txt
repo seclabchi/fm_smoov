@@ -22,9 +22,10 @@ include_directories(hdr)
 #include_directories(/usr/include/alsa)
 
 set(SOURCES 
-    src/main.cpp )
+    src/main.cpp
+    src/logger.cpp)
     
 add_executable(fmsmoov_ui ${SOURCES})
-target_link_libraries(fmsmoov_ui fltk Xext X11 pthread m)
+target_link_libraries(fmsmoov_ui fltk_images png z jpeg fltk Xrender Xfixes Xext Xft fontconfig pthread dl m X11)
 
 # Top project

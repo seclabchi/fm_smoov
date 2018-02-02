@@ -207,7 +207,7 @@ string CommandHandler::process_command(char* command, uint32_t len)
     string cmd = string(command);
     string retval = "ERROR";
     
-    /* FIXME: Assumes that the command string has a \r\n at the end.  This needs
+    /* FIXME TODO: Assumes that the command string has a \r\n at the end.  This needs
      * to be made more robust.
      */
      
