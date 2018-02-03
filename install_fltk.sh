@@ -3,6 +3,7 @@ PACKAGE_PATH=http://fltk.org/pub/fltk/1.3.4/$PACKAGE_TARBALL_NAME
 
 sudo apt-get update
 sudo apt-get install xorg-dev
+sudo apt-get install libjpeg-dev
 
 mkdir fltk
 cd fltk
@@ -13,5 +14,4 @@ cd fltk-1.3.4-2
 make
 sudo make install
 cd ../..
-rm -rf fltk
 echo "Done!"
