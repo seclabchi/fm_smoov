@@ -5,6 +5,7 @@ mkdir -p outputs
 echo "Building fmsmoov daemon..."
 echo "Running cmake..."
 cmake .
+make clean
 make
 echo "Moving fmsmoovd build output into outputs directory..."
 mv ./cmake-build-Debug/output/fmsmoovd ./outputs/
@@ -12,6 +13,7 @@ mv ./cmake-build-Debug/output/fmsmoovd ./outputs/
 echo "Building fmsmoov UI..."
 cd fmsmoov_ui
 cmake .
+make clean
 make
 cd ..
 

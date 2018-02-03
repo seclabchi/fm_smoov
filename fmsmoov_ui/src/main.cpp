@@ -176,10 +176,17 @@ string send_command_to_smoovd(string cmd)
     return "TODO:";
 }
 
-void enable_tone_generator()
+void enable_tone_generator(uint32_t freq)
 {
-    const char* msg = "tg0 enable 1\r\n";
+    char msg[1025];
+    memset(msg, 0, 1025);
+    
+    strcpy(msg, "tg0 enable 1\r\n");
     send_command_to_smoovd(msg);
+    
+    sprintf(msg, "tg0 freq %d\r\n", freq);
+    send_command_to_smoovd(msg);
+    
     logger->log_msg(INFO, "Tone generator enabled.");
 }
 
@@ -190,12 +197,29 @@ void disable_tone_generator()
     logger->log_msg(INFO, "Tone generator disabled.");
 }
 
+void send_tone_generator_command(bool enabled, uint32_t freq)
+{
+    if(false == enabled)
+    {
+        disable_tone_generator();
+    }
+    else
+    {
+        enable_tone_generator(freq);
+    }
+}
+
+void tone_gen_callback(bool enabled, uint32_t freq)
+{
+    send_tone_generator_command(enabled, freq);
+}
+
 void toggle_tone_gen(Fl_Widget* w)
 {
     Fl_Check_Button* b = (Fl_Check_Button*)w;
     if(1 == b->value())
     {
-        enable_tone_generator();
+        enable_tone_generator(1000);
     }
     else
     {
@@ -266,7 +290,7 @@ int main(int argc, char **argv) {
     int log_style_buf_size = sizeof(log_style_table)/sizeof(log_style_table[0]);
     disp->highlight_data(log_style_buf, log_style_table, log_style_buf_size, 'A', 0, 0);
     
-    Fl_Tone_Gen* fltg = new Fl_Tone_Gen(10, 300);
+    Fl_Tone_Gen* fltg = new Fl_Tone_Gen(tone_gen_callback, 10, 300);
     fltg->set_logger(logger);
     
     window->end();
