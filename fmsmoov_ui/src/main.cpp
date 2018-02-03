@@ -38,6 +38,7 @@ static Fl_Text_Display *disp = 0;
 static uint32_t connect_attempts = 0;
 static Fl_Button* button_connect = 0;
 static Fl_Check_Button* button_tonegen = 0;
+static Fl_Input* input_remote_ip = 0;
 static Fl_Value_Input* value_tonegen = 0;
 static bool is_connected = false;
 static Logger* logger = 0;
@@ -116,19 +117,21 @@ bool connect_to_smoovd()
         return false;
     }
         
-    server = gethostbyname("localhost");
+    inet_pton(AF_INET, input_remote_ip->value(), &(serv_addr.sin_addr));
     
-    bzero((char *) &serv_addr, sizeof(serv_addr));
+    //server = gethostbyname("localhost");
+    
+    //bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
-    bcopy((char *)server->h_addr, 
-         (char *)&serv_addr.sin_addr.s_addr,
-         server->h_length);
+    //bcopy((char *)server->h_addr, 
+    //     (char *)&serv_addr.sin_addr.s_addr,
+    //     server->h_length);
     serv_addr.sin_port = htons(portno);
     
     char str[256];
     inet_ntop(AF_INET, &(serv_addr.sin_addr), str, 256);
     
-    logger->log_msg(INFO, "Connecting to smoovd at %s:%d (localhost only for now)...", str, portno);
+    logger->log_msg(INFO, "Connecting to smoovd at %s:%d...", str, portno);
     
     if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0) 
     {
@@ -265,8 +268,8 @@ int main(int argc, char **argv) {
     group_communications->box(FL_DOWN_FRAME);
     group_communications->align(FL_ALIGN_TOP_LEFT);
     button_connect = new Fl_Button(xoff+10, yoff+10, 160, 30, "CONNECT");
-    group_communications->add(button_connect);
-    
+    input_remote_ip = new Fl_Input(xoff+180, yoff+10, 300, 30);
+    input_remote_ip->value("127.0.0.1");
     button_connect->callback(connect_button_pressed);
     group_communications->end();
     
