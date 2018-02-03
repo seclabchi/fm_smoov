@@ -14,4 +14,5 @@ cd fltk-1.3.4-2
 make
 sudo make install
 cd ../..
+sudo ldconfig
 echo "Done!"
