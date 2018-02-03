@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 #include <netdb.h> 
 #include <arpa/inet.h>
 
@@ -133,7 +134,10 @@ bool connect_to_smoovd()
     
     logger->log_msg(INFO, "Connecting to smoovd at %s:%d...", str, portno);
     
-    if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0) 
+    int synRetries = 2; // Send a total of 3 SYN packets => Timeout ~7s
+    setsockopt(sockfd, IPPROTO_TCP, TCP_SYNCNT, &synRetries, sizeof(synRetries));
+
+    if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) 
     {
         logger->log_msg(ERROR, "Error %d connecting to fmsmoovd: %s", errno, strerror(errno));
         return false;
@@ -268,7 +272,7 @@ int main(int argc, char **argv) {
     group_communications->box(FL_DOWN_FRAME);
     group_communications->align(FL_ALIGN_TOP_LEFT);
     button_connect = new Fl_Button(xoff+10, yoff+10, 160, 30, "CONNECT");
-    input_remote_ip = new Fl_Input(xoff+180, yoff+10, 300, 30);
+    input_remote_ip = new Fl_Input(xoff+180, yoff+10, 150, 30);
     input_remote_ip->value("127.0.0.1");
     button_connect->callback(connect_button_pressed);
     group_communications->end();
