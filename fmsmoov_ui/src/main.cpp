@@ -25,6 +25,8 @@
 #include <FL/Fl_Shared_Image.H>
 #include <FL/Fl_PNG_Image.H>
 
+#include "Fl_Tone_Gen.h"
+
 #include "logger.h"
 
 using namespace std;
@@ -263,6 +265,9 @@ int main(int argc, char **argv) {
     log_style_buf = new Fl_Text_Buffer();
     int log_style_buf_size = sizeof(log_style_table)/sizeof(log_style_table[0]);
     disp->highlight_data(log_style_buf, log_style_table, log_style_buf_size, 'A', 0, 0);
+    
+    Fl_Tone_Gen* fltg = new Fl_Tone_Gen(10, 300);
+    fltg->set_logger(logger);
     
     window->end();
     window->show(argc, argv);
