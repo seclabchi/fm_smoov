@@ -13,10 +13,8 @@ using namespace std;
 
 namespace Tonekids
 {
-    
-typedef void (*LOGMSG_UI_CALLBACK)(string);
 
-enum LogLevel
+typedef enum 
 {
     ALL,
     DEBUG_LOW,
@@ -27,19 +25,22 @@ enum LogLevel
     ERROR,
     CRITICAL,
     NONE
-};
+} LogLevel;
+
+typedef void (*LOGMSG_UI_CALLBACK)(LogLevel, string);
 
 class Logger
 {
 public:
     Logger(string name);
     virtual ~Logger();
-    virtual void log_msg(string msg);
-    virtual void log_msg(stringstream msgstream);
-    virtual void log_msg(const char* format, ...);
+    virtual void log_msg(LogLevel lvl, string msg);
+    virtual void log_msg(LogLevel lvl, stringstream msgstream);
+    virtual void log_msg(LogLevel lvl, const char* format, ...);
     void set_ui_logmsg_callback(LOGMSG_UI_CALLBACK cb);
 private:
     Logger() {};
+    string log_level_to_string(LogLevel lvl);
     char m_msgbuf[LOG_MSG_MAX_LEN_CHARS];
     time_t* m_raw_time;
     struct tm* m_time;

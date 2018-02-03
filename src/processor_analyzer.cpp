@@ -63,9 +63,7 @@ void ProcessorAnalyzer::process(float* buf, size_t num_frames)
         rms_l = sqrtf(total_l / samp_per_chan);
         rms_r = sqrtf(total_r / samp_per_chan);
         
-        m_log->log_msg(this->m_name + string(" Peak/RMS sample level L: ") + to_string(peak_l) 
-            + "/" + to_string(rms_l)  + ", R: " + to_string(peak_r) + "/" 
-            + to_string(rms_r));
+        m_log->log_msg(DEBUG, "Peak/RMS sample level L: %f/%f, %f/%f", peak_l, rms_l, peak_r, rms_r);
     }
     
     m_call_count++;

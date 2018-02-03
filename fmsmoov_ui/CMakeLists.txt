@@ -23,7 +23,9 @@ include_directories(hdr)
 
 set(SOURCES 
     src/main.cpp
-    src/logger.cpp)
+    src/logger.cpp
+    src/Fl_Tone_Gen.cpp
+    )
     
 add_executable(fmsmoov_ui ${SOURCES})
 target_link_libraries(fmsmoov_ui fltk_images png z jpeg fltk Xrender Xfixes Xext Xft fontconfig pthread dl m X11)

@@ -10,12 +10,14 @@
   <VirtualDirectory Name="src">
     <File Name="src/main.cpp"/>
     <File Name="src/logger.cpp"/>
+    <File Name="src/Fl_Tone_Gen.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="resources">
     <File Name="CMakeLists.txt"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hdr">
     <File Name="hdr/logger.h"/>
+    <File Name="hdr/Fl_Tone_Gen.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

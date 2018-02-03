@@ -131,12 +131,12 @@ int main(int argc, char* argv[])
     audio_params.samp_rate = 48000;
     audio_params.frame_size = 8;
     
-    ToneGenerator* tg1 = new ToneGenerator(&audio_params, "tg1");
-    tg1->set_frequency(440.0);
-    tg1->set_level(-6.0);
-    tg1->enable_channels(true, true);
-    audio_hub->add_processor(tg1);
-    command_handler->add_processor(tg1);
+    ToneGenerator* tg0 = new ToneGenerator(&audio_params, "tg0");
+    tg0->set_frequency(440.0);
+    tg0->set_level(-6.0);
+    tg0->enable_channels(true, true);
+    audio_hub->add_processor(tg0);
+    command_handler->add_processor(tg0);
     
     ProcessorAnalyzer* an0 = new ProcessorAnalyzer(&audio_params, "an0");
     audio_hub->add_processor(an0);

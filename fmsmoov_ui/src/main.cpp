@@ -31,6 +31,7 @@ using namespace std;
 using namespace Tonekids;
 
 static Fl_Text_Buffer* buff = 0;
+static Fl_Text_Buffer* log_style_buf = 0;
 static Fl_Text_Display *disp = 0;
 static uint32_t connect_attempts = 0;
 static Fl_Button* button_connect = 0;
@@ -47,11 +48,58 @@ static struct hostent *server;
 
 static stringstream logmsg_ss;
 
+Fl_Text_Display::Style_Table_Entry log_style_table[] = {
+         // FONT COLOR      FONT FACE   FONT SIZE
+         // --------------- ----------- --------------
+         {  FL_GRAY,        FL_COURIER, 12 }, // A 
+         {  FL_BLACK,       FL_COURIER, 12 }, // B
+         {  FL_DARK_GREEN,  FL_COURIER, 12 }, // C 
+         {  FL_DARK_YELLOW, FL_COURIER, 12 }, // D
+         {  FL_RED,         FL_COURIER, 12 }, // E
+         {  FL_MAGENTA,     FL_COURIER, 12 }  // F
+};
 
-void append_log_msg(string msg)
+string log_lvl_to_style(LogLevel lvl, string msg)
+{
+    uint32_t len = msg.length();
+    char style_char = 'A';
+    
+    switch(lvl)
+    {
+        case DEBUG_LOW:
+            style_char = 'A';
+            break;
+        case DEBUG:
+        case DEBUG_HIGH:
+            style_char = 'B';
+            break;
+        case INFO:
+            style_char = 'C';
+            break;
+        case WARN:
+            style_char = 'D';
+            break;
+        case ERROR:
+            style_char = 'E';
+            break;
+        case CRITICAL:
+            style_char = 'F';
+            break;
+        default:
+            style_char = 'B';
+            break;
+    }
+    
+    string style_str(len, style_char);
+    style_str.at(style_str.length()-1) = '\n';
+    return style_str;
+}
+
+void append_log_msg(LogLevel lvl, string msg)
 {
     int start_pos = buff->length();
     buff->insert(start_pos, msg.c_str());
+    log_style_buf->insert(start_pos, log_lvl_to_style(lvl, msg).c_str());
     int numlines = buff->count_lines(0, buff->length());
     disp->scroll(numlines, 0);
 }
@@ -61,9 +109,7 @@ bool connect_to_smoovd()
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0) 
     {
-        logmsg_ss.str(string());
-        logmsg_ss << "Error " << errno << " creating socket: " << strerror(errno);
-        logger->log_msg(logmsg_ss.str());
+        logger->log_msg(ERROR, "Error %d creating socket: %s", errno, strerror(errno));
         sockfd = 0;
         return false;
     }
@@ -77,21 +123,19 @@ bool connect_to_smoovd()
          server->h_length);
     serv_addr.sin_port = htons(portno);
     
-    logger->log_msg("Connecting to smoovd at localhost:2323 (localhost only for now)...");
+    char str[256];
+    inet_ntop(AF_INET, &(serv_addr.sin_addr), str, 256);
+    
+    logger->log_msg(INFO, "Connecting to smoovd at %s:%d (localhost only for now)...", str, portno);
     
     if (connect(sockfd,(struct sockaddr *)&serv_addr,sizeof(serv_addr)) < 0) 
     {
-        logmsg_ss.str(string());
-        logmsg_ss << "Error " << errno << " connecting to fmsmoovd: " << strerror(errno);
-        logger->log_msg(logmsg_ss.str());
+        logger->log_msg(ERROR, "Error %d connecting to fmsmoovd: %s", errno, strerror(errno));
         return false;
     }
     
-    char str[256];
-    inet_ntop(AF_INET, &(serv_addr.sin_addr), str, 256);
-    logger->log_msg("Connected to %s:%d.", str, portno);
+    logger->log_msg(INFO, "Connected to fmsmoovd.");
     
-    button_tonegen->activate();
     return true;
 }
 
@@ -99,27 +143,32 @@ void disconnect_from_smoovd()
 {
     if(0 != sockfd)
     {
+        logger->log_msg(INFO, "Disconnecting from fmsmoovd...");
         close(sockfd);
         sockfd = 0;
+        button_tonegen->value(0);
+        button_tonegen->deactivate();
+        logger->log_msg(INFO, "Disconnected from fmsmoovd.");
     }
-    
-    button_tonegen->value(0);
-    button_tonegen->deactivate();
+    else
+    {
+        logger->log_msg(WARN, "Not connected to fmsmoovd.");
+    }
 }
 
 string send_command_to_smoovd(string cmd)
 {
-    logger->log_msg("Sending command \'%s\' to smoovd...", cmd.c_str());
+    logger->log_msg(DEBUG, "Sending command \'%s\' to smoovd...", cmd.c_str());
     
     if(sockfd)
     {
         const char* c = cmd.c_str();
         int n = write(sockfd, c, strlen(c));
-        logger->log_msg("Wrote %d bytes to smoovd.", n);
+        logger->log_msg(DEBUG, "Wrote %d bytes to smoovd.", n);
     }
     else
     {
-        logger->log_msg("Not connected to smoovd.");
+        logger->log_msg(ERROR, "Not connected to smoovd.");
     }
     
     return "TODO:";
@@ -127,16 +176,16 @@ string send_command_to_smoovd(string cmd)
 
 void enable_tone_generator()
 {
-    const char* msg = "tg1 enable 1\r\n";
+    const char* msg = "tg0 enable 1\r\n";
     send_command_to_smoovd(msg);
-    logger->log_msg("Tone generator enabled.");
+    logger->log_msg(INFO, "Tone generator enabled.");
 }
 
 void disable_tone_generator()
 {
-    const char* msg = "tg1 enable 0\r\n";
+    const char* msg = "tg0 enable 0\r\n";
     send_command_to_smoovd(msg);
-    logger->log_msg("Tone generator disabled.");
+    logger->log_msg(INFO, "Tone generator disabled.");
 }
 
 void toggle_tone_gen(Fl_Widget* w)
@@ -156,25 +205,24 @@ void connect_button_pressed(Fl_Widget* w)
 {
     if(false == is_connected)
     {
-        logger->log_msg("Connecting to fmsmoovd...");
         if(true == connect_to_smoovd())
         {
             is_connected = true;
             button_connect->label("DISCONNECT");
-            logger->log_msg("Connected to fmsmoovd.");
+            button_tonegen->activate();
         }
     }
     else
     {
-        logger->log_msg("Disconnecting from fmsmoovd...");
         disconnect_from_smoovd();
         is_connected = false;
         button_connect->label("CONNECT");
-        logger->log_msg("Disconnected from fmsmoovd.");
     }
 }
 
 int main(int argc, char **argv) {
+    uint32_t xoff, yoff;
+    
     logmsg_ss = stringstream();
     logger = new Logger("UI_MAIN");
     logger->set_ui_logmsg_callback(append_log_msg);
@@ -184,29 +232,37 @@ int main(int argc, char **argv) {
     Fl_Window *window = new Fl_Window(800,600, "FM SMOOV(TM) Broadcast Processor");  
     window->position(200, 100);
     
+    xoff = 10;
+    yoff = 20;
     
-    Fl_Group* group_communications = new Fl_Group(10, 20, window->w()-20, 75, "Communications");
+    Fl_Group* group_communications = new Fl_Group(xoff, yoff, window->w()-20, 75, "Communications");
     group_communications->box(FL_DOWN_FRAME);
     group_communications->align(FL_ALIGN_TOP_LEFT);
-    button_connect = new Fl_Button(group_communications->x()+10, group_communications->y()+10, 160, 30, "CONNECT");
+    button_connect = new Fl_Button(xoff+10, yoff+10, 160, 30, "CONNECT");
     group_communications->add(button_connect);
     
     button_connect->callback(connect_button_pressed);
     group_communications->end();
     
+    xoff = 10;
+    yoff = 130;
+    
     Fl_Group* group_sig_gen = new Fl_Group(10, 130, window->w()-20, 100, "Signal Generators");
     group_sig_gen->clip_children(1);
     group_sig_gen->box(FL_DOWN_FRAME);
     group_sig_gen->align(FL_ALIGN_TOP_LEFT);
-    button_tonegen = new Fl_Check_Button(group_sig_gen->x()+10, group_sig_gen->y()+10, 160, 30, "Tone Generator");
-    //group_sig_gen->add(button_tonegen);
+    button_tonegen = new Fl_Check_Button(xoff+10, yoff+10, 160, 30, "Tone Generator 0");
     button_tonegen->callback(toggle_tone_gen);
-    group_sig_gen->init_sizes();
+    button_tonegen->deactivate();
     group_sig_gen->end();
     
     buff = new Fl_Text_Buffer();
     disp = new Fl_Text_Display(10, window->h()-150, window->w()-20, 140);
     disp->buffer(buff);  // attach text buffer to display widget
+    
+    log_style_buf = new Fl_Text_Buffer();
+    int log_style_buf_size = sizeof(log_style_table)/sizeof(log_style_table[0]);
+    disp->highlight_data(log_style_buf, log_style_table, log_style_buf_size, 'A', 0, 0);
     
     window->end();
     window->show(argc, argv);
