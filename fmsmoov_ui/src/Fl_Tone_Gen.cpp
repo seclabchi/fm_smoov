@@ -15,6 +15,7 @@ Fl_Tone_Gen::Fl_Tone_Gen(engine_callback e_cb, uint32_t x, uint32_t y) : Fl_Grou
     m_log = NULL;
     m_engine_callback = e_cb;
     this->box(FL_DOWN_FRAME);
+    this->align(FL_ALIGN_TOP_LEFT);
     this->begin();
     m_enable_button = new Fl_Light_Button(x+5, y+5, 50, 40, "ON");
     m_enable_button->selection_color(FL_GREEN);
@@ -98,6 +99,13 @@ int Fl_Tone_Gen::Slider_Tone_Gen::handle(int event)
             m_parent->m_freq = atoi(m_parent->m_freq_input->value());
             m_parent->send_tonegen_state();
         break;
+        case FL_KEYDOWN:
+            if((FL_Left == Fl::event_key()) || (FL_Right == Fl::event_key()))
+            {
+                m_parent->m_freq = atoi(m_parent->m_freq_input->value());
+                m_parent->send_tonegen_state();
+            }
+            break;
         default:
         break;
     }

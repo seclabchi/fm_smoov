@@ -38,7 +38,6 @@ static Fl_Text_Buffer* log_style_buf = 0;
 static Fl_Text_Display *disp = 0;
 static uint32_t connect_attempts = 0;
 static Fl_Button* button_connect = 0;
-static Fl_Check_Button* button_tonegen = 0;
 static Fl_Input* input_remote_ip = 0;
 static Fl_Value_Input* value_tonegen = 0;
 static bool is_connected = false;
@@ -155,8 +154,6 @@ void disconnect_from_smoovd()
         logger->log_msg(INFO, "Disconnecting from fmsmoovd...");
         close(sockfd);
         sockfd = 0;
-        button_tonegen->value(0);
-        button_tonegen->deactivate();
         logger->log_msg(INFO, "Disconnected from fmsmoovd.");
     }
     else
@@ -173,7 +170,14 @@ string send_command_to_smoovd(string cmd)
     {
         const char* c = cmd.c_str();
         int n = write(sockfd, c, strlen(c));
-        logger->log_msg(DEBUG, "Wrote %d bytes to smoovd.", n);
+        if(n < 0)
+        {
+            logger->log_msg(ERROR, "Error %d sending data to smoovd: %s", errno, strerror(errno));
+        }
+        else
+        {
+            logger->log_msg(DEBUG, "Wrote %d bytes to smoovd.", n);
+        }
     }
     else
     {
@@ -221,19 +225,6 @@ void tone_gen_callback(bool enabled, uint32_t freq)
     send_tone_generator_command(enabled, freq);
 }
 
-void toggle_tone_gen(Fl_Widget* w)
-{
-    Fl_Check_Button* b = (Fl_Check_Button*)w;
-    if(1 == b->value())
-    {
-        enable_tone_generator(1000);
-    }
-    else
-    {
-        disable_tone_generator();
-    }
-}
-
 void connect_button_pressed(Fl_Widget* w)
 {
     if(false == is_connected)
@@ -242,7 +233,6 @@ void connect_button_pressed(Fl_Widget* w)
         {
             is_connected = true;
             button_connect->label("DISCONNECT");
-            button_tonegen->activate();
         }
     }
     else
@@ -268,7 +258,7 @@ int main(int argc, char **argv) {
     xoff = 10;
     yoff = 20;
     
-    Fl_Group* group_communications = new Fl_Group(xoff, yoff, window->w()-20, 75, "Communications");
+    Fl_Group* group_communications = new Fl_Group(xoff, yoff, window->w()-20, 50, "Communications");
     group_communications->box(FL_DOWN_FRAME);
     group_communications->align(FL_ALIGN_TOP_LEFT);
     button_connect = new Fl_Button(xoff+10, yoff+10, 160, 30, "CONNECT");
@@ -278,17 +268,11 @@ int main(int argc, char **argv) {
     group_communications->end();
     
     xoff = 10;
-    yoff = 130;
+    yoff = 100;
     
-    Fl_Group* group_sig_gen = new Fl_Group(10, 130, window->w()-20, 100, "Signal Generators");
-    group_sig_gen->clip_children(1);
-    group_sig_gen->box(FL_DOWN_FRAME);
-    group_sig_gen->align(FL_ALIGN_TOP_LEFT);
-    button_tonegen = new Fl_Check_Button(xoff+10, yoff+10, 160, 30, "Tone Generator 0");
-    button_tonegen->callback(toggle_tone_gen);
-    button_tonegen->deactivate();
-    group_sig_gen->end();
-    
+    Fl_Tone_Gen* fltg = new Fl_Tone_Gen(tone_gen_callback, xoff, yoff);
+    fltg->set_logger(logger);
+
     buff = new Fl_Text_Buffer();
     disp = new Fl_Text_Display(10, window->h()-150, window->w()-20, 140);
     disp->buffer(buff);  // attach text buffer to display widget
@@ -296,9 +280,6 @@ int main(int argc, char **argv) {
     log_style_buf = new Fl_Text_Buffer();
     int log_style_buf_size = sizeof(log_style_table)/sizeof(log_style_table[0]);
     disp->highlight_data(log_style_buf, log_style_table, log_style_buf_size, 'A', 0, 0);
-    
-    Fl_Tone_Gen* fltg = new Fl_Tone_Gen(tone_gen_callback, 10, 300);
-    fltg->set_logger(logger);
     
     window->end();
     window->show(argc, argv);
