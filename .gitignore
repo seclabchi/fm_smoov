@@ -11,3 +11,6 @@ cmake_install.cmake
 compile_commands.json
 fltk/
 outputs/
+*.pcm
+*.wav
+*.raw

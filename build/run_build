@@ -1,0 +1,5 @@
+cmake . -DCMAKE_TOOLCHAIN_FILE=toolchain-rpi.cmake
+make clean
+make
+scp fm_smoov pi@10.0.0.23:/opt/repos/fmsmoov_bin
+

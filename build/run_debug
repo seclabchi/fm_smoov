@@ -1,0 +1,1 @@
+/opt/repos/rpi_cross/tools/arm-bcm2708/arm-linux-gnueabihf/bin/arm-linux-gnueabihf-gdb ./hello_world_cross
