@@ -230,11 +230,11 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 		rms_lout = 0;
 		rms_rout = 0;
 
-		float b1_gain = 0.2;
-		float b2_gain = 0.2;
-		float b3_gain = 0.2;
-		float b4_gain = 0.2;
-		float b5_gain = 0.2;
+		float b1_gain = .2;
+		float b2_gain = .2;
+		float b3_gain = .2;
+		float b4_gain = .2;
+		float b5_gain = .2;
 
 		for(uint32_t i = 0; i < samps; i+=2)
 		{

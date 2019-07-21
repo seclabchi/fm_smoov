@@ -19,9 +19,9 @@ Compressor::Compressor()
 	timeconst_a = .000001;
 	timeconst_r = .05;
 
-	T = -40.0;
-	R = 3.0;
-	W = 0.0;
+	T = -99.0;
+	R = 15.0;
+	W = 3.0;
 
 	//soft knee thresholds
 	knee_start = T - (W/2.0);
@@ -68,19 +68,19 @@ void Compressor::process(float* p, uint32_t samps)
 		{
 			detL = 20.0*log10f(samp_abs_l);
 		}
-		else
-		{
-			detL = -99.0;
-		}
+		//else
+		//{
+		//	detL = -99.0;
+		//}
 
 		if(samp_abs_r != 0.0)
 		{
 			detR = 20.0*log10f(samp_abs_r);
 		}
-		else
-		{
-			detR = -99.0;
-		}
+		//else
+		//{
+		//	detR = -99.0;
+		//}
 
 
 		//compute static characteristic
