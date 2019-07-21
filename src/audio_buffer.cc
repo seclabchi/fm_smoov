@@ -175,7 +175,7 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 		cout << "IN" << " samps: " << samps << ", Peak/RMS L: " << peak_lin_db << "," << rms_lin_db << " - Peak/RMS R: " << peak_rin_db << "," << rms_rin_db << endl;
 
 		//EXPERIMENTAL STEREO WIDENING START
-		float ses = 4.0;
+		float ses = 3.0;
 		float M, S;
 
 		for(int i = 0; i < samps; i += 2)
@@ -225,17 +225,22 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 	//	cout << lastpow4_l << " " << lastpow4_r << endl;
 	//	cout << lastpow5_l << " " << lastpow5_r << endl;
 
-		#define GAIN_ADJ .17
-
 		peak_lout = 0;
 		peak_rout = 0;
 		rms_lout = 0;
 		rms_rout = 0;
 
+		float b1_gain = 0.2;
+		float b2_gain = 0.2;
+		float b3_gain = 0.2;
+		float b4_gain = 0.2;
+		float b5_gain = 0.2;
+
 		for(uint32_t i = 0; i < samps; i+=2)
 		{
-			p[i] = GAIN_ADJ * buf_b1[i] + GAIN_ADJ * buf_b2[i] + GAIN_ADJ * buf_b3[i] + GAIN_ADJ * buf_b4[i] + GAIN_ADJ * buf_b5[i];
-			p[i+1] = GAIN_ADJ * buf_b1[i+1] + GAIN_ADJ * buf_b2[i+1] + GAIN_ADJ * buf_b3[i+1] + GAIN_ADJ * buf_b4[i+1] + GAIN_ADJ * buf_b5[i+1];
+			p[i] = b1_gain * buf_b1[i] + b2_gain * buf_b2[i] + b3_gain * buf_b3[i] + b4_gain * buf_b4[i] + b5_gain * buf_b5[i];
+
+			p[i+1] = b1_gain * buf_b1[i+1] + b2_gain * buf_b2[i+1] + b3_gain * buf_b3[i+1] + b4_gain * buf_b4[i+1] + b5_gain * buf_b5[i+1];
 
 			if(p[i] > 1.0)
 			{

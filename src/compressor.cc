@@ -17,11 +17,11 @@ Compressor::Compressor()
 {
 	/* Set defaults */
 	timeconst_a = .000001;
-	timeconst_r = .500;
+	timeconst_r = .05;
 
-	T = -50.0;
-	R = 1.6;
-	W = 2.0;
+	T = -40.0;
+	R = 3.0;
+	W = 0.0;
 
 	//soft knee thresholds
 	knee_start = T - (W/2.0);
@@ -85,31 +85,31 @@ void Compressor::process(float* p, uint32_t samps)
 
 		//compute static characteristic
 		//left channel
-		if(p[i] < knee_start)
+		if(detL < knee_start)
 		{
-			buf_l[ibuf] = p[i];
+			buf_l[ibuf] = detL;
 		}
-		else if(p[i] >= knee_start && p[i] <= knee_end)
+		else if(detL >= knee_start && detL <= knee_end)
 		{
-			buf_l[ibuf] = p[i] + ((1.0/R)-1.0) * powf(p[i] - T + (W/2.0), 2.0) / (2.0*W);
+			buf_l[ibuf] = detL + ((1.0/R)-1.0) * powf(detL - T + (W/2.0), 2.0) / (2.0*W);
 		}
 		else
 		{
-			buf_l[ibuf] = T + ((p[i] - T)/R);
+			buf_l[ibuf] = T + ((detL - T)/R);
 		}
 
 		//right channel
-		if(p[i+1] < knee_start)
+		if(detR < knee_start)
 		{
-			buf_r[i] = p[i+1];
+			buf_r[ibuf] = detR;
 		}
-		else if(p[i+1] >= knee_start && p[i+1] <= knee_end)
+		else if(detR >= knee_start && detR <= knee_end)
 		{
-			buf_r[i] = p[i+1] + ((1.0/R)-1.0) * powf(p[i+1] - T + (W/2.0), 2.0) / (2.0*W);
+			buf_r[ibuf] = detR + ((1.0/R)-1.0) * powf(detR - T + (W/2.0), 2.0) / (2.0*W);
 		}
 		else
 		{
-			buf_r[ibuf] = T + ((p[i+1] - T)/R);
+			buf_r[ibuf] = T + ((detR - T)/R);
 		}
 
 		//compute gain
