@@ -3,6 +3,7 @@
 #include <math.h>
 #include <string.h>
 
+<<<<<<< HEAD
 using namespace std;
 
 float AudioBuffer::peak_lin_db = 0;
@@ -13,6 +14,10 @@ float AudioBuffer::peak_lout_db = 0;
 float AudioBuffer::rms_lout_db = 0;
 float AudioBuffer::peak_rout_db = 0;
 float AudioBuffer::rms_rout_db = 0;
+=======
+
+using namespace std;
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 
 AudioBuffer* AudioBuffer::the_instance = NULL;
 
@@ -60,8 +65,11 @@ AudioBuffer::AudioBuffer()
 	gate4 = new Gate();
 	gate5 = new Gate();
 
+<<<<<<< HEAD
 	slowagc = new SlowAGC();
 
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 	compressor1 = new Compressor();  //<64 Hz  BAND
 	compressor2 = new Compressor();  //64-362 Hz BAND
 	compressor3 = new Compressor();  //362-2040 Hz BAND
@@ -182,6 +190,7 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 			peak_rin_db = -99;
 		}
 
+<<<<<<< HEAD
 		//cout << "IN" << " samps: " << samps << ", Peak/RMS L: " << peak_lin_db << "," << rms_lin_db << " - Peak/RMS R: " << peak_rin_db << "," << rms_rin_db << endl;
 
 
@@ -190,6 +199,11 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 
 		//EXPERIMENTAL STEREO WIDENING START
 
+=======
+		cout << "IN" << " samps: " << samps << ", Peak/RMS L: " << peak_lin_db << "," << rms_lin_db << " - Peak/RMS R: " << peak_rin_db << "," << rms_rin_db << endl;
+
+		//EXPERIMENTAL STEREO WIDENING START
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 		float ses = 3.0;
 		float M, S;
 
@@ -240,9 +254,12 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 	//	cout << lastpow4_l << " " << lastpow4_r << endl;
 	//	cout << lastpow5_l << " " << lastpow5_r << endl;
 
+<<<<<<< HEAD
 		//Do slow AGC on the output
 		slowagc->process(p, samps);
 
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 		peak_lout = 0;
 		peak_rout = 0;
 		rms_lout = 0;
@@ -260,8 +277,11 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 
 			p[i+1] = b1_gain * buf_b1[i+1] + b2_gain * buf_b2[i+1] + b3_gain * buf_b3[i+1] + b4_gain * buf_b4[i+1] + b5_gain * buf_b5[i+1];
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 			if(p[i] > 1.0)
 			{
 				p[i] = 1.0;
@@ -292,9 +312,12 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 			}
 		}
 
+<<<<<<< HEAD
 		//Do slow AGC on the output
 		//slowagc->process(p, samps);
 
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 		rms_lout = sqrtf(2.0 * rms_lout / samps);
 		rms_rout = sqrtf(2.0 * rms_rout / samps);
 
@@ -334,7 +357,11 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 			peak_rout_db = -99;
 		}
 
+<<<<<<< HEAD
 		//cout << "OUT" << " samps: " << samps << ", Peak/RMS L: " << peak_lout_db << "," << rms_lout_db << " - Peak/RMS R: " << peak_rout_db << "," << rms_rout_db << endl;
+=======
+		cout << "OUT" << " samps: " << samps << ", Peak/RMS L: " << peak_lout_db << "," << rms_lout_db << " - Peak/RMS R: " << peak_rout_db << "," << rms_rout_db << endl;
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 
 #ifdef DEBUG_CAPTURE
 		fwrite(p, sizeof(float), samps, capfile);

@@ -16,11 +16,19 @@ using namespace std;
 Compressor::Compressor()
 {
 	/* Set defaults */
+<<<<<<< HEAD
 	timeconst_a = .000050;
 	timeconst_r = .200;
 
 	T = -30.0;
 	R = 8.0;
+=======
+	timeconst_a = .000001;
+	timeconst_r = .05;
+
+	T = -99.0;
+	R = 15.0;
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 	W = 3.0;
 
 	//soft knee thresholds

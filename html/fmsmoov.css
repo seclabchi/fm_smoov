@@ -1,0 +1,35 @@
+body {
+	background-color: darkgray;
+	font-family: sans-serif;
+}
+
+.pushbuttons {
+	font-size: 1.75em;
+}
+
+#meters, #input_meters, #output_meters {
+	display: flex;
+}
+
+.vumeter {
+	font-size: 0.8em;
+}
+
+.ui-slider .ui-slider-handle
+{
+	outline: 0;
+	height: 1px;
+	background: black;
+	
+}
+
+.ui-slider .ui-slider-range
+{
+	background: lightgreen;
+}
+
+.ui-slider
+{
+	background: white;
+	border-radius: 5%;
+}

@@ -3,12 +3,21 @@
 
 Gate::Gate()
 {
+<<<<<<< HEAD
 	timeconst_a = 0.50;
 	timeconst_r = 0.50;
 
 	T = -28; //threshold in dB
 
 	HT = 0.075;
+=======
+	timeconst_a = 0.1;
+	timeconst_r = 0.1;
+
+	T = -50; //threshold in dB
+
+	HT = 0.08;
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 
 	recalculate();
 }
@@ -71,7 +80,11 @@ void Gate::process(float* p, uint32_t samps)
 		{
 			if(CaL > HTI)
 			{
+<<<<<<< HEAD
 				gsL = alpha_a * gsLprev + (1.0-alpha_a) * gcL;
+=======
+				gsL = alpha_a * gsLprev + (1-alpha_a) * gcL;
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 			}
 			else //CaL <= HTI
 			{
@@ -82,7 +95,11 @@ void Gate::process(float* p, uint32_t samps)
 		{
 			if(CrL > HTI)
 			{
+<<<<<<< HEAD
 				gsL = alpha_r * gsLprev + (1.0-alpha_r) * gcL;
+=======
+				gsL = alpha_r * gsLprev + (1-alpha_r) * gcL;
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 			}
 			else //CaR <= HTI
 			{
@@ -96,7 +113,11 @@ void Gate::process(float* p, uint32_t samps)
 		{
 			if(CaR > HTI)
 			{
+<<<<<<< HEAD
 				gsR = alpha_a * gsRprev + (1.0-alpha_a) * gcR;
+=======
+				gsR = alpha_a * gsRprev + (1-alpha_a) * gcR;
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 			}
 			else //CaR <= HTI
 			{
@@ -108,7 +129,11 @@ void Gate::process(float* p, uint32_t samps)
 		{
 			if(CrR > HTI)
 			{
+<<<<<<< HEAD
 				gsR = alpha_r * gsRprev + (1.0-alpha_r) * gcR;
+=======
+				gsR = alpha_r * gsRprev + (1-alpha_r) * gcR;
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 			}
 			else //CrR <= HTI
 			{

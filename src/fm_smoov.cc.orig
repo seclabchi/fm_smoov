@@ -15,7 +15,10 @@
 #include "pcm_thread_playback.h"
 #include "pcm_device_capture.h"
 #include "pcm_device_playback.h"
+<<<<<<< HEAD
 #include "cmd_server.h"
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 
 using namespace std;
 
@@ -148,9 +151,12 @@ int main (int argc, char *argv[])
 
 	try
 	{
+<<<<<<< HEAD
 		CmdServer* cmd_server = new CmdServer();
 		cmd_server->start();
 
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 		PCMDevices* devs = PCMDevices::getInstance();
 
 		vector<PCMDevice*> playback_devices = devs->get_playback_devices();
@@ -183,8 +189,11 @@ int main (int argc, char *argv[])
 		PCMThreadCapture* capture_thread = new PCMThreadCapture(dev_cap, pb_buf_size);
 		capture_thread->start(&sem_cap_start, &sem_pb_opened);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 		int stdinchar;
 
 		do

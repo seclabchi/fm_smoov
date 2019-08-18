@@ -1,0 +1,83 @@
+<html>
+
+<head>
+  <title>Experimental FM SMOOV Control Panel</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="fmsmoov.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script type="text/javascript" src="./fmsmoov.js"></script></script>
+</head>
+<body>
+  <h1>Experimental FM SMOOV Control Panel</h1>
+  <input type="button" class="pushbuttons" onclick="connect()" value="CONNECT TO FM SMOOV" id="button_connect_disconnect"/><br><br> 
+  <hr />
+  
+  <div id="meters">
+    <div id="input_meters">
+      <p>Input:</p>
+      <br />
+      <div class="vumeter">
+        <div id="slider-linpeak" style="height:100px;"></div>
+        <label for="vert_slider_val">Lpeak</label>
+        <br />
+        <input type="text" class="vumeter" id="slider-linpeak-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
+      </div>
+      <div class="vumeter">
+        <div id="slider-rinpeak" style="height:100px;"></div>
+        <label for="vert_slider_val">Rpeak</label>
+        <br />
+        <input type="text" class="vumeter" id="slider-rinpeak-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
+      </div>
+      <div class="vumeter">
+        <div id="slider-linrms" style="height:100px;"></div>
+        <label for="vert_slider_val">Lrms</label>
+        <br />
+        <input type="text" class="vumeter" id="slider-linrms-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
+      </div>
+    
+      <div class="vumeter">
+        <div id="slider-rinrms" style="height:100px;"></div>
+        <label for="vert_slider_val">Rrms</label>
+        <br />
+        <input type="text" class="vumeter" id="slider-rinrms-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
+      </div>
+    </div>
+    
+    <div id="output_meters">
+      <p>Output:</p>
+      <br />
+      <div class="vumeter">
+        <div id="slider-loutpeak" style="height:100px;"></div>
+        <label for="vert_slider_val">Lpeak</label>
+        <br />
+        <input type="text" class="vumeter" id="slider-loutpeak-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
+      </div>
+      <div class="vumeter">
+        <div id="slider-routpeak" style="height:100px;"></div>
+        <label for="vert_slider_val">Rpeak</label>
+        <br />
+        <input type="text" class="vumeter" id="slider-routpeak-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
+      </div>
+      <div class="vumeter">
+        <div id="slider-loutrms" style="height:100px;"></div>
+        <label for="vert_slider_val">Lrms</label>
+        <br />
+        <input type="text" class="vumeter" id="slider-loutrms-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
+      </div>
+    
+      <div class="vumeter">
+        <div id="slider-routrms" style="height:100px;"></div>
+        <label for="vert_slider_val">Rrms</label>
+        <br />
+        <input type="text" class="vumeter" id="slider-routrms-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
+      </div>
+    </div>
+  </div>
+  
+  <hr />
+  <p id="status_text">Welcome to the experimental FM SMOOV Control Panel.</p>
+  <hr />
+  <p id="recvdata"></p>
+</body>
+</html>

@@ -8,7 +8,10 @@
 #include <semaphore.h>
 
 #include "biquad.h"
+<<<<<<< HEAD
 #include "slow_agc.h"
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 #include "compressor.h"
 #include "gate.h"
 
@@ -29,9 +32,12 @@ public:
 
 	void wait_for_capture_start();
 
+<<<<<<< HEAD
 	static float peak_lin_db, rms_lin_db, peak_rin_db, rms_rin_db;
 	static float peak_lout_db, rms_lout_db, peak_rout_db, rms_rout_db;
 
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 
 private:
 	AudioBuffer();
@@ -65,13 +71,17 @@ private:
 	float buf_b4[BUFSIZE_BAND];
 	float buf_b5[BUFSIZE_BAND];
 
+<<<<<<< HEAD
 	SlowAGC* slowagc;
+=======
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 	Compressor* compressor1, *compressor2, *compressor3, *compressor4, *compressor5;
 	Gate* gate1, *gate2, *gate3, *gate4, *gate5;
 
 	float lastpow1_l, lastpow1_r, lastpow2_l, lastpow2_r, lastpow3_l, lastpow3_r;
 	float lastpow4_l, lastpow4_r, lastpow5_l, lastpow5_r;
 
+<<<<<<< HEAD
 	float peak_lin = 0;
 	float peak_rin = 0;
 	float rms_lin = 0;
@@ -81,6 +91,17 @@ private:
 	float peak_rout = 0;
 	float rms_lout = 0;
 	float rms_rout = 0;
+=======
+	float peak_lin, peak_lin_db = 0;
+	float peak_rin, peak_rin_db = 0;
+	float rms_lin, rms_lin_db = 0;
+	float rms_rin, rms_rin_db = 0;
+
+	float peak_lout, peak_lout_db = 0;
+	float peak_rout, peak_rout_db = 0;
+	float rms_lout, rms_lout_db = 0;
+	float rms_rout, rms_rout_db = 0;
+>>>>>>> 4987be4faa1834236845b5adffa9dbd1f6baf676
 
 	float absp = 0;
 

@@ -16,3 +16,8 @@ outputs/
 *.raw
 /Default/
 .settings/
+*.o
+*.oct
+*.m4a
+node_modules/
+jquery*
