@@ -17,10 +17,16 @@ DEFUN_DLD (oct_agc, args, nargout,
   int cols = in_dims.elem(1);
   double TL = args(1).double_value();
   double GT = args(2).double_value();
-  double Tatt = args(3).double_value();
-  double Trel = args(4).double_value();
-  double Fs = args(5).double_value();
+  string mode = args(3).string_value();
+  double RMSw = args(4).double_value();
+  double Tatt = args(5).double_value();
+  double Trel = args(6).double_value();
+  double Fs = args(7).double_value();
+    
+  int rmswinlen = (int)(Fs/RMSw);
   
+  octave_stdout << "RMS window length of " << RMSw << " seconds = " << rmswinlen << " samples." << endl;
+    
   NDArray out = NDArray(in_dims);
   double alphaA = exp(-log10(9)/(Fs * Tatt));
   double alphaR = exp(-log10(9)/(Fs * Trel));
@@ -34,6 +40,9 @@ DEFUN_DLD (oct_agc, args, nargout,
   double gs = 0.0;
   double gsPrev = 0.0;
   
+  double N = 0.0;  
+  double RMSinst = 0.0;
+      
   for(int col = 0; col < cols; col++)
   {
     gsPrev = 0.0;
@@ -42,8 +51,7 @@ DEFUN_DLD (oct_agc, args, nargout,
     for(int row = 0; row < rows; row++)
     {
       insampDB = in(row,col);
-      out(row,col) = insampDB;
-        
+   
       if(insampDB > GT)
       {
         gc = TL-insampDB;
@@ -63,7 +71,6 @@ DEFUN_DLD (oct_agc, args, nargout,
       gsPrev = gs;
    
     }
-    
   }
   
   return octave_value(out);

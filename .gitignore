@@ -21,3 +21,4 @@ outputs/
 *.m4a
 node_modules/
 jquery*
+octave-workspace

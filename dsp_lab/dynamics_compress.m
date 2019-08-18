@@ -1,6 +1,6 @@
 
 
-function out = dynamics_compress(in, R, T, Tatt, Trel)
+function out = dynamics_compress(in, R, T, G, Tatt, Trel)
   global Fs;
   
   alphaA = exp(-log10(9)/(Fs * Tatt));
@@ -13,6 +13,7 @@ function out = dynamics_compress(in, R, T, Tatt, Trel)
   M = -((T + (-T/R)));
   
   GM = Ggs .+ M;
+  GM = GM .+ G;
   
   Glin = oct_log2lin(GM);
   
