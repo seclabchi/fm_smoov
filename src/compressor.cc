@@ -13,15 +13,28 @@
 
 using namespace std;
 
-Compressor::Compressor()
+Compressor::Compressor(float _R, float _T, float _G, float _W, float _Tatt, float _Trel)
+{
+	set(_R, _T, _G, _W, _Tatt, _Trel);
+}
+
+Compressor::~Compressor() {
+	// TODO Auto-generated destructor stub
+}
+
+void Compressor::set(float _R, float _T, float _G, float _W, float _Tatt, float _Trel)
 {
 	/* Set defaults */
-	timeconst_a = .000050;
-	timeconst_r = .200;
+	timeconst_a = _Tatt;
+	timeconst_r = _Trel;
 
-	T = -30.0;
-	R = 8.0;
-	W = 3.0;
+	T = _T;
+	R = _R;
+	W = _W;
+	G = _G;
+
+	alpha_a = expf(-logf(9.0)/(48000.0 * timeconst_a));
+	alpha_r = expf(-logf(9.0)/(48000.0 * timeconst_r));
 
 	//soft knee thresholds
 	knee_start = T - (W/2.0);
@@ -33,25 +46,11 @@ Compressor::Compressor()
 
 	//makeup gain
 	M = -(T - (T/R)); //dB
-
-	recalculate();
-}
-
-Compressor::~Compressor() {
-	// TODO Auto-generated destructor stub
-}
-
-void Compressor::recalculate()
-{
-	alpha_a = expf(-logf(9.0)/(48000.0 * timeconst_a));
-	alpha_r = expf(-logf(9.0)/(48000.0 * timeconst_r));
 }
 
 void Compressor::process(float* p, uint32_t samps)
 {
 	ibuf = 0;
-	lastpow_l = 0;
-	lastpow_r = 0;
 
 	for(i = 0; i < samps; i+=2)
 	{
@@ -144,8 +143,8 @@ void Compressor::process(float* p, uint32_t samps)
 
 		//apply makeup gain
 
-		buf_l[ibuf] = buf_l[ibuf] + M;
-		buf_r[ibuf] = buf_r[ibuf] + M;
+		buf_l[ibuf] = buf_l[ibuf] + M + G;
+		buf_r[ibuf] = buf_r[ibuf] + M + G;
 
 		//compute linear gain and apply
 
@@ -154,19 +153,6 @@ void Compressor::process(float* p, uint32_t samps)
 		gR = powf(10.0, buf_r[ibuf]/20.0);
 		p[i+1] = gR * p[i+1];
 
-		lastpow_l += powf(samp_abs_l, 2.0);
-		lastpow_r += powf(samp_abs_r, 2.0);
-
 		ibuf++;
 	}
-
-	lastpow_l = 2.0 * lastpow_l / samps;
-	lastpow_r = 2.0 * lastpow_r / samps;
-
-}
-
-void Compressor::get_last_power(float* l, float* r)
-{
-	*l = lastpow_l;
-	*r = lastpow_r;
 }

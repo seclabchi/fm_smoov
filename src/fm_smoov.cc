@@ -10,14 +10,76 @@
 #include <ncurses/ncurses.h>
 #include <cdk.h>
 
-#include "pcm_devices.h"
-#include "pcm_thread_capture.h"
-#include "pcm_thread_playback.h"
-#include "pcm_device_capture.h"
-#include "pcm_device_playback.h"
+#include <jack/jack.h>
+
 #include "cmd_server.h"
+#include "agc.h"
 
 using namespace std;
+
+//#define CAPTURE_TAP
+
+jack_port_t *input_port_L;
+jack_port_t *input_port_R;
+jack_port_t *output_port_L;
+jack_port_t *output_port_R;
+jack_client_t *client;
+
+AGC* agc;
+
+#ifdef CAPTURE_TAP
+FILE* capture_tap;
+#endif
+
+void fmsmoov_procmain(float* inL, float* inR, float* outL, float* outR, uint32_t samps)
+{
+#ifdef CAPTURE_TAP
+	fwrite(inL, sizeof(float), samps, capture_tap);
+#endif
+	agc->process(inL, inR, outL, outR, samps);
+}
+
+/**
+ * The process callback for this JACK application is called in a
+ * special realtime thread once for each audio cycle.
+ *
+ * This client does nothing more than copy data from its input
+ * port to its output port. It will exit when stopped by
+ * the user (e.g. using Ctrl-C on a unix-ish operating system)
+ */
+int
+process (jack_nframes_t nframes, void *arg)
+{
+	jack_default_audio_sample_t *inL, *inR, *outL, *outR;
+
+	inL = (jack_default_audio_sample_t*)jack_port_get_buffer (input_port_L, nframes);
+	outL = (jack_default_audio_sample_t*)jack_port_get_buffer (output_port_L, nframes);
+
+	inR = (jack_default_audio_sample_t*)jack_port_get_buffer (input_port_R, nframes);
+	outR = (jack_default_audio_sample_t*)jack_port_get_buffer (output_port_R, nframes);
+
+	fmsmoov_procmain(inL, inR, outL, outR, nframes);
+
+/*
+    memcpy (outL, inL,
+		sizeof (jack_default_audio_sample_t) * nframes);
+
+	memcpy (outR, inR,
+			sizeof (jack_default_audio_sample_t) * nframes);
+*/
+	return 0;
+}
+
+/**
+ * JACK calls this shutdown_callback if the server ever shuts down or
+ * decides to disconnect the client.
+ */
+void
+jack_shutdown (void *arg)
+{
+	exit (1);
+}
+
 
 int main (int argc, char *argv[])
 {
@@ -28,6 +90,14 @@ int main (int argc, char *argv[])
 	int option_index = 0;
 	int digit_optind = 0;
 	bool gui_disabled = false;
+
+	int stdinchar;
+
+	const char **ports;
+	const char *client_name = "FMsmoov";
+	const char *server_name = NULL;
+	jack_options_t options = JackNullOption;
+	jack_status_t status;
 
 	static struct option long_options[] = {
 		{"nogui",     no_argument, 		 0,  'n' },
@@ -148,57 +218,151 @@ int main (int argc, char *argv[])
 
 	try
 	{
-		CmdServer* cmd_server = new CmdServer();
-		cmd_server->start();
+#ifdef CAPTURE_TAP
+		capture_tap = fopen("/tmp/capture_tap.pcm", "wb");
+#endif
 
-		PCMDevices* devs = PCMDevices::getInstance();
+		agc = new AGC(-18.0, -48.0, 0.5, 8.0);
+		//CmdServer* cmd_server = new CmdServer();
+		//cmd_server->start();
 
-		vector<PCMDevice*> playback_devices = devs->get_playback_devices();
-		vector<PCMDevice*> capture_devices = devs->get_capture_devices();
+		/* open a client connection to the JACK server */
 
-		cout << "# playback devices: " << playback_devices.size() << endl;
-		cout << "# capture devices: " << capture_devices.size() << endl;
+		client = jack_client_open (client_name, options, &status, server_name);
+		if (client == NULL) {
+			fprintf (stderr, "jack_client_open() failed, "
+				 "status = 0x%2.0x\n", status);
+			if (status & JackServerFailed) {
+				fprintf (stderr, "Unable to connect to JACK server\n");
+			}
+			exit (1);
+		}
+		if (status & JackServerStarted) {
+			fprintf (stderr, "JACK server started\n");
+		}
+		if (status & JackNameNotUnique) {
+			client_name = jack_get_client_name(client);
+			fprintf (stderr, "unique name `%s' assigned\n", client_name);
+		}
 
-		PCMDevice* dev_pb = playback_devices.at(1);
-		PCMDevice* dev_cap = capture_devices.at(1);
+		/* tell the JACK server to call `process()' whenever
+		   there is work to be done.
+		*/
 
-		//start the playback thread.  It will signal when it's opened and ready for playback
-		//then start the capture thread with the PB thread's buffer size, so the PB buffer can
-		//be instantly filled to prevent an underrun.
+		jack_set_process_callback (client, process, 0);
 
-		sem_t sem_cap_start;
-		sem_init(&sem_cap_start, 0, 0);
+		/* tell the JACK server to call `jack_shutdown()' if
+		   it ever shuts down, either entirely, or if it
+		   just decides to stop calling us.
+		*/
 
-		sem_t sem_pb_opened;
-		sem_init(&sem_pb_opened, 0, 0);
+		jack_on_shutdown (client, jack_shutdown, 0);
 
-		cout << "Playback device: " << playback_devices.at(1)->get_name() << endl;
-		PCMThreadPlayback* playback_thread = new PCMThreadPlayback(dev_pb);
-		playback_thread->start(&sem_cap_start, &sem_pb_opened);
-		cout << "Waiting for PB to be opened..." << endl;
-		sem_wait(&sem_pb_opened);
-		uint32_t pb_buf_size = dev_pb->get_buffer_size();
+		/* display the current sample rate.
+		 */
 
-		cout << "Capture device: " << capture_devices.at(1)->get_name() << endl;
-		PCMThreadCapture* capture_thread = new PCMThreadCapture(dev_cap, pb_buf_size);
-		capture_thread->start(&sem_cap_start, &sem_pb_opened);
+		printf ("engine sample rate: %" PRIu32 "\n",
+			jack_get_sample_rate (client));
+
+		/* create two ports */
+
+		input_port_L = jack_port_register (client, "inputL",
+						 "32 bit float mono audio",
+						 JackPortIsInput, 0);
+		input_port_R = jack_port_register (client, "inputR",
+								 "32 bit float mono audio",
+								 JackPortIsInput, 0);
+		output_port_L = jack_port_register (client, "outputL",
+						  //JACK_DEFAULT_AUDIO_TYPE,
+						 "32 bit float mono audio",
+						  JackPortIsOutput, 0);
+		output_port_R = jack_port_register (client, "outputR",
+								  //JACK_DEFAULT_AUDIO_TYPE,
+								 "32 bit float mono audio",
+								  JackPortIsOutput, 0);
+
+		if ((input_port_L == NULL) || (output_port_L == NULL) || (input_port_R == NULL)|| (output_port_R == NULL)) {
+			fprintf(stderr, "no more JACK ports available\n");
+			exit (1);
+		}
+
+		/* Tell the JACK server that we are ready to roll.  Our
+		 * process() callback will start running now. */
+
+		if (jack_activate (client)) {
+			fprintf (stderr, "cannot activate client");
+			exit (1);
+		}
+
+		/* Connect the ports.  You can't do this before the client is
+		 * activated, because we can't make connections to clients
+		 * that aren't running.  Note the confusing (but necessary)
+		 * orientation of the driver backend ports: playback ports are
+		 * "input" to the backend, and capture ports are "output" from
+		 * it.
+		 */
+
+		ports = jack_get_ports (client, NULL, NULL,
+					JackPortIsPhysical|JackPortIsOutput);
+		if (ports == NULL) {
+			fprintf(stderr, "no physical capture ports\n");
+			exit (1);
+		}
+
+		if (jack_connect (client, ports[0], jack_port_name (input_port_L))) {
+			fprintf (stderr, "cannot connect input port 0\n");
+		}
+
+		if (jack_connect (client, ports[1], jack_port_name (input_port_R))) {
+					fprintf (stderr, "cannot connect input port 1\n");
+		}
 
 
+		free (ports);
 
-		int stdinchar;
+		ports = jack_get_ports (client, NULL, NULL,
+					JackPortIsPhysical|JackPortIsInput);
+		if (ports == NULL) {
+			fprintf(stderr, "no physical playback ports\n");
+			exit (1);
+		}
+
+		if (jack_connect (client, jack_port_name (output_port_L), ports[0])) {
+			fprintf (stderr, "cannot connect output port 0\n");
+		}
+
+		if (jack_connect (client, jack_port_name (output_port_R), ports[1])) {
+					fprintf (stderr, "cannot connect output port 1\n");
+		}
+
+		free (ports);
+
+		/* keep running until stopped by the user */
+
+		//sleep (-1);
+
+		/* this is never reached but if the program
+		   had some other way to exit besides being killed,
+		   they would be important to call.
+		*/
 
 		do
 		{
 			stdinchar = getchar();
 		} while('q' != (char)stdinchar);
 
-		playback_thread->stop();
-		capture_thread->stop();
+		jack_client_close (client);
+#ifdef CAPTURE_TAP
+		fclose(capture_tap);
+#endif
+
 	}
 	catch(const exception& ex)
 	{
 		cout << "Failed in main: " << ex.what() << endl;
 	}
+
+	cout << "Done.  Goodbye." << endl;
 
 	return 0;
 }

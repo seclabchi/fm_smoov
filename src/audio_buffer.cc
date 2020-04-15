@@ -39,36 +39,38 @@ AudioBuffer::AudioBuffer()
 
 	pthread_mutex_init(&the_mutex, NULL);
 
-	//64 Hz LP filter
-	filt_b1 = new Biquad(0.011850, 1, 1, 0, 1, -0.97630, 0);
+	bands = new float*[4];
+	b1 = new float[BUFSIZE];
+	b2 = new float[BUFSIZE];
+	b3 = new float[BUFSIZE];
+	b4 = new float[BUFSIZE];
 
-	//64-362 Hz BP
-	filt_b2 = new Biquad(0.052889, 1, 0, -1, 1, -1.8938, 0.89422);
+	memset(b1, 0, sizeof(float)*BUFSIZE);
+	memset(b2, 0, sizeof(float)*BUFSIZE);
+	memset(b3, 0, sizeof(float)*BUFSIZE);
+	memset(b4, 0, sizeof(float)*BUFSIZE);
 
-	//362-2040 Hz BP
-	filt_b3 = new Biquad(0.23993, 1, 0, -1, 1, -1.5105, 0.52013);
+	bands[0] = b1; // <153 Hz
+	bands[1] = b2; // 153-860 Hz
+	bands[2] = b3; // 860-4900 Hz
+	bands[3] = b4; // >4900 Hz
 
-	//2040-11700 Hz BP
-	filt_b4 = new Biquad(0.67712, 1, 0, -1, 1, -0.49804, -0.35425);
+	crossover = new Crossover(BUFSIZE, bands);
 
-	//11700-15000 Hz BP
-	filt_b5 = new Biquad(0.38579, 1, 0, -1, 1, 0.22109, 0.22842);
+//	gate1 = new Gate();
+//	gate2 = new Gate();
+//	gate3 = new Gate();
+//	gate4 = new Gate();
+//	gate5 = new Gate();
 
-	gate1 = new Gate();
-	gate2 = new Gate();
-	gate3 = new Gate();
-	gate4 = new Gate();
-	gate5 = new Gate();
+	//AGC setup: TL, GT, Tatt, Trel
+	input_agc = new AGC(-15.0, 25.0, .250, .250);
 
-	slowagc = new SlowAGC();
-
-	compressor1 = new Compressor();  //<64 Hz  BAND
-	compressor2 = new Compressor();  //64-362 Hz BAND
-	compressor3 = new Compressor();  //362-2040 Hz BAND
-	compressor4 = new Compressor();  //2040-11700 Hz BAND
-	compressor5 = new Compressor();  //11700-15000 Hz BAND
-
-
+	//Compressor setup: _R, _T, _G, _W, _Tatt, _Trel
+	compressor1 = new Compressor(5.0, -15.0, 3.5, 0.5, 0.050, 0.100);
+	compressor2 = new Compressor(8.0, -20.0, 1.5, 0.5, 0.010, 0.100);
+	compressor3 = new Compressor(8.0, -23.0, 1.5, 0.5, 0.0010, 0.100);
+	compressor4 = new Compressor(9.0, -23.0, 2.0, 0.5, 0.00001, 0.075);
 
 
 #ifdef DEBUG_CAPTURE
@@ -118,6 +120,7 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 {
 	if(samps > 0)
 	{
+		//cout << samps << "samps" << endl;
 		peak_lin = 0;
 		peak_rin = 0;
 		rms_lin = 0;
@@ -182,15 +185,14 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 			peak_rin_db = -99;
 		}
 
-		//cout << "IN" << " samps: " << samps << ", Peak/RMS L: " << peak_lin_db << "," << rms_lin_db << " - Peak/RMS R: " << peak_rin_db << "," << rms_rin_db << endl;
-
+		cout << "IN" << " samps: " << samps << ", Peak/RMS L: " << peak_lin_db << "," << rms_lin_db << " - Peak/RMS R: " << peak_rin_db << "," << rms_rin_db << endl;
 
 		//Do slow AGC on the input
-		//slowagc->process(p, samps);
+		input_agc->process(p, samps);
 
 		//EXPERIMENTAL STEREO WIDENING START
 
-		float ses = 3.0;
+		float ses = 1.5;
 		float M, S;
 
 		for(int i = 0; i < samps; i += 2)
@@ -204,63 +206,33 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 
 		//EXPERIMENTAL STEREO WIDENING END
 
-		memcpy(buf_b1, p, samps * sizeof(float));
-		memcpy(buf_b2, p, samps * sizeof(float));
-		memcpy(buf_b3, p, samps * sizeof(float));
-		memcpy(buf_b4, p, samps * sizeof(float));
-		memcpy(buf_b5, p, samps * sizeof(float));
-
-		filt_b1->process(buf_b1, samps);
-		filt_b2->process(buf_b2, samps);
-		filt_b3->process(buf_b3, samps);
-		filt_b4->process(buf_b4, samps);
-		filt_b5->process(buf_b5, samps);
+		crossover->process(p, samps);
 
 //		gate1->process(buf_b1, samps);
 //		gate2->process(buf_b2, samps);
 //		gate3->process(buf_b3, samps);
 //		gate4->process(buf_b4, samps);
-//		gate5->process(buf_b5, samps);
 
-		compressor1->process(buf_b1, samps);
-		compressor2->process(buf_b2, samps);
-		compressor3->process(buf_b3, samps);
-		compressor4->process(buf_b4, samps);
-		compressor5->process(buf_b5, samps);
-
-	//	compressor1->get_last_power(&lastpow1_l, &lastpow1_r);
-	//	compressor2->get_last_power(&lastpow2_l, &lastpow2_r);
-	//	compressor3->get_last_power(&lastpow3_l, &lastpow3_r);
-	//	compressor4->get_last_power(&lastpow4_l, &lastpow4_r);
-	//	compressor5->get_last_power(&lastpow5_l, &lastpow5_r);
-
-	//	cout << lastpow1_l << " " << lastpow1_r << endl;
-	//	cout << lastpow2_l << " " << lastpow2_r << endl;
-	//	cout << lastpow3_l << " " << lastpow3_r << endl;
-	//	cout << lastpow4_l << " " << lastpow4_r << endl;
-	//	cout << lastpow5_l << " " << lastpow5_r << endl;
-
-		//Do slow AGC on the output
-		slowagc->process(p, samps);
+		compressor1->process(b1, samps);
+		compressor2->process(b2, samps);
+		compressor3->process(b3, samps);
+		compressor4->process(b4, samps);
 
 		peak_lout = 0;
 		peak_rout = 0;
 		rms_lout = 0;
 		rms_rout = 0;
 
-		float b1_gain = .2;
-		float b2_gain = .2;
-		float b3_gain = .2;
-		float b4_gain = .2;
-		float b5_gain = .2;
+		float b1_gain = .20;
+		float b2_gain = .20;
+		float b3_gain = .20;
+		float b4_gain = .20;
 
 		for(uint32_t i = 0; i < samps; i+=2)
 		{
-			p[i] = b1_gain * buf_b1[i] + b2_gain * buf_b2[i] + b3_gain * buf_b3[i] + b4_gain * buf_b4[i] + b5_gain * buf_b5[i];
+			p[i] = b1_gain * b1[i] + b2_gain * b2[i] + b3_gain * b3[i] + b4_gain * b4[i];
 
-			p[i+1] = b1_gain * buf_b1[i+1] + b2_gain * buf_b2[i+1] + b3_gain * buf_b3[i+1] + b4_gain * buf_b4[i+1] + b5_gain * buf_b5[i+1];
-
-
+			p[i+1] = b1_gain * b1[i+1] + b2_gain * b2[i+1] + b3_gain * b3[i+1] + b4_gain * b4[i+1];
 
 			if(p[i] > 1.0)
 			{
@@ -291,9 +263,6 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 				peak_rout = absp;
 			}
 		}
-
-		//Do slow AGC on the output
-		//slowagc->process(p, samps);
 
 		rms_lout = sqrtf(2.0 * rms_lout / samps);
 		rms_rout = sqrtf(2.0 * rms_rout / samps);
@@ -334,7 +303,7 @@ void AudioBuffer::process_samples(float* p, uint32_t samps)
 			peak_rout_db = -99;
 		}
 
-		//cout << "OUT" << " samps: " << samps << ", Peak/RMS L: " << peak_lout_db << "," << rms_lout_db << " - Peak/RMS R: " << peak_rout_db << "," << rms_rout_db << endl;
+		cout << "OUT" << " samps: " << samps << ", Peak/RMS L: " << peak_lout_db << "," << rms_lout_db << " - Peak/RMS R: " << peak_rout_db << "," << rms_rout_db << endl;
 
 #ifdef DEBUG_CAPTURE
 		fwrite(p, sizeof(float), samps, capfile);

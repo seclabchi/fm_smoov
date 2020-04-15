@@ -16,13 +16,15 @@
 class Compressor
 {
 public:
-	Compressor();
+	Compressor(float _R, float _T, float _G, float _W, float _Tatt, float _Trel);
 	virtual ~Compressor();
+	void set(float _R, float _T, float _G, float _W, float _Tatt, float _Trel);
 	void process(float* p, uint32_t samps);
 	void get_last_power(float* l, float* r);
 
 
 private:
+	Compressor();
 	float timeconst_a; //attack time constant in seconds
 	float timeconst_r; //release time constant in seconds
 	float alpha_a; //attack time constant calc
@@ -31,6 +33,7 @@ private:
 	float R; //compression ratio
 	float W; //soft knee width in dB
 	float M; //makeup gain in dB
+	float G; //fixed gain in dB
 
 	float detL, detR;
 	float knee_start, knee_end;

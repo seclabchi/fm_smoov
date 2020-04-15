@@ -1,21 +1,21 @@
 #ifndef __AUDIO_BUFFER_H__
 #define __AUDIO_BUFFER_H__
 
+#include <agc.h>
 #include <unistd.h>
 #include <string.h>
 #include <alsa/asoundlib.h>
 #include <pthread.h>
 #include <semaphore.h>
 
-#include "biquad.h"
-#include "slow_agc.h"
+#include "crossover.h"
 #include "compressor.h"
+#include "agc.h"
 #include "gate.h"
 
-#define BUFSIZE 384000
-#define BUFSIZE_BAND BUFSIZE
+#define BUFSIZE 500000
 
-#define DEBUG_CAPTURE
+//#define DEBUG_CAPTURE
 
 class AudioBuffer
 {
@@ -58,14 +58,21 @@ private:
 
 	uint32_t sc, det_window;
 
-	Biquad* filt_b1, *filt_b2, *filt_b3, *filt_b4, *filt_b5;
-	float buf_b1[BUFSIZE_BAND];
-	float buf_b2[BUFSIZE_BAND];
-	float buf_b3[BUFSIZE_BAND];
-	float buf_b4[BUFSIZE_BAND];
-	float buf_b5[BUFSIZE_BAND];
+	float** bands;
+	float* b1;
+	float* b2;
+	float* b3;
+	float* b4;
 
-	SlowAGC* slowagc;
+	//Biquad* filt_b1, *filt_b2, *filt_b3, *filt_b4, *filt_b5;
+	//float buf_b1[BUFSIZE_BAND];
+	//float buf_b2[BUFSIZE_BAND];
+	//float buf_b3[BUFSIZE_BAND];
+	//float buf_b4[BUFSIZE_BAND];
+	//float buf_b5[BUFSIZE_BAND];
+
+	AGC* input_agc;
+	Crossover* crossover;
 	Compressor* compressor1, *compressor2, *compressor3, *compressor4, *compressor5;
 	Gate* gate1, *gate2, *gate3, *gate4, *gate5;
 
