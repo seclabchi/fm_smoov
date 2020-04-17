@@ -14,6 +14,7 @@
 
 #include "cmd_server.h"
 #include "agc.h"
+#include "crossover_twoband.h"
 
 using namespace std;
 
@@ -25,18 +26,48 @@ jack_port_t *output_port_L;
 jack_port_t *output_port_R;
 jack_client_t *client;
 
-AGC* agc;
+AGC* agc_lo, *agc_hi;
+CrossoverTwoband* crossover2b;
 
 #ifdef CAPTURE_TAP
 FILE* capture_tap;
 #endif
 
+float tmpbufLlo[1024];
+float tmpbufRlo[1024];
+float tmpbufLlo_out[1024];
+float tmpbufRlo_out[1024];
+float tmpbufLhi[1024];
+float tmpbufRhi[1024];
+float tmpbufLhi_out[1024];
+float tmpbufRhi_out[1024];
+
+float* tmpbufL[2];
+float* tmpbufR[2];
+
+float* tmpbufLout[2];
+float* tmpbufRout[2];
+
+void combine_bands(float** inL, float** inR, float* outL, float* outR, uint32_t samps, uint32_t numbands)
+{
+	for(uint32_t i = 0; i < samps; i++)
+	{
+		outL[i] = inL[0][i] + inL[1][i];
+		outR[i] = inR[0][i] + inR[1][i];
+	}
+}
+
 void fmsmoov_procmain(float* inL, float* inR, float* outL, float* outR, uint32_t samps)
 {
+	crossover2b->process(inL, inR, tmpbufL, tmpbufR, samps);
+	agc_lo->process(tmpbufL[0], tmpbufR[0], tmpbufLout[0], tmpbufRout[0], samps);
+	agc_hi->process(tmpbufL[1], tmpbufR[1], tmpbufLout[1], tmpbufRout[1], samps);
+
+	combine_bands(tmpbufLout, tmpbufRout, outL, outR, samps, 2);
+
 #ifdef CAPTURE_TAP
-	fwrite(inL, sizeof(float), samps, capture_tap);
+	fwrite(outL, sizeof(float), samps, capture_tap);
 #endif
-	agc->process(inL, inR, outL, outR, samps);
 }
 
 /**
@@ -83,6 +114,16 @@ jack_shutdown (void *arg)
 
 int main (int argc, char *argv[])
 {
+	tmpbufL[0] = tmpbufLlo;
+	tmpbufL[1] = tmpbufLhi;
+	tmpbufR[0] = tmpbufRlo;
+	tmpbufR[1] = tmpbufRhi;
+
+	tmpbufLout[0] = tmpbufLlo_out;
+	tmpbufLout[1] = tmpbufLhi_out;
+	tmpbufRout[0] = tmpbufRlo_out;
+	tmpbufRout[1] = tmpbufRhi_out;
+
 	int opt = 0;
 	int c = 0;
 
@@ -222,7 +263,9 @@ int main (int argc, char *argv[])
 		capture_tap = fopen("/tmp/capture_tap.pcm", "wb");
 #endif
 
-		agc = new AGC(-18.0, -48.0, 0.5, 8.0);
+		crossover2b = new CrossoverTwoband(1024);
+		agc_lo = new AGC(-18.0, -44.0, 1, 3.0, string("AGC_lo"));
+		agc_hi = new AGC(-18.0, -44.0, 1, 3.0, string("AGC_hi"));
 		//CmdServer* cmd_server = new CmdServer();
 		//cmd_server->start();
 

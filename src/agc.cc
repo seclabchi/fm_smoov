@@ -19,9 +19,10 @@
 
 using namespace std;
 
-AGC::AGC(float _TL, float _GT, float _Tatt, float _Trel)
+AGC::AGC(float _TL, float _GT, float _Tatt, float _Trel, string _name)
 {
 	set(_TL, _GT, _Tatt, _Trel);
+	name = _name;
 }
 
 AGC::~AGC() {
@@ -110,7 +111,7 @@ void AGC::process(float* inL, float* inR, float* outL, float* outR, uint32_t sam
 
 		if(inlo > GHT)
 		{
-		  gc = 1;
+		  gc = 10;
 		}
 
 		if(0 == inlo)
@@ -140,5 +141,5 @@ void AGC::process(float* inL, float* inR, float* outL, float* outR, uint32_t sam
 //	cout << "inL[samps]/membufL[M], inR[samps]/membufR[M]: " << inL[samps-1] << "/" << membufL[M-1] <<
 //			"/" << inR[samps-1] << "/" << membufR[M-1] << endl;
 
-	cout << "gs=" << gs << endl;
+//	cout << "gs=" << gs << endl;
 }

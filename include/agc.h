@@ -10,11 +10,14 @@
 
 #include <stdint.h>
 #include <math.h>
+#include <string>
+
+using namespace std;
 
 class AGC
 {
 public:
-	AGC(float _TL, float _GT, float _Tatt, float _Trel);
+	AGC(float _TL, float _GT, float _Tatt, float _Trel, string _name);
 	virtual ~AGC();
 	void set(float _TL, float _GT, float _Tatt, float _Trel);
 	void process(float* inL, float* inR, float* outL, float* outR, uint32_t samps);
@@ -28,7 +31,7 @@ private:
 	float GT; //gain threshold for input (hold below threshold)
 	static const uint32_t Fs = 48000; //sampling frequency
 	static const float peak_response_rate = .010; //10 ms
-	static const float gate_hold_time = 5; //5 sec.
+	static const float gate_hold_time = 8; //5 sec.
     uint32_t M;
     uint32_t GHT;
     uint32_t peak_int_Laccum, peak_int_Raccum;
@@ -39,6 +42,7 @@ private:
     uint32_t inlo;
     uint32_t* prr_bufL, *prr_bufR;
     float* membufL, *membufR;
+    string name;
 };
 
 #endif /* __AGC_H__ */
