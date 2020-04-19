@@ -8,13 +8,9 @@ using namespace std;
 Biquad::Biquad(float _g, float _b0, float _b1, float _b2, float _a0, float _a1, float _a2) :
 				g(_g), b0(_b0), b1(_b1), b2(_b2), a0(_a0), a1(_a1), a2(_a2)
 {
-	wl = 0.0;
-	wl1 = 0.0;
-	wl2 = 0.0;
-
-	wr = 0.0;
-	wr1 = 0.0;
-	wr2 = 0.0;
+	w = 0.0;
+	w1 = 0.0;
+	w2 = 0.0;
 
 	i = 0;
 
@@ -28,31 +24,21 @@ Biquad::~Biquad()
 
 void Biquad::process(float* x, uint32_t size, bool do_gain)
 {
-	if(size % 2 != 0)
+	for(i = 0; i < size; i ++)
 	{
-		throw runtime_error("Size needs to be a multiple of two.");
-	}
-
-	for(i = 0; i < size; i += 2)
-	{
-		wl = x[i] - a1*wl1 - a2*wl2;
-		wr = x[i+1] - a1*wr1 - a2*wr2;
+		w = x[i] - a1*w1 - a2*w2;
     
 		if(do_gain)
 		{
-			x[i] = g * (b0 * wl + b1 * wl1 + b2 * wl2);
-			x[i+1] = g * (b0 * wr + b1 * wr1 + b2 * wr2);
+			x[i] = g * (b0 * w + b1 * w1 + b2 * w2);
 		}
 		else
 		{
-			x[i] = (b0 * wl + b1 * wl1 + b2 * wl2);
-			x[i+1] = (b0 * wr + b1 * wr1 + b2 * wr2);
+			x[i] = (b0 * w + b1 * w1 + b2 * w2);
 		}
 
-		wl2 = wl1;
-		wr2 = wr1;
-		wl1 = wl;
-		wr1 = wr;
+		w2 = w1;
+		w1 = w;
 	}
 }
 

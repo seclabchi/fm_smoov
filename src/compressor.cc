@@ -33,12 +33,8 @@ void Compressor::set(float _R, float _T, float _G, float _W, float _Tatt, float 
 	W = _W;
 	G = _G;
 
-	alpha_a = expf(-logf(9.0)/(48000.0 * timeconst_a));
-	alpha_r = expf(-logf(9.0)/(48000.0 * timeconst_r));
-
-	//soft knee thresholds
-	knee_start = T - (W/2.0);
-	knee_end = T + (W/2.0);
+	alphaA = expf(-logf(9.0)/(48000.0 * timeconst_a));
+	alphaR = expf(-logf(9.0)/(48000.0 * timeconst_r));
 
 	//previous gain smoothing values
 	gsLprev = 0.0;
@@ -48,111 +44,91 @@ void Compressor::set(float _R, float _T, float _G, float _W, float _Tatt, float 
 	M = -(T - (T/R)); //dB
 }
 
-void Compressor::process(float* p, uint32_t samps)
+void Compressor::process(float* inL, float* inR, float* outL, float* outR, uint32_t samps)
 {
 	ibuf = 0;
 
-	for(i = 0; i < samps; i+=2)
+	for(i = 0; i < samps; i++)
 	{
-		if(samps % 2 != 0)
-		{
-			throw runtime_error("Samp buffer must be multiple of two.");
-		}
-		//detect signal power in dB
+		inabsL = fabs(inL[i]);
+		inabsR = fabs(inR[i+1]);
 
-		samp_abs_l = fabsf(p[i]);
-		samp_abs_r = fabsf(p[i+1]);
-
-		if(samp_abs_l != 0.0)
+		if(inabsL > 0.0)
 		{
-			detL = 20.0*log10f(samp_abs_l);
-		}
-		//else
-		//{
-		//	detL = -99.0;
-		//}
-
-		if(samp_abs_r != 0.0)
-		{
-			detR = 20.0*log10f(samp_abs_r);
-		}
-		//else
-		//{
-		//	detR = -99.0;
-		//}
-
-
-		//compute static characteristic
-		//left channel
-		if(detL < knee_start)
-		{
-			buf_l[ibuf] = detL;
-		}
-		else if(detL >= knee_start && detL <= knee_end)
-		{
-			buf_l[ibuf] = detL + ((1.0/R)-1.0) * powf(detL - T + (W/2.0), 2.0) / (2.0*W);
+			indBL = 20 * log10f(inabsL);
 		}
 		else
 		{
-			buf_l[ibuf] = T + ((detL - T)/R);
+			indBL = -99.0;
 		}
 
-		//right channel
-		if(detR < knee_start)
+		if(inabsR > 0.0)
 		{
-			buf_r[ibuf] = detR;
-		}
-		else if(detR >= knee_start && detR <= knee_end)
-		{
-			buf_r[ibuf] = detR + ((1.0/R)-1.0) * powf(detR - T + (W/2.0), 2.0) / (2.0*W);
+			indBR = 20 * log10f(inabsR);
 		}
 		else
 		{
-			buf_r[ibuf] = T + ((detR - T)/R);
+			indBR = -99.0;
 		}
 
-		//compute gain
-		buf_l[ibuf] = buf_l[ibuf] - detL;
-		buf_r[ibuf] = buf_r[ibuf] - detR;
-
-		//compute gain smoothing
-		//left channel
-
-		if(buf_l[ibuf] <= gsLprev)
+		//calculate static characteristic L
+		if(indBL < (T - W/2))
 		{
-			buf_l[ibuf] = alpha_a * gsLprev + (1.0-alpha_a) * buf_l[ibuf];
-			gsLprev = buf_l[ibuf];
+		  scL = indBL;
+		}
+		else if((indBL >= (T-W/2)) && (indBL < (T+W/2)))
+		{
+		  scL = indBL + ((1/R-1) * powf(indBL - T + W/2, 2)) / (2*W);
 		}
 		else
 		{
-			buf_l[ibuf] = alpha_r * gsLprev + (1.0-alpha_r) * buf_l[ibuf];
-			gsLprev = buf_l[ibuf];
+		  scL = T + ((indBL - T)/R) - indBL;
 		}
 
-		//right channel
-		if(buf_r[ibuf] <= gsRprev)
+		//calculate static characteristic R
+		if(indBR < (T - W/2))
 		{
-			buf_r[ibuf] = alpha_a * gsRprev + (1.0-alpha_a) * buf_r[ibuf];
-			gsRprev = buf_r[ibuf];
+		  scR = indBR;
+		}
+		else if((indBR >= (T-W/2)) && (indBR < (T+W/2)))
+		{
+		  scR = indBR + ((1/R-1) * powf(indBR - T + W/2, 2)) / (2*W);
 		}
 		else
 		{
-			buf_r[ibuf] = alpha_r * gsRprev + (1.0-alpha_r) * buf_r[ibuf];
-			gsRprev = buf_r[ibuf];
+		  scR = T + ((indBR - T)/R) - indBR;
 		}
 
-		//apply makeup gain
+		gcL = scL - indBL;
+		gcR = scR - indBR;
 
-		buf_l[ibuf] = buf_l[ibuf] + M + G;
-		buf_r[ibuf] = buf_r[ibuf] + M + G;
+		//calculate gain smoothing L
 
-		//compute linear gain and apply
+		if(gcL <= gsLprev)
+		{
+		  gsL = alphaA*gsLprev + (1-alphaA)*gcL;
+		}
+		else
+		{
+		  gsL = alphaR*gsLprev + (1-alphaR)*gcL;
+		}
 
-		gL = powf(10.0, buf_l[ibuf]/20.0);
-		p[i] = gL * p[i];
-		gR = powf(10.0, buf_r[ibuf]/20.0);
-		p[i+1] = gR * p[i+1];
+		gsLprev = gsL;
 
-		ibuf++;
+		//calculate gain smoothing R
+
+		if(gcR <= gsRprev)
+		{
+		  gsR = alphaA*gsRprev + (1-alphaA)*gcR;
+		}
+		else
+		{
+		  gsR = alphaR*gsRprev + (1-alphaR)*gcR;
+		}
+
+		gsRprev = gsR;
+
+		outL[i] = inL[i] * powf(10.0, (gsL + M + G)/20.0);
+		outR[i] = inR[i] * powf(10.0, (gsR + M + G)/20.0);
 	}
 }

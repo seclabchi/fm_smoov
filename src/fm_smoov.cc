@@ -15,6 +15,10 @@
 #include "cmd_server.h"
 #include "agc.h"
 #include "crossover_twoband.h"
+#include "hpf_30hz.h"
+#include "lpf_15khz.h"
+#include "compressor.h"
+#include "crossover.h"
 
 using namespace std;
 
@@ -28,6 +32,13 @@ jack_client_t *client;
 
 AGC* agc_lo, *agc_hi;
 CrossoverTwoband* crossover2b;
+HPF30Hz* hpf30Hz;
+LPF15kHz* lpf15kHz;
+Compressor* comp_b1;
+Compressor* comp_b2;
+Compressor* comp_b3;
+Compressor* comp_b4;
+Crossover* crossover4b;
 
 #ifdef CAPTURE_TAP
 FILE* capture_tap;
@@ -42,6 +53,20 @@ float tmpbufRhi[1024];
 float tmpbufLhi_out[1024];
 float tmpbufRhi_out[1024];
 
+float tmpbufCrossb1L[1024];
+float tmpbufCrossb1R[1024];
+float tmpbufCrossb2L[1024];
+float tmpbufCrossb2R[1024];
+float tmpbufCrossb3L[1024];
+float tmpbufCrossb3R[1024];
+float tmpbufCrossb4L[1024];
+float tmpbufCrossb4R[1024];
+
+float* tmpbufCrossb1[2];
+float* tmpbufCrossb2[2];
+float* tmpbufCrossb3[2];
+float* tmpbufCrossb4[2];
+
 float* tmpbufL[2];
 float* tmpbufR[2];
 
@@ -52,18 +77,40 @@ void combine_bands(float** inL, float** inR, float* outL, float* outR, uint32_t 
 {
 	for(uint32_t i = 0; i < samps; i++)
 	{
-		outL[i] = inL[0][i] + inL[1][i];
-		outR[i] = inR[0][i] + inR[1][i];
+		outL[i] = (inL[0][i] + inL[1][i]) * 0.7;
+		outR[i] = (inR[0][i] + inR[1][i]) * 0.7;
+	}
+}
+
+void combine_bands2(float** inb1, float** inb2, float** inb3, float** inb4, float* outL, float* outR, uint32_t samps)
+{
+	for(uint32_t i = 0; i < samps; i++)
+	{
+		outL[i] = (inb1[0][i] + inb2[0][i] + inb3[0][i] + inb4[0][i]) * 0.5;
+		outR[i] = (inb1[1][i] + inb2[1][i] + inb3[1][i] + inb4[1][i]) * 0.5;
 	}
 }
 
 void fmsmoov_procmain(float* inL, float* inR, float* outL, float* outR, uint32_t samps)
 {
+	hpf30Hz->process(inL, inR, inL, inR, samps);
+
 	crossover2b->process(inL, inR, tmpbufL, tmpbufR, samps);
 	agc_lo->process(tmpbufL[0], tmpbufR[0], tmpbufLout[0], tmpbufRout[0], samps);
 	agc_hi->process(tmpbufL[1], tmpbufR[1], tmpbufLout[1], tmpbufRout[1], samps);
 
 	combine_bands(tmpbufLout, tmpbufRout, outL, outR, samps, 2);
+
+	crossover4b->process(outL, outR, tmpbufCrossb1, tmpbufCrossb2, tmpbufCrossb3, tmpbufCrossb4, samps);
+
+	comp_b1->process(tmpbufCrossb1[0], tmpbufCrossb1[1], tmpbufCrossb1[0], tmpbufCrossb1[1], samps);
+	comp_b2->process(tmpbufCrossb2[0], tmpbufCrossb2[1], tmpbufCrossb2[0], tmpbufCrossb2[1], samps);
+	comp_b3->process(tmpbufCrossb3[0], tmpbufCrossb3[1], tmpbufCrossb3[0], tmpbufCrossb3[1], samps);
+	comp_b4->process(tmpbufCrossb4[0], tmpbufCrossb4[1], tmpbufCrossb4[0], tmpbufCrossb4[1], samps);
+
+	combine_bands2(tmpbufCrossb1, tmpbufCrossb2, tmpbufCrossb3, tmpbufCrossb4, outL, outR, samps);
+
+	lpf15kHz->process(outL, outR, outL, outR, samps);
 
 #ifdef CAPTURE_TAP
 	fwrite(outL, sizeof(float), samps, capture_tap);
@@ -123,6 +170,15 @@ int main (int argc, char *argv[])
 	tmpbufLout[1] = tmpbufLhi_out;
 	tmpbufRout[0] = tmpbufRlo_out;
 	tmpbufRout[1] = tmpbufRhi_out;
+
+	tmpbufCrossb1[0] = tmpbufCrossb1L;
+	tmpbufCrossb1[1] = tmpbufCrossb1R;
+	tmpbufCrossb2[0] = tmpbufCrossb2L;
+	tmpbufCrossb2[1] = tmpbufCrossb2R;
+	tmpbufCrossb3[0] = tmpbufCrossb3L;
+	tmpbufCrossb3[1] = tmpbufCrossb3R;
+	tmpbufCrossb4[0] = tmpbufCrossb4L;
+	tmpbufCrossb4[1] = tmpbufCrossb4R;
 
 	int opt = 0;
 	int c = 0;
@@ -264,8 +320,16 @@ int main (int argc, char *argv[])
 #endif
 
 		crossover2b = new CrossoverTwoband(1024);
-		agc_lo = new AGC(-18.0, -44.0, 1, 3.0, string("AGC_lo"));
-		agc_hi = new AGC(-18.0, -44.0, 1, 3.0, string("AGC_hi"));
+		agc_lo = new AGC(-18.0, -60.0, 0.8, 7.0, string("AGC_lo"));
+		agc_hi = new AGC(-18.0, -60.0, 0.8, 7.0, string("AGC_hi"));
+		hpf30Hz = new HPF30Hz(1024);
+		lpf15kHz = new LPF15kHz(1024);
+		crossover4b = new Crossover(1024);
+		/*compressor CTOR: float _R, float _T, float _G, float _W, float _Tatt, float _Trel */
+		comp_b1 = new Compressor(18, -30, -21, 0, .05, .10);
+		comp_b2 = new Compressor(18, -30, -21, 0, 0.01 , 0.08);
+		comp_b3 = new Compressor(18, -30, -21, 0, 0.001, 0.05);
+		comp_b4 = new Compressor(18, -30, -18, 0, 0.0005, 0.005);
 		//CmdServer* cmd_server = new CmdServer();
 		//cmd_server->start();
 

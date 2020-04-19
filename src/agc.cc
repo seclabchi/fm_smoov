@@ -141,5 +141,5 @@ void AGC::process(float* inL, float* inR, float* outL, float* outR, uint32_t sam
 //	cout << "inL[samps]/membufL[M], inR[samps]/membufR[M]: " << inL[samps-1] << "/" << membufL[M-1] <<
 //			"/" << inR[samps-1] << "/" << membufR[M-1] << endl;
 
-//	cout << "gs=" << gs << endl;
+//	cout << name << " gs=" << gs << endl;
 }
