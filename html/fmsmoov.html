@@ -1,83 +1,71 @@
-<html>
-
+<!doctype html>
+<html lang="en">
 <head>
-  <title>Experimental FM SMOOV Control Panel</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FMsmoov Control Panel</title>
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="fmsmoov.css">
+  <link rel="stylesheet" type="text/css" href="fmsmoov.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script type="text/javascript" src="./fmsmoov.js"></script></script>
+  <script src="fmsmoov.js"></script>
+  
+
 </head>
 <body>
-  <h1>Experimental FM SMOOV Control Panel</h1>
-  <input type="button" class="pushbuttons" onclick="connect()" value="CONNECT TO FM SMOOV" id="button_connect_disconnect"/><br><br> 
-  <hr />
-  
-  <div id="meters">
-    <div id="input_meters">
-      <p>Input:</p>
-      <br />
-      <div class="vumeter">
-        <div id="slider-linpeak" style="height:100px;"></div>
-        <label for="vert_slider_val">Lpeak</label>
-        <br />
-        <input type="text" class="vumeter" id="slider-linpeak-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
-      </div>
-      <div class="vumeter">
-        <div id="slider-rinpeak" style="height:100px;"></div>
-        <label for="vert_slider_val">Rpeak</label>
-        <br />
-        <input type="text" class="vumeter" id="slider-rinpeak-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
-      </div>
-      <div class="vumeter">
-        <div id="slider-linrms" style="height:100px;"></div>
-        <label for="vert_slider_val">Lrms</label>
-        <br />
-        <input type="text" class="vumeter" id="slider-linrms-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
-      </div>
-    
-      <div class="vumeter">
-        <div id="slider-rinrms" style="height:100px;"></div>
-        <label for="vert_slider_val">Rrms</label>
-        <br />
-        <input type="text" class="vumeter" id="slider-rinrms-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
-      </div>
+<h2>FMsmoov Control Panel</h2>
+<div class="mainctrl" id="mainctrl">
+	<button id="connect_button" class="ui-button ui_widget ui_corner_all" onclick="connection_button_pressed()">CONNECT</button>
+</div>
+<div id="tabs" class="tabsmain">
+  <ul>
+    <li><a href="#tabs-stereo-enh">Stereo Enhance</a></li>
+    <li><a href="#tabs-2band-agc">2 Band AGC</a></li>
+    <li><a href="#tabs-mb-dyn">Multiband Dynamics</a></li>
+    <li><a href="#tabs-wb-lim">Wideband Limiter</a></li>
+  </ul>
+  <div id="tabs-stereo-enh">
+    <div id="stereo_enh_mon_panel" class="subpanel subpanel-left">
+    	<p>Stereo Enhance Monitor</p>
+    	<p>
+  			<label for="amount">Value:</label>
+  			<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+		</p>
+    	<div id="stereo-enh-slider" class="slider"></div>
     </div>
-    
-    <div id="output_meters">
-      <p>Output:</p>
-      <br />
-      <div class="vumeter">
-        <div id="slider-loutpeak" style="height:100px;"></div>
-        <label for="vert_slider_val">Lpeak</label>
-        <br />
-        <input type="text" class="vumeter" id="slider-loutpeak-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
-      </div>
-      <div class="vumeter">
-        <div id="slider-routpeak" style="height:100px;"></div>
-        <label for="vert_slider_val">Rpeak</label>
-        <br />
-        <input type="text" class="vumeter" id="slider-routpeak-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
-      </div>
-      <div class="vumeter">
-        <div id="slider-loutrms" style="height:100px;"></div>
-        <label for="vert_slider_val">Lrms</label>
-        <br />
-        <input type="text" class="vumeter" id="slider-loutrms-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
-      </div>
-    
-      <div class="vumeter">
-        <div id="slider-routrms" style="height:100px;"></div>
-        <label for="vert_slider_val">Rrms</label>
-        <br />
-        <input type="text" class="vumeter" id="slider-routrms-val" readonly style="width:40px; border:0; color:#f6931f; font-weight:bold;">
-      </div>
+    <div id="stereo_enh_ctrl_panel" class="subpanel subpanel-right">
+    	<p>Stereo Enhance Control</p>
     </div>
   </div>
-  
-  <hr />
-  <p id="status_text">Welcome to the experimental FM SMOOV Control Panel.</p>
-  <hr />
-  <p id="recvdata"></p>
+  <div id="tabs-2band-agc">
+    <div id="2band-agc-mon_panel" class="subpanel subpanel-left">
+    	<p>2-band AGC Monitor</p>
+    </div>
+    <div id="2band-agc-ctrl_panel" class="subpanel subpanel-right">
+    	<p>2-band AGC Control</p>
+  	</div>
+  </div>
+  <div id="tabs-mb-dyn">
+    <div id="mb-dyn-mon_panel" class="subpanel subpanel-left">
+    	<p>Multiband Dynamics Monitor</p>
+    </div>
+    <div id="mb-dyn-ctrl_panel" class="subpanel subpanel-right">
+    	<p>Multiband Dynamics Control</p>
+  	</div>
+  </div>
+  <div id="tabs-wb-lim">
+  	<div id="wb-lim-mon_panel" class="subpanel subpanel-left">
+    	<p>Wideband Limiter Monitor</p>
+    </div>
+    <div id="wb-lim-ctrl_panel" class="subpanel subpanel-right">
+    	<p>Wideband Limiter Control</p>
+  	</div>
+  </div>
+</div>
+<div id="specan_container" class="specan_container">
+	<p>Spectrum Analyzer</p>
+	<canvas id="specan_window" class="specan_window" width="400" height="300"></canvas>
+</div>
+ 
 </body>
 </html>

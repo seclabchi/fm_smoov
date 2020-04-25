@@ -7,6 +7,43 @@ body {
 	font-size: 1.75em;
 }
 
+.mainctrl {
+	background-color: darkgray;
+	font-family: sans-serif;
+}
+
+.tabsmain {
+	height: 350px;
+}
+
+.subpanel {
+	background-color: lightgray;
+	border: 1px solid black;
+	height: 90%;
+	width: 45%;
+	padding: 10px;
+}
+
+.subpanel-left {
+	float: left;
+}
+
+.subpanel-right {
+	float: right;
+}
+
+.specan_container {
+	background_color: lightgrey;
+	margin: 10px;
+	padding: 10px;
+}
+
+.specan_window {
+	background_color: black;
+	margin: 10px;
+	padding: 10px;
+}
+
 #meters, #input_meters, #output_meters {
 	display: flex;
 }

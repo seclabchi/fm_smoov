@@ -12,13 +12,16 @@
 
 #include <jack/jack.h>
 
-#include "cmd_server.h"
+//#include "cmd_server.h"
 #include "agc.h"
 #include "crossover_twoband.h"
 #include "hpf_30hz.h"
 #include "lpf_15khz.h"
 #include "compressor.h"
 #include "crossover.h"
+#include "stereo_enhancer.h"
+
+#include "websocket_server.h"
 
 using namespace std;
 
@@ -39,6 +42,10 @@ Compressor* comp_b2;
 Compressor* comp_b3;
 Compressor* comp_b4;
 Crossover* crossover4b;
+StereoEnhancer* stereo_enh;
+Compressor* final_lim;
+
+WebsocketServer* ws_server;
 
 #ifdef CAPTURE_TAP
 FILE* capture_tap;
@@ -86,14 +93,16 @@ void combine_bands2(float** inb1, float** inb2, float** inb3, float** inb4, floa
 {
 	for(uint32_t i = 0; i < samps; i++)
 	{
-		outL[i] = (inb1[0][i] + inb2[0][i] + inb3[0][i] + inb4[0][i]) * 0.5;
-		outR[i] = (inb1[1][i] + inb2[1][i] + inb3[1][i] + inb4[1][i]) * 0.5;
+		outL[i] = (inb1[0][i] + inb2[0][i] + inb3[0][i] + inb4[0][i]) * 0.3;
+		outR[i] = (inb1[1][i] + inb2[1][i] + inb3[1][i] + inb4[1][i]) * 0.3;
 	}
 }
 
 void fmsmoov_procmain(float* inL, float* inR, float* outL, float* outR, uint32_t samps)
 {
 	hpf30Hz->process(inL, inR, inL, inR, samps);
+
+	stereo_enh->process(inL, inR, outL, outR, samps);
 
 	crossover2b->process(inL, inR, tmpbufL, tmpbufR, samps);
 	agc_lo->process(tmpbufL[0], tmpbufR[0], tmpbufLout[0], tmpbufRout[0], samps);
@@ -109,6 +118,8 @@ void fmsmoov_procmain(float* inL, float* inR, float* outL, float* outR, uint32_t
 	comp_b4->process(tmpbufCrossb4[0], tmpbufCrossb4[1], tmpbufCrossb4[0], tmpbufCrossb4[1], samps);
 
 	combine_bands2(tmpbufCrossb1, tmpbufCrossb2, tmpbufCrossb3, tmpbufCrossb4, outL, outR, samps);
+
+	final_lim->process(outL, outR, outL, outR, samps);
 
 	lpf15kHz->process(outL, outR, outL, outR, samps);
 
@@ -326,10 +337,15 @@ int main (int argc, char *argv[])
 		lpf15kHz = new LPF15kHz(1024);
 		crossover4b = new Crossover(1024);
 		/*compressor CTOR: float _R, float _T, float _G, float _W, float _Tatt, float _Trel */
-		comp_b1 = new Compressor(18, -30, -21, 0, .05, .10);
-		comp_b2 = new Compressor(18, -30, -21, 0, 0.01 , 0.08);
-		comp_b3 = new Compressor(18, -30, -21, 0, 0.001, 0.05);
-		comp_b4 = new Compressor(18, -30, -18, 0, 0.0005, 0.005);
+		comp_b1 = new Compressor(18, -29, -23, 0, .05, .10);
+		comp_b2 = new Compressor(18, -27, -19, 0, 0.01 , 0.08);
+		comp_b3 = new Compressor(18, -27, -16, 0, 0.001, 0.05);
+		comp_b4 = new Compressor(18, -27, -14, 0, 0.0005, 0.005);
+		stereo_enh = new StereoEnhancer(1.5);
+		final_lim = new Compressor(50, -4, -10, 4, 0.0005, 0.005);
+
+		ws_server = new WebsocketServer();
+		ws_server->go();
 		//CmdServer* cmd_server = new CmdServer();
 		//cmd_server->start();
 
@@ -458,6 +474,7 @@ int main (int argc, char *argv[])
 			stdinchar = getchar();
 		} while('q' != (char)stdinchar);
 
+		ws_server->stop();
 		jack_client_close (client);
 #ifdef CAPTURE_TAP
 		fclose(capture_tap);

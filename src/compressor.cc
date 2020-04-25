@@ -11,6 +11,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#define EPS 0.00000000001  //epsilon, to prevent zero sample errors
+
 using namespace std;
 
 Compressor::Compressor(float _R, float _T, float _G, float _W, float _Tatt, float _Trel)
@@ -50,26 +52,26 @@ void Compressor::process(float* inL, float* inR, float* outL, float* outR, uint3
 
 	for(i = 0; i < samps; i++)
 	{
-		inabsL = fabs(inL[i]);
-		inabsR = fabs(inR[i+1]);
+		inabsL = fabs(inL[i]) + EPS;
+		inabsR = fabs(inR[i]) + EPS;
 
-		if(inabsL > 0.0)
-		{
+//		if(inabsL > 0.0)
+//		{
 			indBL = 20 * log10f(inabsL);
-		}
-		else
-		{
-			indBL = -99.0;
-		}
+//		}
+//		else
+//		{
+//			indBL = -99.0;
+//		}
 
-		if(inabsR > 0.0)
-		{
+//		if(inabsR > 0.0)
+//		{
 			indBR = 20 * log10f(inabsR);
-		}
-		else
-		{
-			indBR = -99.0;
-		}
+//		}
+//		else
+//		{
+//			indBR = -99.0;
+//		}
 
 		//calculate static characteristic L
 		if(indBL < (T - W/2))
@@ -104,11 +106,11 @@ void Compressor::process(float* inL, float* inR, float* outL, float* outR, uint3
 
 		//calculate gain smoothing L
 
-		if(gcL <= gsLprev)
+		if(gcL < gsLprev)
 		{
 		  gsL = alphaA*gsLprev + (1-alphaA)*gcL;
 		}
-		else
+		else if(gcL > gsLprev)
 		{
 		  gsL = alphaR*gsLprev + (1-alphaR)*gcL;
 		}
@@ -117,11 +119,11 @@ void Compressor::process(float* inL, float* inR, float* outL, float* outR, uint3
 
 		//calculate gain smoothing R
 
-		if(gcR <= gsRprev)
+		if(gcR < gsRprev)
 		{
 		  gsR = alphaA*gsRprev + (1-alphaA)*gcR;
 		}
-		else
+		else if(gcR > gsRprev)
 		{
 		  gsR = alphaR*gsRprev + (1-alphaR)*gcR;
 		}
