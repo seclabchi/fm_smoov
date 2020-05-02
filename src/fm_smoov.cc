@@ -4,6 +4,7 @@
 #include <string>
 #include <cstring>
 #include <unistd.h>
+#include <signal.h>
 #include <semaphore.h>
 #include <getopt.h>
 
@@ -79,6 +80,12 @@ float* tmpbufR[2];
 
 float* tmpbufLout[2];
 float* tmpbufRout[2];
+
+void ouch(int sig)
+{
+    printf("OUCH! - I got signal %d\n", sig);
+    exit(sig);
+}
 
 void combine_bands(float** inL, float** inR, float* outL, float* outR, uint32_t samps, uint32_t numbands)
 {
@@ -172,6 +179,12 @@ jack_shutdown (void *arg)
 
 int main (int argc, char *argv[])
 {
+	struct sigaction act;
+	act.sa_handler = ouch;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = 0;
+	sigaction(SIGSEGV, &act, 0);
+
 	tmpbufL[0] = tmpbufLlo;
 	tmpbufL[1] = tmpbufLhi;
 	tmpbufR[0] = tmpbufRlo;

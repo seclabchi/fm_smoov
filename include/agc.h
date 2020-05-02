@@ -30,8 +30,8 @@ private:
 	float TL; //target in dB
 	float GT; //gain threshold for input (hold below threshold)
 	static const uint32_t Fs = 48000; //sampling frequency
-	static const float peak_response_rate = .010; //10 ms
-	static const float gate_hold_time = 8; //5 sec.
+	static constexpr float peak_response_rate = .010; //10 ms
+	static constexpr float gate_hold_time = 8; //5 sec.
     uint32_t M;
     uint32_t GHT;
     uint32_t peak_int_Laccum, peak_int_Raccum;

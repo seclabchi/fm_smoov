@@ -1,5 +1,6 @@
 var connected = false;  
 var socket; 
+var pushsocket;
 var specan;
 var specan_ctx;
 
@@ -15,6 +16,14 @@ function websocket_closed() {
 	console.log("socket close"); update("connection closed");
 	$("#connect_button").html("CONNECT"); 
 	connected = false;
+}
+
+function pushsocket_opened() { 
+	console.log("pushsocket open"); 
+}
+
+function pushsocket_closed() { 
+	console.log("pushsocket close"); 
 }
 
 $( function() {
@@ -81,12 +90,20 @@ function draw_spectrum(tox, toy)
 function svr_msg_rcvd(msg) {
   	
 }
+
+function push_msg_received(msg) {
+	$( "#push_msg_sink" ).text(msg);
+}
   
 function connection_button_pressed() {
 	console.log("Connection button pressed.");
 	if(false == connected)
 	{
 		socket = new WebSocket( "wss://lab.tonekids.com:2324", "example-protocol" );
+		pushsocket = new WebSocket("wss://lab.tonekids.com:2324", "server-push-protocol");
+		pushsocket.onopen = pushsocket_opened;
+		pushsocket.onclose = pushsocket_closed;
+		pushsocket.onmessage = function(msg) { push_msg_received(msg.data);}
 		socket.onopen = websocket_opened;
 		socket.onclose = websocket_closed;
 		socket.onmessage = function(msg) { console.log("socket message: " + msg.data); update(msg.data); }
@@ -94,5 +111,6 @@ function connection_button_pressed() {
 	else
 	{
 		socket.close();
+		pushsocket.close();
 	}
 }
