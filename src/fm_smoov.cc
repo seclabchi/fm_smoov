@@ -515,14 +515,11 @@ int main (int argc, char *argv[])
 	int option_index = 0;
 	int digit_optind = 0;
 	bool gui_disabled = false;
-	char alsa_device[MAX_ALSA_DEVICE_STRLEN + 1];
-	memset(alsa_device, 0, MAX_ALSA_DEVICE_STRLEN + 1);
 
 	int stdinchar;
 
 	static const struct option long_options[] = {
 		{"nogui",     no_argument, 		 0,  'n' },
-		{"alsadev",	  required_argument, 0,  'd' },
 		//{"append",    no_argument,       0,  0 },
 		//{"delete",    required_argument, 0,  0 },
 		//{"verbose",   no_argument,       0,  0 },
@@ -564,11 +561,6 @@ int main (int argc, char *argv[])
 			case 'n':
 				printf("GUI disabled\n");
 				gui_disabled = true;
-				break;
-
-			case 'd':
-				printf("Using ALSA device %s\n", optarg);
-				strncpy(alsa_device, optarg, MAX_ALSA_DEVICE_STRLEN);
 				break;
 
 			/*case 'b':
