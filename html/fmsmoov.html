@@ -1,74 +1,12 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FMsmoov Control Panel</title>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" type="text/css" href="fmsmoov.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src="fmsmoov.js"></script>
-  
-
-</head>
-<body>
-<h2>FMsmoov Control Panel</h2>
-<p id="push_msg_sink">
-	testing one two three
-</p>
-<div class="mainctrl" id="mainctrl">
-	<button id="connect_button" class="ui-button ui_widget ui_corner_all" onclick="connection_button_pressed()">CONNECT</button>
-</div>
-<div id="tabs" class="tabsmain">
-  <ul>
-    <li><a href="#tabs-stereo-enh">Stereo Enhance</a></li>
-    <li><a href="#tabs-2band-agc">2 Band AGC</a></li>
-    <li><a href="#tabs-mb-dyn">Multiband Dynamics</a></li>
-    <li><a href="#tabs-wb-lim">Wideband Limiter</a></li>
-  </ul>
-  <div id="tabs-stereo-enh">
-    <div id="stereo_enh_mon_panel" class="subpanel subpanel-left">
-    	<p>Stereo Enhance Monitor</p>
-    	<p>
-  			<label for="amount">Value:</label>
-  			<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-		</p>
-    	<div id="stereo-enh-slider" class="slider"></div>
-    </div>
-    <div id="stereo_enh_ctrl_panel" class="subpanel subpanel-right">
-    	<p>Stereo Enhance Control</p>
-    </div>
-  </div>
-  <div id="tabs-2band-agc">
-    <div id="2band-agc-mon_panel" class="subpanel subpanel-left">
-    	<p>2-band AGC Monitor</p>
-    </div>
-    <div id="2band-agc-ctrl_panel" class="subpanel subpanel-right">
-    	<p>2-band AGC Control</p>
-  	</div>
-  </div>
-  <div id="tabs-mb-dyn">
-    <div id="mb-dyn-mon_panel" class="subpanel subpanel-left">
-    	<p>Multiband Dynamics Monitor</p>
-    </div>
-    <div id="mb-dyn-ctrl_panel" class="subpanel subpanel-right">
-    	<p>Multiband Dynamics Control</p>
-  	</div>
-  </div>
-  <div id="tabs-wb-lim">
-  	<div id="wb-lim-mon_panel" class="subpanel subpanel-left">
-    	<p>Wideband Limiter Monitor</p>
-    </div>
-    <div id="wb-lim-ctrl_panel" class="subpanel subpanel-right">
-    	<p>Wideband Limiter Control</p>
-  	</div>
-  </div>
-</div>
-<div id="specan_container" class="specan_container">
-	<p>Spectrum Analyzer</p>
-	<canvas id="specan_window" class="specan_window" width="400" height="300"></canvas>
-</div>
- 
-</body>
+<html>
+	<head>
+		<title>FM Smoov Control Panel v0.9b</title>
+		<!-- <script src="fmsmoov.js"></script> -->
+	</head>
+	</body>
+		<p>Works great when AT&T is not down!</p>
+		-<div class="mainctrl" id="mainctrl">
+			<button id="connect_button" onclick="connection_button_pressed()">CONNECT</button>
+		</div>
+	</body>
 </html>

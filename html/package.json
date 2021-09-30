@@ -1,0 +1,27 @@
+{
+  "name": "html",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "copy-webpack-plugin": "^9.0.1",
+    "google-closure-library": "^20210808.0.0",
+    "google-protobuf": "^3.18.0",
+    "jquery": "^3.6.0",
+    "jquery-ui": "^1.12.1",
+    "node": "^16.9.1",
+    "nodejs": "^0.0.0",
+    "protobufjs": "^6.11.2",
+    "webpack": "^5.53.0"
+  },
+  "devDependencies": {
+    "google-closure-library-webpack-plugin": "^1.1.15",
+    "webpack-cli": "^4.8.0"
+  }
+}

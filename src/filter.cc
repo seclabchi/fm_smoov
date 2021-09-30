@@ -21,18 +21,23 @@ Filter::Filter(SOS* _s1, SOS* _s2, uint32_t bufsize)
 
 Filter::~Filter()
 {
+	delete s1;
+	delete s2;
+	delete b1;
+	delete b2;
+	delete[] tmpbuf;
 }
 
 void Filter::process(float* in, uint32_t nsamp, float* out)
 {
     memcpy(tmpbuf, in, nsamp * sizeof(float));
     b1->process(tmpbuf, nsamp, false);
-    b2->process(tmpbuf, nsamp, false); 
+    b2->process(tmpbuf, nsamp, false);
   
-  for(uint32_t i = 0; i < nsamp; i++)
-  {
-    out[i] = s1->g * tmpbuf[i];
-  }
+	for(uint32_t i = 0; i < nsamp; i++)
+	{
+		out[i] = s1->g * tmpbuf[i];
+	}
 }
 
 AllpassFilter::AllpassFilter(SOS* _s1l, SOS* _s2l, SOS* _s1h, SOS* _s2h, uint32_t bufsize)
@@ -56,7 +61,7 @@ void AllpassFilter::process(float* in, uint32_t nsamp, float* out)
 	filterL->process(in, nsamp, tmpbufL);
 	filterH->process(in, nsamp, tmpbufH);
 
-	for(int i = 0; i < nsamp; i++)
+	for(uint32_t i = 0; i < nsamp; i++)
 	{
 		out[i] = tmpbufL[i] + tmpbufH[i];
 	}

@@ -19,14 +19,30 @@
 
 using namespace std;
 
+AGCParams::AGCParams(float _TL, float _GT, float _Tatt, float _Trel)
+{
+	TL = _TL;
+	GT = _GT;
+	Tatt = _Tatt;
+	Trel = _Trel;
+}
+
+AGCParams::~AGCParams()
+{
+
+}
+
+
 AGC::AGC(float _TL, float _GT, float _Tatt, float _Trel, string _name)
 {
+	membufL = NULL;
+	membufR = NULL;
 	set(_TL, _GT, _Tatt, _Trel);
 	name = _name;
+	cout << "New AGC with params " << TL << "," << GT << "," << Tatt << "," << Trel << endl;
 }
 
 AGC::~AGC() {
-	// TODO Auto-generated destructor stub
 	delete[] membufL;
 	delete[] membufR;
 }

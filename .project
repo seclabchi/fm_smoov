@@ -24,4 +24,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/kiss_fft.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/kiss_fft130/kiss_fft.c</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

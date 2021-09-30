@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package fmsmoov;
+
+message Command {
+  enum CommandType {
+	PING_REQ = 0;
+	PING_RSP = 1;
+    DELAY_GET = 2;
+    DELAY_SET = 3;
+  }
+
+  CommandType type = 1;
+  repeated float vals = 2;
+}

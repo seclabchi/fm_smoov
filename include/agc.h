@@ -14,6 +14,17 @@
 
 using namespace std;
 
+class AGCParams
+{
+public:
+	AGCParams(float _TL, float _GT, float _Tatt, float _Trel);
+	virtual ~AGCParams();
+	float TL;
+	float GT;
+	float Tatt;
+	float Trel;
+};
+
 class AGC
 {
 public:

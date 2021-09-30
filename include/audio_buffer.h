@@ -1,16 +1,16 @@
 #ifndef __AUDIO_BUFFER_H__
 #define __AUDIO_BUFFER_H__
 
-#include <agc.h>
 #include <unistd.h>
 #include <string.h>
 #include <alsa/asoundlib.h>
+#include <gain.h>
+#include <gain.h>
 #include <pthread.h>
 #include <semaphore.h>
 
 #include "crossover.h"
 #include "compressor.h"
-#include "agc.h"
 #include "gate.h"
 
 #define BUFSIZE 500000

@@ -14,7 +14,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" description="" id="cdt.managedbuild.toolchain.gnu.cross.base.302878396" name="Default" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.connection=unix:///var/run/docker.sock" parent="org.eclipse.cdt.build.core.emptycfg" postbuildStep="scp ${ProjName} pi@rpi-fmsmoov:/tmp/" preannouncebuildStep="Copying web resources to remote host..." prebuildStep="scp -r ${ProjDirPath}/html rpi-fmsmoov:/tmp/">
+				<configuration artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" description="" id="cdt.managedbuild.toolchain.gnu.cross.base.302878396" name="Default" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.connection=unix:///var/run/docker.sock,org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=" parent="org.eclipse.cdt.build.core.emptycfg" postbuildStep="scp ${ProjName} pi@rpi-fmsmoov:/tmp/" preannouncebuildStep="" prebuildStep="">
 					<folderInfo id="cdt.managedbuild.toolchain.gnu.cross.base.302878396.1716466259" name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.base.335972677" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.base">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1792354783" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" useByScannerDiscovery="false" value="arm-linux-gnueabihf-" valueType="string"/>
@@ -34,8 +34,11 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.compiler.613627938" name="Cross G++ Compiler" superClass="cdt.managedbuild.tool.gnu.cross.cpp.compiler">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.compiler.option.include.paths.931628922" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/fm_smoov/include}&quot;"/>
+									<listOptionValue builtIn="false" value="/opt/repos/protobuf/src/install/include"/>
+									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/libwebsockets/build/include/libwebsockets"/>
+									<listOptionValue builtIn="false" value="/opt/repos/kiss_fft130"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/openssl/install/include"/>
-									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/libwebsockets/include"/>
+									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/libwebsockets/build/include"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/jack1/install/include"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/alsa-lib-1.1.9/install/include"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/ncurses-5.9/install/include"/>
@@ -52,9 +55,10 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.cpp.linker.955287948" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.paths.34621306" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" useByScannerDiscovery="false" valueType="libPaths">
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/alsa-lib-1.1.9/install/lib"/>
+									<listOptionValue builtIn="false" value="/opt/repos/protobuf/src/install/lib"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/openssl/install/lib"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/openssl/lib"/>
-									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/libwebsockets/lib"/>
+									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/libwebsockets/build/lib"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/db-5.3.28/install/lib"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/jack1/install/lib"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi_cross/ncurses-5.9/install/lib"/>
@@ -62,6 +66,7 @@
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.libs.1120556703" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" useByScannerDiscovery="false" valueType="libs">
 									<listOptionValue builtIn="false" value="asound"/>
+									<listOptionValue builtIn="false" value="protobuf"/>
 									<listOptionValue builtIn="false" value="crypto"/>
 									<listOptionValue builtIn="false" value="ssl"/>
 									<listOptionValue builtIn="false" value="db"/>
@@ -90,8 +95,9 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="cdt.managedbuild.toolchain.gnu.cross.base.302878396.140806425" name="generic_delay.h" rcbsApplicability="disable" resourcePath="include/generic_delay.h" toolsToInvoke=""/>
 					<sourceEntries>
-						<entry excluding="src/cmd_server.cpp|src/audio_buffer.cc|src/pcm_thread.cc|src/pcm_thread_playback.cc|src/pcm_thread_capture.cc|src/pcm_devices.cc|src/pcm_device.cc|src/pcm_device_playback.cc|src/pcm_device_capture.cc|src/protocol_lws_minimal_server_echo.c|dsp_lab" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="src/person.pb.cc|include/generic_delay.h|src/generic_delay.cpp|generic_delay.cpp|src/cmd_server.cpp|src/audio_buffer.cc|src/pcm_thread.cc|src/pcm_thread_playback.cc|src/pcm_thread_capture.cc|src/pcm_devices.cc|src/pcm_device.cc|src/pcm_device_playback.cc|src/pcm_device_capture.cc|src/protocol_lws_minimal_server_echo.c|dsp_lab" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

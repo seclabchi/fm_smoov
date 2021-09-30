@@ -9,7 +9,7 @@
 
 StereoEnhancer::StereoEnhancer(float _sep_factor)
 {
-	this->set(sep_factor);
+	this->set(_sep_factor);
 }
 
 StereoEnhancer::~StereoEnhancer()
@@ -26,11 +26,11 @@ void StereoEnhancer::process(float* inL, float* inR, float* outL, float* outR, u
 {
 	for(uint32_t i = 0; i < samps; i++)
 	{
-		M = sep_factor * (inL[i] + inR[i]) / 2.0;
-		S = sep_factor * (inL[i] - inR[i]) / 2.0;
+		M = sep_factor * ((inL[i] + inR[i]) / 2.0);
+		S = sep_factor * ((inL[i] - inR[i]) / 2.0);
 
-		outL[i] = 1/sep_factor * (M + S);
-		outR[i] = 1/sep_factor * (M - S);
+		outL[i] = 1.0f/sep_factor * (M + S);
+		outR[i] = 1.0f/sep_factor * (M - S);
 	}
 }
 

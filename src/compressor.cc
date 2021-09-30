@@ -18,6 +18,8 @@ using namespace std;
 Compressor::Compressor(float _R, float _T, float _G, float _W, float _Tatt, float _Trel)
 {
 	set(_R, _T, _G, _W, _Tatt, _Trel);
+	cout << "New compressor with settings: " << R << "," << T << "," << G << "," << W << ","
+			<< timeconst_a << "," << timeconst_r << endl;
 }
 
 Compressor::~Compressor() {

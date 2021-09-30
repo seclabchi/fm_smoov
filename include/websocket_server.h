@@ -40,61 +40,25 @@ private:
 	void* thread_func(void* args);
 	bool shutdown;
 
-	enum protocols
-	{
-		PROTOCOL_HTTP = 0,
-		PROTOCOL_EXAMPLE,
-		PROTOCOL_COUNT
-	};
-
-	struct lws_protocols* myprotocols;
-	static struct payload received_payload;
-	static struct payload push_payload;
-
 	/* Periodic push thread related */
 	pthread_t push_thread;
 	pthread_attr_t push_thread_attrs;
 	static void* push_thread_func_wrapper(void* args);
 	void* push_thread_func(void* args);
 
-};
-
-/* one of these created for each message in the ringbuffer */
-
-struct msg {
-	void *payload; /* is malloc'd */
-	size_t len;
-};
-
-/*
- * One of these is created for each client connecting to us.
- *
- * It is ONLY read or written from the lws service thread context.
- */
-
-struct per_session_data__minimal {
-	struct per_session_data__minimal *pss_list;
-	struct lws *wsi;
-	uint32_t tail;
-};
-
-/* one of these is created for each vhost our protocol is used with */
-
-struct per_vhost_data__minimal {
+	struct lws_context_creation_info info;
 	struct lws_context *context;
-	struct lws_vhost *vhost;
-	const struct lws_protocols *protocol;
+	const char *p;
+	int n = 0;
+	int logs = LLL_USER | LLL_ERR | LLL_WARN | LLL_NOTICE;
+	/* for LLL_ verbosity above NOTICE to be built into lws,
+						 * lws must have been configured and built with
+						 * -DCMAKE_BUILD_TYPE=DEBUG instead of =RELEASE */
+						/* | LLL_INFO */ /* | LLL_PARSER */ /* | LLL_HEADER */
+						/* | LLL_EXT */ /* | LLL_CLIENT */ /* | LLL_LATENCY */
+						/* | LLL_DEBUG */;
 
-	struct per_session_data__minimal *pss_list; /* linked-list of live pss*/
-	pthread_t pthread_spam[2];
-
-	pthread_mutex_t lock_ring; /* serialize access to the ring buffer */
-	struct lws_ring *ring; /* {lock_ring} ringbuffer holding unsent content */
-
-	const char *config;
-	char finished;
 };
-
 
 
 #endif /* INCLUDE_WEBSOCKET_SERVER_H_ */

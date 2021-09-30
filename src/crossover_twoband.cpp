@@ -67,12 +67,11 @@ CrossoverTwoband::~CrossoverTwoband() {
 }
 
 /* The ins and outs should be a 2x array of float pointers, for the lo and hi band */
-void CrossoverTwoband::process(float* inL, float* inR, float** outL, float** outR, uint32_t samps)
+void CrossoverTwoband::process(float* inL, float* inR, float** outLo, float** outHi, uint32_t samps)
 {
-
-	b0loL->process(inL, samps, outL[0]);
-	b0hiL->process(inL, samps, outL[1]);
-	b0loR->process(inR, samps, outR[0]);
-	b0hiR->process(inR, samps, outR[1]);
+	b0loL->process(inL, samps, outLo[0]);
+	b0loR->process(inR, samps, outLo[1]);
+	b0hiL->process(inL, samps, outHi[0]);
+	b0hiR->process(inR, samps, outHi[1]);
 }
 
