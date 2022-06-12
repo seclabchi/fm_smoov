@@ -17,14 +17,14 @@
 #include "compressor.h"
 #include "limiter_6_band.h"
 #include "stereo_enhancer.h"
-#include "fft.h"
-#include "websocket_server.h"
+//#include "fft.h"
+//#include "websocket_server.h"
 #include "phase_rotator.h"
 #include "signal_generator.h"
 #include "agc_2_band.h"
 #include "delay_line.h"
 
-#include "CommandHandler.h"
+//#include "CommandHandler.h"
 
 class FMSmoov
 {
@@ -80,14 +80,14 @@ private:
 	Limiter6band* limiter6b;
 	StereoEnhancer* stereo_enh;
 	Compressor* final_lim;
-	FFT* fft_out;
+	//FFT* fft_out;
 	Gain* gain_final;
 	DelayLine* delay_line;
 
-	WebsocketServer* ws_server;
+	//WebsocketServer* ws_server;
 	SignalGenerator* sig_gen;
 
-	CommandHandler* cmd_handler;
+	//CommandHandler* cmd_handler;
 };
 
 

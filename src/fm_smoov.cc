@@ -21,8 +21,8 @@
 #include <semaphore.h>
 #include <getopt.h>
 
-#include <ncurses/ncurses.h>
-#include <cdk.h>
+//#include <ncurses/ncurses.h>
+//#include <cdk.h>
 #include <gain.h>
 
 #include <jack/jack.h>
@@ -34,8 +34,8 @@
 #include "compressor.h"
 #include "crossover.h"
 #include "stereo_enhancer.h"
-#include "fft.h"
-#include "websocket_server.h"
+//#include "fft.h"
+//#include "websocket_server.h"
 #include "phase_rotator.h"
 #include "signal_generator.h"
 #include "agc_2_band.h"
@@ -121,14 +121,16 @@ void FMSmoov::go()
 
 	gain_final = new Gain(8.0, 8.0, string("final gain"));
 
+	/*
 	cmd_handler = CommandHandler::get_instance();
 	SUBSCRIBER me { (void*) this, this->command_handler_callback_wrapper };
 	cmd_handler->add_subscriber(me);
 	cmd_handler->go();
+	*/
 
 	start_jack();
-	ws_server = new WebsocketServer();
-	ws_server->go();
+	//ws_server = new WebsocketServer();
+	//ws_server->go();
 
 	cout << "All started. FMSmoov is on the air." << endl;
 }
@@ -136,8 +138,8 @@ void FMSmoov::go()
 void FMSmoov::stop()
 {
 	cout << "Stopping and cleaning up..." << endl;
-	ws_server->stop();
-	cmd_handler->stop();
+	//ws_server->stop();
+	//cmd_handler->stop();
 	stop_jack();
 
 	delete hpf30Hz;
@@ -146,7 +148,7 @@ void FMSmoov::stop()
 	//delete ws_agc;
 	delete lpf15kHz;
 	delete delay_line;
-	delete ws_server;
+	//delete ws_server;
 
 	cout << "All stop." << endl;
 }
