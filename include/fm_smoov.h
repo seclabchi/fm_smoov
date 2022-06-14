@@ -8,7 +8,12 @@
 #ifndef INCLUDE_FM_SMOOV_H_
 #define INCLUDE_FM_SMOOV_H_
 
-#include <jack/jack.h>
+#include <thread>
+
+#include "common_defs.h"
+#include "spdlog/spdlog.h"
+
+#include "ProcessorMain.h"
 #include "agc.h"
 #include "gain.h"
 #include "crossover_twoband.h"
@@ -31,19 +36,19 @@ class FMSmoov
 public:
 	FMSmoov();
 	virtual ~FMSmoov();
-	static int jack_process_callback_wrapper(jack_nframes_t nframes, void *arg);
-	static void jack_shutdown_wrapper(void* arg);
-	static int command_handler_callback_wrapper(void* arg, char* msg);
+
+	//static int command_handler_callback_wrapper(void* arg, char* msg);
 	void go();
 	void stop();
 protected:
-	int jack_process_callback(jack_nframes_t nframes, void *arg);
-	void jack_shutdown_callback(void* arg);
-	int command_handler_callback(char* msg);
+
+	//int command_handler_callback(char* msg);
 private:
-	void start_jack();
-	void stop_jack();
-	int process(float* inL, float* inR, float* outL, float* outR, uint32_t samps);
+
+	std::shared_ptr<spdlog::logger> log;
+
+	std::thread* m_thread_audioproc;
+	ProcessorMain* m_audioproc;
 
 	bool master_bypass;
 	bool hpf30Hz_bypass;
@@ -61,16 +66,7 @@ private:
 	LimiterSettings** limiter_settings;
 	AGCParams** agc_params;
 
-	const char **ports;
-	jack_port_t *input_port_L;
-	jack_port_t *input_port_R;
-	jack_port_t *output_port_L;
-	jack_port_t *output_port_R;
-	jack_client_t *client;
-	const char *client_name = "FMsmoov";
-	const char *server_name = NULL;
-	jack_options_t options = JackNullOption;
-	jack_status_t status;
+
 
 	PhaseRotator* phase_rotator;
 	AGC* ws_agc;

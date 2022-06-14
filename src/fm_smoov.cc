@@ -9,6 +9,14 @@
 
 #include "fm_smoov.h"
 
+#include <mutex>
+#include <condition_variable>
+
+#include "spdlog/sinks/stdout_color_sinks.h"
+
+#include "common_defs.h"
+#include "ProcessorMain.h"
+
 #include <agc.h>
 #include <iostream>
 #include <stdio.h>
@@ -43,6 +51,7 @@
 #include "gain.h"
 
 using namespace std;
+using namespace spdlog;
 
 //#define CAPTURE_TAP
 #define MAX_ALSA_DEVICE_STRLEN 64
@@ -50,7 +59,11 @@ using namespace std;
 
 FMSmoov::FMSmoov()
 {
-	cout << "FMSmoov CTOR" << endl;
+	log = spdlog::stdout_color_mt("MAIN");
+	log->set_pattern("%^[%H%M%S.%e][%s:%#][%n][%l] %v%$");
+	log->set_level(spdlog::level::trace);
+
+	LOGT("FMSMoov CTOR");
 
 	tempaL = new float[1024];
 	tempaR = new float[1024];
@@ -60,7 +73,7 @@ FMSmoov::FMSmoov()
 
 FMSmoov::~FMSmoov()
 {
-	cout << "FMSmoov DTOR" << endl;
+	LOGT("FMSmoov DTOR");
 
 	delete[] tempaL;
 	delete[] tempaR;
@@ -79,7 +92,21 @@ FMSmoov::~FMSmoov()
 
 void FMSmoov::go()
 {
-	cout << "Starting..." << endl;
+	LOGI("Starting FMSmoov...");
+
+	bool jack_started = false;
+	std::mutex mutex_startup;
+	std::condition_variable cv_startup;
+	std::unique_lock lk(mutex_startup);
+
+	LOGD("Constructing ProcessorMain...");
+	m_audioproc = new ProcessorMain(mutex_startup, cv_startup, jack_started);
+	LOGD("Starting ProcessorMain...");
+	m_thread_audioproc = new std::thread(std::ref(*m_audioproc), "1234");
+	LOGD("Waiting for startup confirmation from ProcessorMain...");
+	cv_startup.wait(lk, [&]{return jack_started;});
+
+	LOGI("All started. FMSmoov is on the air.");
 
 	master_bypass = false;
 	hpf30Hz_bypass = true;
@@ -128,19 +155,30 @@ void FMSmoov::go()
 	cmd_handler->go();
 	*/
 
-	start_jack();
+
 	//ws_server = new WebsocketServer();
 	//ws_server->go();
 
-	cout << "All started. FMSmoov is on the air." << endl;
+
 }
 
 void FMSmoov::stop()
 {
-	cout << "Stopping and cleaning up..." << endl;
+	LOGI("Stopping and cleaning up...");
+
+	LOGD("Signalling audioproc to stop...");
+	m_audioproc->stop();
+	LOGD("Waiting to join audioproc...");
+	m_thread_audioproc->join();
+
+	LOGD("Joined.  Continuing...");
+
+	delete m_thread_audioproc;
+	delete m_audioproc;
+
 	//ws_server->stop();
 	//cmd_handler->stop();
-	stop_jack();
+
 
 	delete hpf30Hz;
 	delete phase_rotator;
@@ -150,260 +188,10 @@ void FMSmoov::stop()
 	delete delay_line;
 	//delete ws_server;
 
-	cout << "All stop." << endl;
+	LOGI("All stop.");
 }
 
-void FMSmoov::start_jack()
-{
-	client = jack_client_open (client_name, options, &status, server_name);
-	if (client == NULL) {
-		fprintf (stderr, "jack_client_open() failed, "
-			 "status = 0x%2.0x\n", status);
-		if (status & JackServerFailed) {
-			fprintf (stderr, "Unable to connect to JACK server\n");
-		}
-		exit (1);
-	}
-	if (status & JackServerStarted) {
-		fprintf (stderr, "JACK server started\n");
-	}
-	if (status & JackNameNotUnique) {
-		client_name = jack_get_client_name(client);
-		fprintf (stderr, "unique name `%s' assigned\n", client_name);
-	}
-
-	/* tell the JACK server to call `process()' whenever
-	   there is work to be done.
-	*/
-
-	cout << "jack client is open, setting process callback..." << endl;
-
-	jack_set_process_callback (client, jack_process_callback_wrapper, this);
-
-	/* tell the JACK server to call `jack_shutdown()' if
-	   it ever shuts down, either entirely, or if it
-	   just decides to stop calling us.
-	*/
-
-	jack_on_shutdown(client, jack_shutdown_wrapper, this);
-
-	/* display the current sample rate.
-	 */
-
-	printf ("engine sample rate: %" PRIu32 "\n",
-		jack_get_sample_rate (client));
-
-	/* create two ports */
-
-	input_port_L = jack_port_register (client, "fmsmoov_inputL",
-					 "32 bit float mono audio",
-					 JackPortIsInput, 0);
-	input_port_R = jack_port_register (client, "fmsmoov_inputR",
-							 "32 bit float mono audio",
-							 JackPortIsInput, 0);
-	output_port_L = jack_port_register (client, "fmsmoov_outputL",
-					  //JACK_DEFAULT_AUDIO_TYPE,
-					 "32 bit float mono audio",
-					  JackPortIsOutput, 0);
-	output_port_R = jack_port_register (client, "fmsmoov_outputR",
-							  //JACK_DEFAULT_AUDIO_TYPE,
-							 "32 bit float mono audio",
-							  JackPortIsOutput, 0);
-
-	if ((input_port_L == NULL) || (output_port_L == NULL) || (input_port_R == NULL)|| (output_port_R == NULL)) {
-		fprintf(stderr, "no more JACK ports available\n");
-		exit (1);
-	}
-
-	/* Tell the JACK server that we are ready to roll.  Our
-	 * process() callback will start running now. */
-
-	if (jack_activate (client)) {
-		fprintf (stderr, "cannot activate client");
-		exit (1);
-	}
-
-	/* Connect the ports.  You can't do this before the client is
-	 * activated, because we can't make connections to clients
-	 * that aren't running.  Note the confusing (but necessary)
-	 * orientation of the driver backend ports: playback ports are
-	 * "input" to the backend, and capture ports are "output" from
-	 * it.
-	 */
-
-	ports = jack_get_ports (client, NULL, NULL,
-				JackPortIsPhysical|JackPortIsOutput);
-	if (ports == NULL) {
-		fprintf(stderr, "no physical capture ports\n");
-		exit (1);
-	}
-
-	if (jack_connect (client, ports[0], jack_port_name (input_port_L))) {
-		fprintf (stderr, "cannot connect input port 0\n");
-	}
-
-	if (jack_connect (client, ports[1], jack_port_name (input_port_R))) {
-				fprintf (stderr, "cannot connect input port 1\n");
-	}
-
-
-	jack_free (ports);
-
-	ports = jack_get_ports (client, NULL, NULL,
-				JackPortIsPhysical|JackPortIsInput);
-	if (ports == NULL) {
-		fprintf(stderr, "no physical playback ports\n");
-		exit (1);
-	}
-
-	if (jack_connect (client, jack_port_name (output_port_L), ports[0])) {
-		fprintf (stderr, "cannot connect output port 0\n");
-	}
-
-	if (jack_connect (client, jack_port_name (output_port_R), ports[1])) {
-				fprintf (stderr, "cannot connect output port 1\n");
-	}
-
-	jack_free (ports);
-}
-
-void FMSmoov::stop_jack()
-{
-	jack_client_close(client);
-}
-
-int FMSmoov::jack_process_callback_wrapper(jack_nframes_t nframes, void *arg)
-{
-	if(1024 != nframes)
-	{
-		//lazy programmer hack.
-		//TODO: handle different buffer sizes!
-		cout << "FATAL: Getting " << nframes << " frames from JACK but I can only do 1024."
-				<< " This will get fixed in future versions. " << endl;
-		return -1;
-	}
-	FMSmoov* fms = reinterpret_cast<FMSmoov*>(arg);
-	return fms->jack_process_callback(nframes, arg);
-}
-
-/**
- * The process callback for this JACK application is called in a
- * special realtime thread once for each audio cycle.
- *
- * This client does nothing more than copy data from its input
- * port to its output port. It will exit when stopped by
- * the user (e.g. using Ctrl-C on a unix-ish operating system)
- */
-int FMSmoov::jack_process_callback(jack_nframes_t nframes, void *arg)
-{
-	jack_default_audio_sample_t *inL, *inR, *outL, *outR;
-
-	inL = (jack_default_audio_sample_t*)jack_port_get_buffer (input_port_L, nframes);
-	outL = (jack_default_audio_sample_t*)jack_port_get_buffer (output_port_L, nframes);
-
-	inR = (jack_default_audio_sample_t*)jack_port_get_buffer (input_port_R, nframes);
-	outR = (jack_default_audio_sample_t*)jack_port_get_buffer (output_port_R, nframes);
-
-	return process(inL, inR, outL, outR, nframes);
-}
-
-int FMSmoov::process(float* inL, float* inR, float* outL, float* outR, uint32_t samps)
-{
-	if(true == master_bypass)
-	{
-		memcpy(outL, inL, samps * sizeof(float));
-		memcpy(outR, inR, samps * sizeof(float));
-	}
-	else
-	{
-		memcpy(tempaL, inL, samps * sizeof(float));
-		memcpy(tempaR, inR, samps * sizeof(float));
-
-		if(false == hpf30Hz_bypass)
-		{
-			hpf30Hz->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == phase_rotator_bypass)
-		{
-			phase_rotator->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == stereo_enh_bypass)
-		{
-			stereo_enh->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == ws_agc_bypass)
-		{
-			ws_agc->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == agc2b_bypass)
-		{
-			agc2b->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == limiter6b_bypass)
-		{
-			limiter6b->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == lpf15kHz_bypass)
-		{
-			lpf15kHz->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == delay_line_bypass)
-		{
-			delay_line->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		gain_final->process(tempaL, tempaR, tempaL, tempaR, samps);
-
-		memcpy(outL, tempaL, samps * sizeof(float));
-		memcpy(outR, tempaR, samps * sizeof(float));
-
-	//	sig_gen->process(outL, outR, samps);
-
-	//	fft_out->process(outL, outR, fftL, fftR, samps);
-	}
-
-#ifdef CAPTURE_TAP
-	fwrite(fftL, sizeof(float), samps/2, capture_tap);
-#endif
-
-	return 0;
-}
-
-void FMSmoov::jack_shutdown_wrapper(void* arg)
-{
-	FMSmoov* fms = reinterpret_cast<FMSmoov*>(arg);
-	fms->jack_shutdown_callback(arg);
-}
-
-void FMSmoov::jack_shutdown_callback(void* arg)
-{
-	cout << "JACK SHUTDOWN CALLBACK:  THIS IS ABNORMAL." << endl;
-	exit (1);
-}
-
+/*
 int FMSmoov::command_handler_callback_wrapper(void* arg, char* msg)
 {
 	FMSmoov* fms = reinterpret_cast<FMSmoov*>(arg);
@@ -435,9 +223,9 @@ int FMSmoov::command_handler_callback(char* msg)
 			if(!cmd_arr.at(0).compare("DELAY"))
 			{
 				cout << "Delay changed to " << cmd_arr.at(1) << " seconds." << endl;
-				stop_jack();
+				//stop_jack();
 				delay_line->change_delay(atof(cmd_arr.at(1).c_str()));
-				start_jack();
+				//start_jack();
 			}
 		}
 	}
@@ -448,7 +236,7 @@ int FMSmoov::command_handler_callback(char* msg)
 
 }
 
-
+*/
 
 float tmpbufLlo[1024];
 float tmpbufRlo[1024];
