@@ -16,6 +16,7 @@
 #include "spdlog/spdlog.h"
 #include <jack/jack.h>
 
+#include "ProcessorPlugin.h"
 
 using namespace std;
 
@@ -25,6 +26,12 @@ public:
 	virtual ~ProcessorMain();
 	void stop();
 	void operator ()(string params);
+
+	void setMasterBypass(bool bypass);
+	bool getMasterBypass();
+
+	void set_plugins(ProcessorPlugin* plugin);
+
 private:
 	void start_jack();
 	void stop_jack();
@@ -41,6 +48,10 @@ private:
 
 private:
 	std::shared_ptr<spdlog::logger> log;
+
+	bool m_master_bypass;
+	ProcessorPlugin* m_plugins;
+
 	const char **ports;
 	jack_port_t *input_port_L;
 	jack_port_t *input_port_R;

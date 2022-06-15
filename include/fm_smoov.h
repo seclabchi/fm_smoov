@@ -13,6 +13,8 @@
 #include "common_defs.h"
 #include "spdlog/spdlog.h"
 
+#include "plugin_main.h"
+
 #include "ProcessorMain.h"
 #include "agc.h"
 #include "gain.h"
@@ -49,6 +51,8 @@ private:
 
 	std::thread* m_thread_audioproc;
 	ProcessorMain* m_audioproc;
+
+	PluginMain* m_plug_main;
 
 	bool master_bypass;
 	bool hpf30Hz_bypass;

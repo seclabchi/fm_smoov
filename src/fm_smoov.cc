@@ -16,7 +16,6 @@
 
 #include "common_defs.h"
 #include "ProcessorMain.h"
-
 #include <agc.h>
 #include <iostream>
 #include <stdio.h>
@@ -34,6 +33,7 @@
 #include <gain.h>
 
 #include <jack/jack.h>
+#include <plugin_main.h>
 
 //#include "cmd_server.h"
 #include "crossover_twoband.h"
@@ -101,12 +101,29 @@ void FMSmoov::go()
 
 	LOGD("Constructing ProcessorMain...");
 	m_audioproc = new ProcessorMain(mutex_startup, cv_startup, jack_started);
+
+	PluginConfigVal cfgval;
+	cfgval.name = "CHANS";
+	cfgval.uint32val = 2;
+
+	std::map<std::string, PluginConfigVal> cfgs;
+	cfgs[cfgval.name] = cfgval;
+
+	m_plug_main = new PluginMain();
+	m_plug_main->init(cfgs);
+
+	m_audioproc->set_plugins(m_plug_main);
+
 	LOGD("Starting ProcessorMain...");
 	m_thread_audioproc = new std::thread(std::ref(*m_audioproc), "1234");
+	auto handle = m_thread_audioproc->native_handle();
+	pthread_setname_np(handle,"processor");
 	LOGD("Waiting for startup confirmation from ProcessorMain...");
 	cv_startup.wait(lk, [&]{return jack_started;});
 
 	LOGI("All started. FMSmoov is on the air.");
+
+
 
 	master_bypass = false;
 	hpf30Hz_bypass = true;
@@ -175,6 +192,7 @@ void FMSmoov::stop()
 
 	delete m_thread_audioproc;
 	delete m_audioproc;
+	delete m_plug_main;
 
 	//ws_server->stop();
 	//cmd_handler->stop();
@@ -444,6 +462,7 @@ int main (int argc, char *argv[])
 		} while('q' != (char)stdinchar);
 
 		fms->stop();
+		delete fms;
 
 #ifdef START_JACK
 

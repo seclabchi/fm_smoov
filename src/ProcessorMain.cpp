@@ -80,6 +80,19 @@ void ProcessorMain::operator ()(string params) {
 	return;
 }
 
+void ProcessorMain::setMasterBypass(bool bypass) {
+	m_master_bypass = bypass;
+}
+
+bool ProcessorMain::getMasterBypass() {
+	return m_master_bypass;
+}
+
+void ProcessorMain::set_plugins(ProcessorPlugin* plugin) {
+	m_plugins = plugin;
+}
+
+
 void ProcessorMain::start_jack() {
 	LOGI("Starting jack...");
 	jack_set_error_function(jack_error_log_function_wrapper);
@@ -218,12 +231,8 @@ int ProcessorMain::jack_process_callback_wrapper(jack_nframes_t nframes, void *a
 }
 
 /**
- * The process callback for this JACK application is called in a
- * special realtime thread once for each audio cycle.
- *
- * This client does nothing more than copy data from its input
- * port to its output port. It will exit when stopped by
- * the user (e.g. using Ctrl-C on a unix-ish operating system)
+ * Process callback when an audio buffer is ready for processing.  Called on a
+ * realtime thread for each buffer of frames available.
  */
 int ProcessorMain::jack_process_callback(jack_nframes_t nframes, void *arg)
 {
@@ -248,12 +257,16 @@ int ProcessorMain::jack_process_callback(jack_nframes_t nframes, void *arg)
 
 int ProcessorMain::process(float* inL, float* inR, float* outL, float* outR, uint32_t samps)
 {
-/*	if(true == master_bypass)
+	if(true == m_master_bypass)
 	{
 		memcpy(outL, inL, samps * sizeof(float));
 		memcpy(outR, inR, samps * sizeof(float));
+		return 0;
 	}
-	else
+
+	//m_plugins->process(buf_in, buf_out);
+
+/*
 	{
 		memcpy(tempaL, inL, samps * sizeof(float));
 		memcpy(tempaR, inR, samps * sizeof(float));
