@@ -8,13 +8,15 @@
 #include "common_defs.h"
 #include "ProcessorMain.h"
 #include <iostream>
+#include <sstream>
 #include <unistd.h>
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 
 ProcessorMain::ProcessorMain(std::mutex& _mutex_startup, std::condition_variable& _cv_startup, bool& _jack_started) :
-		mutex_startup(_mutex_startup), cv_startup(_cv_startup), m_jack_started(_jack_started)
+		mutex_startup(_mutex_startup), cv_startup(_cv_startup), m_jack_started(_jack_started),
+		m_master_bypass(false)
 {
 	log = spdlog::stdout_color_mt("PROCESSOR");
 	log->set_pattern("%^[%H%M%S.%e][%s:%#][%n][%l] %v%$");
@@ -22,11 +24,30 @@ ProcessorMain::ProcessorMain(std::mutex& _mutex_startup, std::condition_variable
 	LOGT("ProcessorMain CTOR");
 	m_shutdown_signalled = false;
 	m_jack_shutdown_complete = false;
+	m_plugins = new std::vector<ProcessorPlugin*>();
+	m_jackbufs_in = NULL;
+	m_jackbufs_out = NULL;
 }
 
 ProcessorMain::~ProcessorMain() {
-	// TODO Auto-generated destructor stub
 	LOGT("ProcessorMain DTOR");
+	for(ProcessorPlugin* p : *m_plugins) {
+		delete p;
+	}
+
+	delete m_plugins;
+
+	for(AudioBuf* ab : *m_jackbufs_in) {
+		delete ab;
+	}
+
+	delete m_jackbufs_in;
+
+	for(AudioBuf* ab : *m_jackbufs_out) {
+		delete ab;
+	}
+
+	delete m_jackbufs_out;
 }
 
 void ProcessorMain::stop() {
@@ -88,8 +109,59 @@ bool ProcessorMain::getMasterBypass() {
 	return m_master_bypass;
 }
 
-void ProcessorMain::set_plugins(ProcessorPlugin* plugin) {
-	m_plugins = plugin;
+bool ProcessorMain::add_plugin(ProcessorPlugin* plugin) {
+	std::vector<ProcessorPlugin*>::iterator it = m_plugins->begin();
+	std::vector<ProcessorPlugin*>* last_plugin_out;
+
+	while(it != m_plugins->end()) {
+		if(plugin == *it) {
+			LOGE("Can't add duplicate plugin {} to processor stack.", plugin->get_name());
+			return false;
+		}
+		it++;
+	}
+
+	m_plugins->push_back(plugin);
+
+	if(m_plugins->size() > 1) {
+		for(uint32_t i = 1; i < m_plugins->size(); i++) {
+			m_plugins->at(i)->set_inbufs(m_plugins->at(i-1)->get_outbufs());
+		}
+	}
+
+	m_last_plugout = m_plugins->at(m_plugins->size()-1)->get_outbufs();
+
+	return true;
+}
+
+bool ProcessorMain::remove_plugin(ProcessorPlugin* plugin) {
+	bool found = false;
+
+	std::vector<ProcessorPlugin*>::iterator it = m_plugins->begin();
+
+	while(it != m_plugins->end()) {
+		if(plugin == *it) {
+			m_plugins->erase(it);
+			found = true;
+			break;
+		}
+	}
+
+	if(true == found) {
+		LOGI("Removed plugin {} from processor stack.", plugin->get_name());
+	}
+	else {
+		LOGW("Couldn't find plugin {} in processor stack.", plugin->get_name());
+	}
+
+	return found;
+}
+
+void ProcessorMain::list_plugins(vector<std::string>& list) {
+	list.clear();
+	for(ProcessorPlugin* p : *m_plugins) {
+		list.push_back(p->get_name());
+	}
 }
 
 
@@ -133,9 +205,25 @@ void ProcessorMain::start_jack() {
 	 */
 
 	LOGI("engine sample rate: {}", jack_get_sample_rate(client));
-	LOGI("engine buffer size: {}", jack_get_buffer_size(client));
+	m_jack_buffer_size = jack_get_buffer_size(client);
+	LOGI("engine buffer size: {}", m_jack_buffer_size);
 	LOGI("jack version: {}", jack_get_version_string());
 	LOGI("jack current system time: {}", jack_get_time());
+
+	/* Set up the main audio buffers */
+	m_jackbufs_in = new vector<AudioBuf*>();
+	m_jackbufs_out = new vector<AudioBuf*>();
+
+	std::stringstream bufname;
+
+	for(uint32_t i = 0; i < JACK_INTERFACE_CHANNELS; i++) {
+		bufname.str("");
+		bufname << "JACK_IN_" << i;
+		m_jackbufs_in->push_back(new AudioBuf(bufname.str(), AudioBuf::AUDIO_BUF_TYPE::REFERENCE, m_jack_buffer_size, NULL));
+		bufname.str("");
+		bufname << "JACK_OUT_" << i;
+		m_jackbufs_out->push_back(new AudioBuf(bufname.str(), AudioBuf::AUDIO_BUF_TYPE::REFERENCE, m_jack_buffer_size, NULL));
+	}
 
 	/* create two ports */
 
@@ -239,32 +327,44 @@ int ProcessorMain::jack_process_callback(jack_nframes_t nframes, void *arg)
 	if(1024 != nframes)
 	{
 		//lazy programmer hack.
-		//TODO: handle different buffer sizes!
+		//TODO: handle different buffer sizes!  This will require a bounce of
+		//the plugin stack.  I've added enough infrastructure where I can
+		//probably pull this off.
 		LOGC("Getting {} frames from JACK but I can only do 1024. This will get fixed in future versions.", nframes);
 		exit (1);
 	}
 
-	jack_default_audio_sample_t *inL, *inR, *outL, *outR;
+	//jack_default_audio_sample_t *inL, *inR, *outL, *outR;
 
-	inL = (jack_default_audio_sample_t*)jack_port_get_buffer (input_port_L, nframes);
-	outL = (jack_default_audio_sample_t*)jack_port_get_buffer (output_port_L, nframes);
+	m_jackbufs_in->at(0)->set((jack_default_audio_sample_t*)jack_port_get_buffer (input_port_L, nframes), m_jack_buffer_size);
+	m_jackbufs_out->at(0)->set((jack_default_audio_sample_t*)jack_port_get_buffer (output_port_L, nframes), m_jack_buffer_size);
 
-	inR = (jack_default_audio_sample_t*)jack_port_get_buffer (input_port_R, nframes);
-	outR = (jack_default_audio_sample_t*)jack_port_get_buffer (output_port_R, nframes);
+	m_jackbufs_in->at(1)->set((jack_default_audio_sample_t*)jack_port_get_buffer (input_port_R, nframes), m_jack_buffer_size);
+	m_jackbufs_out->at(1)->set((jack_default_audio_sample_t*)jack_port_get_buffer (output_port_R, nframes), m_jack_buffer_size);
 
-	return process(inL, inR, outL, outR, nframes);
+	if(m_plugins->size() > 0) {
+		m_plugins->at(0)->set_inbufs(m_jackbufs_in);
+	}
+
+	return process();
 }
 
-int ProcessorMain::process(float* inL, float* inR, float* outL, float* outR, uint32_t samps)
+int ProcessorMain::process()
 {
 	if(true == m_master_bypass)
 	{
-		memcpy(outL, inL, samps * sizeof(float));
-		memcpy(outR, inR, samps * sizeof(float));
+		memcpy(m_jackbufs_out->at(0)->get(), m_jackbufs_in->at(0)->get(), m_jack_buffer_size * sizeof(float));
+		memcpy(m_jackbufs_out->at(1)->get(), m_jackbufs_in->at(1)->get(), m_jack_buffer_size * sizeof(float));
+
 		return 0;
 	}
 
-	//m_plugins->process(buf_in, buf_out);
+	for(ProcessorPlugin* p : *m_plugins) {
+		p->process();
+	}
+
+	memcpy(m_jackbufs_out->at(0)->get(), m_last_plugout->at(0)->get(), m_jack_buffer_size * sizeof(float));
+	memcpy(m_jackbufs_out->at(1)->get(), m_last_plugout->at(1)->get(), m_jack_buffer_size * sizeof(float));
 
 /*
 	{

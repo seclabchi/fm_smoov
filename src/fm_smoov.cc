@@ -33,9 +33,7 @@
 #include <gain.h>
 
 #include <jack/jack.h>
-#include <plugin_main.h>
-
-//#include "cmd_server.h"
+#include <plugin_meter_passthrough.h>
 #include "crossover_twoband.h"
 #include "hpf_30hz.h"
 #include "lpf_15khz.h"
@@ -102,17 +100,28 @@ void FMSmoov::go()
 	LOGD("Constructing ProcessorMain...");
 	m_audioproc = new ProcessorMain(mutex_startup, cv_startup, jack_started);
 
-	PluginConfigVal cfgval;
-	cfgval.name = "CHANS";
-	cfgval.uint32val = 2;
+	std::map<std::string, PluginConfigVal> config;
+	PluginConfigVal val;
 
-	std::map<std::string, PluginConfigVal> cfgs;
-	cfgs[cfgval.name] = cfgval;
+	memset(&val, 0, sizeof(PluginConfigVal));
+	val.name = "CHANS_IN";
+	val.uint32val = 2;
+	config[val.name] = val;
 
-	m_plug_main = new PluginMain();
-	m_plug_main->init(cfgs);
+	memset(&val, 0, sizeof(PluginConfigVal));
+	val.name = "CHANS_OUT";
+	val.uint32val = 2;
+	config[val.name] = val;
 
-	m_audioproc->set_plugins(m_plug_main);
+	memset(&val, 0, sizeof(PluginConfigVal));
+	val.name = "BUFSIZE";
+	val.uint32val = 1024;
+	config[val.name] = val;
+
+	m_plug_meter_passthrough = new PluginMeterPassthrough();
+	m_plug_meter_passthrough->init(config);
+
+	m_audioproc->add_plugin(m_plug_meter_passthrough);
 
 	LOGD("Starting ProcessorMain...");
 	m_thread_audioproc = new std::thread(std::ref(*m_audioproc), "1234");
@@ -192,7 +201,7 @@ void FMSmoov::stop()
 
 	delete m_thread_audioproc;
 	delete m_audioproc;
-	delete m_plug_main;
+	//delete m_plug_main;
 
 	//ws_server->stop();
 	//cmd_handler->stop();

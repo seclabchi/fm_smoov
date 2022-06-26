@@ -17,6 +17,7 @@
 #include <jack/jack.h>
 
 #include "ProcessorPlugin.h"
+#include "audiobuf.h"
 
 using namespace std;
 
@@ -30,12 +31,15 @@ public:
 	void setMasterBypass(bool bypass);
 	bool getMasterBypass();
 
-	void set_plugins(ProcessorPlugin* plugin);
+	bool add_plugin(ProcessorPlugin* plugin);
+	bool remove_plugin(ProcessorPlugin* plugin);
+
+	void list_plugins(vector<std::string>& list);
 
 private:
 	void start_jack();
 	void stop_jack();
-	int process(float* inL, float* inR, float* outL, float* outR, uint32_t samps);
+	int process();
 
 	static int jack_process_callback_wrapper(jack_nframes_t nframes, void *arg);
 	static void jack_shutdown_wrapper(void* arg);
@@ -47,10 +51,22 @@ private:
 
 
 private:
+	static const uint32_t JACK_INTERFACE_CHANNELS = 2; //TODO: magic number fix?
 	std::shared_ptr<spdlog::logger> log;
 
 	bool m_master_bypass;
-	ProcessorPlugin* m_plugins;
+	vector<ProcessorPlugin*>* m_plugins;
+	vector<ProcessorPlugin*>::iterator m_plugiter;
+
+	vector<AudioBuf*>* m_jackbufs_in;
+	vector<AudioBuf*>* m_jackbufs_out;
+	vector<AudioBuf*>* m_last_plugout;
+	uint32_t m_jack_buffer_size;
+
+	float* inL;
+	float* inR;
+	float* outL;
+	float* outR;
 
 	const char **ports;
 	jack_port_t *input_port_L;

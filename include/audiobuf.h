@@ -15,16 +15,28 @@
 
 class AudioBuf {
 public:
-	AudioBuf(uint32_t size, std::string name);
+	typedef enum {
+		ALLOCATED = 0,
+		REFERENCE = 1
+	} AUDIO_BUF_TYPE;
+
+public:
+	AudioBuf(std::string name, AUDIO_BUF_TYPE type, uint32_t size = 0, float* srcptr = NULL);
+	AudioBuf(const AudioBuf& rhs);
+	AudioBuf& operator = (const AudioBuf& rhs);
 	virtual ~AudioBuf();
-	void getcopy(float* outptr, uint32_t size);
-	void set(float* inptr, uint32_t size);
-	float* buf();  //yeah completely violates encapsulation but we need speed?
-	uint32_t size();
+	bool set(float* inptr, uint32_t size);
+	void get(float** p);  //yeah completely violates encapsulation but we need speed?
+	float* get();
+	const uint32_t size();
+	const std::string name();
+	const AUDIO_BUF_TYPE type();
 private:
 	std::shared_ptr<spdlog::logger> log;
 	float* m_buf;
 	uint32_t m_size;
+	std::string m_name;
+	AUDIO_BUF_TYPE m_type;
 };
 
 #endif /* AUDIOBUF_H_ */
