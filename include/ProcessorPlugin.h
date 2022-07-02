@@ -35,12 +35,14 @@ public:
 	int process();
 	virtual int do_process() = 0;
 	bool init(const std::map<std::string, PluginConfigVal>& config_vals);
+	bool change_cfg(const std::map<std::string, PluginConfigVal>& config_vals);
+	virtual bool do_change_cfg(const std::map<std::string, PluginConfigVal>& config_vals) = 0;
 	virtual bool do_init(const std::map<std::string, PluginConfigVal>& config_vals) = 0;
 	virtual bool add(ProcessorPlugin* plugin);
 	virtual bool remove(ProcessorPlugin* plugin);
 	virtual ProcessorPlugin& get_child(uint32_t child_num);
-	void set_inbufs(std::vector<AudioBuf*>* bufs);
-	std::vector<AudioBuf*>* get_outbufs();
+	bool set_main_inbufs(std::vector<AudioBuf*>* bufs);
+	void get_main_outbufs(std::vector<AudioBuf*>* outbufs);
 
 	const std::string get_name();
 protected:
@@ -53,6 +55,11 @@ protected:
 	uint32_t m_chans_in;
 	uint32_t m_chans_out;
 	uint32_t m_bufsize;
+	//TODO: multichannel support?
+	float* in_L;
+	float* in_R;
+	float* out_L;
+	float* out_R;
 };
 
 #endif /* PROCESSORPLUGIN_H_ */

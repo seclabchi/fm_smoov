@@ -25,6 +25,7 @@ ProcessorMain::ProcessorMain(std::mutex& _mutex_startup, std::condition_variable
 	m_shutdown_signalled = false;
 	m_jack_shutdown_complete = false;
 	m_plugins = new std::vector<ProcessorPlugin*>();
+	m_last_plugout_bufs = new std::vector<AudioBuf*>();
 	m_jackbufs_in = NULL;
 	m_jackbufs_out = NULL;
 }
@@ -36,6 +37,8 @@ ProcessorMain::~ProcessorMain() {
 	}
 
 	delete m_plugins;
+
+	delete m_last_plugout_bufs;
 
 	for(AudioBuf* ab : *m_jackbufs_in) {
 		delete ab;
@@ -112,6 +115,7 @@ bool ProcessorMain::getMasterBypass() {
 bool ProcessorMain::add_plugin(ProcessorPlugin* plugin) {
 	std::vector<ProcessorPlugin*>::iterator it = m_plugins->begin();
 	std::vector<ProcessorPlugin*>* last_plugin_out;
+	bool retval = true;
 
 	while(it != m_plugins->end()) {
 		if(plugin == *it) {
@@ -124,14 +128,21 @@ bool ProcessorMain::add_plugin(ProcessorPlugin* plugin) {
 	m_plugins->push_back(plugin);
 
 	if(m_plugins->size() > 1) {
+		std::vector<AudioBuf*>* bufs = new std::vector<AudioBuf*>();
+		bool set_result;
 		for(uint32_t i = 1; i < m_plugins->size(); i++) {
-			m_plugins->at(i)->set_inbufs(m_plugins->at(i-1)->get_outbufs());
+			m_plugins->at(i-1)->get_main_outbufs(bufs);
+			set_result = m_plugins->at(i)->set_main_inbufs(bufs);
+			if(!set_result) {
+				retval = false;
+			}
 		}
+		delete bufs;
 	}
 
-	m_last_plugout = m_plugins->at(m_plugins->size()-1)->get_outbufs();
+	m_plugins->at(m_plugins->size()-1)->get_main_outbufs(m_last_plugout_bufs);
 
-	return true;
+	return retval;
 }
 
 bool ProcessorMain::remove_plugin(ProcessorPlugin* plugin) {
@@ -336,14 +347,14 @@ int ProcessorMain::jack_process_callback(jack_nframes_t nframes, void *arg)
 
 	//jack_default_audio_sample_t *inL, *inR, *outL, *outR;
 
-	m_jackbufs_in->at(0)->set((jack_default_audio_sample_t*)jack_port_get_buffer (input_port_L, nframes), m_jack_buffer_size);
-	m_jackbufs_out->at(0)->set((jack_default_audio_sample_t*)jack_port_get_buffer (output_port_L, nframes), m_jack_buffer_size);
+	m_jackbufs_in->at(0)->setptr((jack_default_audio_sample_t*)jack_port_get_buffer (input_port_L, nframes), m_jack_buffer_size);
+	m_jackbufs_out->at(0)->setptr((jack_default_audio_sample_t*)jack_port_get_buffer (output_port_L, nframes), m_jack_buffer_size);
 
-	m_jackbufs_in->at(1)->set((jack_default_audio_sample_t*)jack_port_get_buffer (input_port_R, nframes), m_jack_buffer_size);
-	m_jackbufs_out->at(1)->set((jack_default_audio_sample_t*)jack_port_get_buffer (output_port_R, nframes), m_jack_buffer_size);
+	m_jackbufs_in->at(1)->setptr((jack_default_audio_sample_t*)jack_port_get_buffer (input_port_R, nframes), m_jack_buffer_size);
+	m_jackbufs_out->at(1)->setptr((jack_default_audio_sample_t*)jack_port_get_buffer (output_port_R, nframes), m_jack_buffer_size);
 
 	if(m_plugins->size() > 0) {
-		m_plugins->at(0)->set_inbufs(m_jackbufs_in);
+		m_plugins->at(0)->set_main_inbufs(m_jackbufs_in);
 	}
 
 	return process();
@@ -363,8 +374,8 @@ int ProcessorMain::process()
 		p->process();
 	}
 
-	memcpy(m_jackbufs_out->at(0)->get(), m_last_plugout->at(0)->get(), m_jack_buffer_size * sizeof(float));
-	memcpy(m_jackbufs_out->at(1)->get(), m_last_plugout->at(1)->get(), m_jack_buffer_size * sizeof(float));
+	memcpy(m_jackbufs_out->at(0)->get(), m_last_plugout_bufs->at(0)->get(), m_jack_buffer_size * sizeof(float));
+	memcpy(m_jackbufs_out->at(1)->get(), m_last_plugout_bufs->at(1)->get(), m_jack_buffer_size * sizeof(float));
 
 /*
 	{

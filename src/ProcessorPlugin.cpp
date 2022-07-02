@@ -38,8 +38,14 @@ ProcessorPlugin::~ProcessorPlugin() {
 
 	delete m_children;
 
-	for(uint32_t i = 0; i < m_chans_out; i++) {
-		delete m_bufs_out->at(i);
+	for(AudioBuf* b : *m_bufs_in) {
+		delete b;
+	}
+
+	delete m_bufs_in;
+
+	for(AudioBuf* b : *m_bufs_out) {
+		delete b;
 	}
 
 	delete m_bufs_out;
@@ -61,28 +67,25 @@ bool ProcessorPlugin::init(const std::map<std::string, PluginConfigVal>& config_
 		goto returnval;
 	}
 
-	m_chans_in = 0;
-	m_chans_out = 0;
 	m_bufsize = bufsize->second.uint32val;
 
 	m_has_been_inited = this->do_init(config_vals);
 
-	LOGI("{} has {} input and {} output channels.", this->m_name, m_chans_in, m_chans_out);
-
-	/*for(uint32_t i = 0; i < m_chans_out; i++) {
-		buf_name.str("");
-		buf_name << "IN_CHAN_" << i;
-		m_bufs_in->push_back(new AudioBuf(buf_name.str(), AudioBuf::AUDIO_BUF_TYPE::REFERENCE, m_bufsize));
+	if(m_has_been_inited) {
+		m_chans_in = m_bufs_in->size();
+		m_chans_out = m_bufs_out->size();
+		LOGI("{} has {} input and {} output channels.", m_name, m_chans_in, m_chans_out);
 	}
-	*/
-	for(uint32_t i = 0; i < m_chans_out; i++) {
-		buf_name.str("");
-		buf_name << m_name << "_OUT_CHAN_" << i;
-		m_bufs_out->push_back(new AudioBuf(buf_name.str(), AudioBuf::AUDIO_BUF_TYPE::ALLOCATED, m_bufsize));
+	else {
+		LOGE("Init failed for plugin {}", m_name);
 	}
 
 	returnval:
 	return m_has_been_inited;
+}
+
+bool ProcessorPlugin::change_cfg(const std::map<std::string, PluginConfigVal>& config_vals) {
+	this->do_change_cfg(config_vals);
 }
 
 int ProcessorPlugin::process() {
@@ -93,6 +96,10 @@ int ProcessorPlugin::process() {
 		return -1;
 	}
 	else {
+		in_L = m_bufs_in->at(0)->get();
+		in_R = m_bufs_in->at(1)->get();
+		out_L = m_bufs_out->at(0)->get();
+		out_R = m_bufs_out->at(1)->get();
 		return this->do_process();
 	}
 }
@@ -151,20 +158,36 @@ const std::string ProcessorPlugin::get_name() {
  * delete the passed in buffers before removing them from here.
  * TODO: this should be probably tackled by using smart pointers.
  */
-void ProcessorPlugin::set_inbufs(std::vector<AudioBuf*>* bufs) {
+bool ProcessorPlugin::set_main_inbufs(std::vector<AudioBuf*>* bufs) {
 	std::vector<AudioBuf*>::iterator it = bufs->begin();
+	AudioBuf* newbuf;
 
-	m_bufs_in->clear();
+	uint32_t setbufs_size = bufs->size();
+	uint32_t plugin_bufs_size = m_bufs_in->size();
 
-	for(AudioBuf* ab : *bufs) {
-		if(ab->type() != AudioBuf::AUDIO_BUF_TYPE::REFERENCE) {
-			LOGE("Can't set inbufs with non-reference type buf named {}.", ab->name());
-		}
-		m_bufs_in->push_back(ab);
+	if(setbufs_size != plugin_bufs_size) {
+		LOGE("Attempting to set {} inbufs with {} buffers.", plugin_bufs_size, setbufs_size);
+		return false;
 	}
 
+	uint32_t i = 0;
+	for(AudioBuf* ab : *bufs) {
+		if(ab->type() == AudioBuf::AUDIO_BUF_TYPE::ALLOCATED) {
+			newbuf = new AudioBuf(ab->name(), ab->type(), ab->size(), ab->get());
+			m_bufs_in->at(i) = newbuf;
+		}
+		else {
+			m_bufs_in->at(i) = ab;
+		}
+		i++;
+	}
+
+	return true;
 }
 
-std::vector<AudioBuf*>* ProcessorPlugin::get_outbufs() {
-	return m_bufs_out;
+//TODO:  Smart pointers look good here
+void ProcessorPlugin::get_main_outbufs(std::vector<AudioBuf*>* outbufs) {
+	outbufs->clear();
+	outbufs->push_back(m_bufs_out->at(0));
+	outbufs->push_back(m_bufs_out->at(1));
 }

@@ -33,7 +33,6 @@
 #include <gain.h>
 
 #include <jack/jack.h>
-#include <plugin_meter_passthrough.h>
 #include "crossover_twoband.h"
 #include "hpf_30hz.h"
 #include "lpf_15khz.h"
@@ -122,6 +121,11 @@ void FMSmoov::go()
 	m_plug_meter_passthrough->init(config);
 
 	m_audioproc->add_plugin(m_plug_meter_passthrough);
+
+	m_plug_gain = new PluginGain();
+	m_plug_gain->init(config);
+
+	m_audioproc->add_plugin(m_plug_gain);
 
 	LOGD("Starting ProcessorMain...");
 	m_thread_audioproc = new std::thread(std::ref(*m_audioproc), "1234");

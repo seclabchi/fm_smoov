@@ -16,7 +16,7 @@ public:
 	virtual ~PluginMeterPassthrough();
 	virtual int do_process();
 	virtual bool do_init(const std::map<std::string, PluginConfigVal>& config_vals);
-
+	virtual bool do_change_cfg(const std::map<std::string, PluginConfigVal>& config_vals);
 };
 
 #endif /* PLUGIN_MAIN_H_ */

@@ -60,7 +60,7 @@ private:
 
 	vector<AudioBuf*>* m_jackbufs_in;
 	vector<AudioBuf*>* m_jackbufs_out;
-	vector<AudioBuf*>* m_last_plugout;
+	vector<AudioBuf*>* m_last_plugout_bufs;
 	uint32_t m_jack_buffer_size;
 
 	float* inL;

@@ -34,7 +34,7 @@ AudioBuf::AudioBuf(std::string name, AUDIO_BUF_TYPE type, uint32_t size, float* 
 	}
 	else if(m_type == AUDIO_BUF_TYPE::REFERENCE) {
 		if(NULL == srcptr) {
-			LOGW("Attempting to allocate AudioBuf named {} as REFERENCE with no/NULL srcptr", m_name);
+			LOGW("Allocating AudioBuf named {} as REFERENCE with no/NULL srcptr", m_name);
 		}
 
 		m_buf = srcptr;
@@ -77,7 +77,10 @@ AudioBuf& AudioBuf::operator = (const AudioBuf& rhs) {
 	return *this;
 }
 
-bool AudioBuf::set(float* inptr, uint32_t size) {
+
+//TODO:  if this is a reference buffer,
+//this pointer/buffer will not be delete upon destruction of this object
+bool AudioBuf::setptr(float* inptr, uint32_t size) {
 	if(size != m_size) {
 		LOGE("Attempting to set buffer of size {} with buffer of size {}", m_size, size);
 		return false;

@@ -14,6 +14,7 @@
 #include "spdlog/spdlog.h"
 
 #include "plugin_meter_passthrough.h"
+#include "plugin_gain.h"
 
 #include "ProcessorMain.h"
 #include "agc.h"
@@ -53,6 +54,7 @@ private:
 	ProcessorMain* m_audioproc;
 
 	PluginMeterPassthrough* m_plug_meter_passthrough;
+	PluginGain* m_plug_gain;
 
 	bool master_bypass;
 	bool hpf30Hz_bypass;

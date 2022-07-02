@@ -25,7 +25,7 @@ public:
 	AudioBuf(const AudioBuf& rhs);
 	AudioBuf& operator = (const AudioBuf& rhs);
 	virtual ~AudioBuf();
-	bool set(float* inptr, uint32_t size);
+	bool setptr(float* inptr, uint32_t size);
 	void get(float** p);  //yeah completely violates encapsulation but we need speed?
 	float* get();
 	const uint32_t size();
