@@ -18,18 +18,13 @@
 #include "spdlog/spdlog.h"
 
 #include "audiobuf.h"
+#include "plugin_config.h"
+#include "fmsmoov.pb.h"
 
-class PluginConfigVal {
-public:
-	std::string name;
-	float floatval;
-	uint32_t uint32val;
-	int32_t int32val;
-};
 
 class ProcessorPlugin {
 public:
-	ProcessorPlugin(const std::string& _name);
+	ProcessorPlugin(const std::string& _name, uint32_t samprate, uint32_t bufsize);
 	virtual ~ProcessorPlugin();
 
 	int process();
@@ -42,13 +37,19 @@ public:
 	virtual bool remove(ProcessorPlugin* plugin);
 	virtual ProcessorPlugin& get_child(uint32_t child_num);
 	bool set_main_inbufs(std::vector<AudioBuf*>* bufs);
+	void get_main_inbufs(std::vector<AudioBuf*>* bufs);
 	void get_main_outbufs(std::vector<AudioBuf*>* outbufs);
 
-	const std::string get_name();
+	void get_live_data(fmsmoov::ProcessorLiveData& data);
+
+	const std::string& get_name();
+	const PluginConfig& get_config();
 protected:
 	std::shared_ptr<spdlog::logger> log;
 	std::string m_name;
+	uint32_t m_samprate;
 	std::map<std::string, ProcessorPlugin*>* m_children;
+	PluginConfig* m_config;
 	std::vector<AudioBuf*>* m_bufs_in;
 	std::vector<AudioBuf*>* m_bufs_out;
 	bool m_has_been_inited;
@@ -60,6 +61,7 @@ protected:
 	float* in_R;
 	float* out_L;
 	float* out_R;
+	fmsmoov::ProcessorLiveData m_live_data;
 };
 
 #endif /* PROCESSORPLUGIN_H_ */

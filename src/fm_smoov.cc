@@ -28,6 +28,10 @@
 #include <semaphore.h>
 #include <getopt.h>
 
+/* Includes for the 0MQ comms */
+#include <zmqpp/zmqpp.hpp>
+
+
 //#include <ncurses/ncurses.h>
 //#include <cdk.h>
 #include <gain.h>
@@ -99,6 +103,11 @@ void FMSmoov::go()
 	LOGD("Constructing ProcessorMain...");
 	m_audioproc = new ProcessorMain(mutex_startup, cv_startup, jack_started);
 
+	//TODO: gotta get this from jack BEFORE the processing starts.  I'm out of
+	//order here.
+	uint32_t samplerate = 48000;//m_audioproc->get_sample_rate();
+	uint32_t bufsize = 1024; //m_audioproc->get_buffer_size();
+
 	std::map<std::string, PluginConfigVal> config;
 	PluginConfigVal val;
 
@@ -117,27 +126,46 @@ void FMSmoov::go()
 	val.uint32val = 1024;
 	config[val.name] = val;
 
-	m_plug_meter_passthrough = new PluginMeterPassthrough();
-	m_plug_meter_passthrough->init(config);
+	m_plug_30hz_hpf = new Plugin30HzHpf(samplerate, bufsize);
+	m_plug_30hz_hpf->init(config);
+	//m_audioproc->add_plugin(m_plug_30hz_hpf);
 
-	m_audioproc->add_plugin(m_plug_meter_passthrough);
-
-	m_plug_gain = new PluginGain();
+	m_plug_gain = new PluginGain(samplerate, bufsize);
 	m_plug_gain->init(config);
-
-	m_audioproc->add_plugin(m_plug_gain);
+	//m_audioproc->add_plugin(m_plug_gain);
 
 	LOGD("Starting ProcessorMain...");
 	m_thread_audioproc = new std::thread(std::ref(*m_audioproc), "1234");
 	auto handle = m_thread_audioproc->native_handle();
-	pthread_setname_np(handle,"processor");
+	pthread_setname_np(handle, "processor");
 	LOGD("Waiting for startup confirmation from ProcessorMain...");
-	cv_startup.wait(lk, [&]{return jack_started;});
+	cv_startup.wait(lk, [&]{return jack_started;}); // @suppress("Invalid arguments")
+
+
+	bool cmdserver_started = false;
+	std::mutex mutex_startup_cmdserver;
+	std::condition_variable cv_startup_cmdserver;
+	std::unique_lock lk_cmdserver(mutex_startup_cmdserver);
+
+	LOGD("Constructing CommandServer...");
+	m_cmdserver = new CommandServer(mutex_startup_cmdserver, cv_startup_cmdserver, cmdserver_started);
+
+	LOGD("Starting CommandServer...");
+	m_thread_cmdserver = new std::thread(std::ref(*m_cmdserver), "5678");
+	auto handle_cmdserver = m_thread_cmdserver->native_handle();
+	pthread_setname_np(handle_cmdserver, "cmdserver");
+	LOGD("Waiting for startup confirmation from CommandServer...");
+	cv_startup_cmdserver.wait(lk_cmdserver, [&]{return cmdserver_started;}); // @suppress("Invalid arguments")
+
+	m_cmdserver->set_processor(m_audioproc);
+	m_audioproc->set_cmd_server(m_cmdserver);
+
+	//TODO: REMOVE THIS :-)
+	m_audioproc->setMasterBypass(true);
 
 	LOGI("All started. FMSmoov is on the air.");
 
-
-
+	/*
 	master_bypass = false;
 	hpf30Hz_bypass = true;
 	phase_rotator_bypass = true;
@@ -178,7 +206,7 @@ void FMSmoov::go()
 
 	gain_final = new Gain(8.0, 8.0, string("final gain"));
 
-	/*
+
 	cmd_handler = CommandHandler::get_instance();
 	SUBSCRIBER me { (void*) this, this->command_handler_callback_wrapper };
 	cmd_handler->add_subscriber(me);
@@ -195,6 +223,17 @@ void FMSmoov::go()
 void FMSmoov::stop()
 {
 	LOGI("Stopping and cleaning up...");
+
+	LOGD("Signalling cmdserver to stop...");
+	m_cmdserver->stop();
+	LOGD("Waiting to join cmdserver...");
+	m_thread_cmdserver->join();
+
+	LOGD("Joined.  Continuing...");
+
+	delete m_thread_cmdserver;
+	delete m_cmdserver;
+
 
 	LOGD("Signalling audioproc to stop...");
 	m_audioproc->stop();

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package fmsmoov;
+
+message ProcessorLiveData {
+    float inL = 1;
+    float inR = 2;
+    float outL = 3;
+    float outR = 4;
+}

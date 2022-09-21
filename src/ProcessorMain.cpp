@@ -12,11 +12,13 @@
 #include <unistd.h>
 
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "command_server.h"
+
+#include "plugin_meter_passthrough.h"
 
 
 ProcessorMain::ProcessorMain(std::mutex& _mutex_startup, std::condition_variable& _cv_startup, bool& _jack_started) :
-		mutex_startup(_mutex_startup), cv_startup(_cv_startup), m_jack_started(_jack_started),
-		m_master_bypass(false)
+		mutex_startup(_mutex_startup), cv_startup(_cv_startup), m_jack_started(_jack_started)
 {
 	log = spdlog::stdout_color_mt("PROCESSOR");
 	log->set_pattern("%^[%H%M%S.%e][%s:%#][%n][%l] %v%$");
@@ -24,21 +26,12 @@ ProcessorMain::ProcessorMain(std::mutex& _mutex_startup, std::condition_variable
 	LOGT("ProcessorMain CTOR");
 	m_shutdown_signalled = false;
 	m_jack_shutdown_complete = false;
-	m_plugins = new std::vector<ProcessorPlugin*>();
-	m_last_plugout_bufs = new std::vector<AudioBuf*>();
 	m_jackbufs_in = NULL;
 	m_jackbufs_out = NULL;
 }
 
 ProcessorMain::~ProcessorMain() {
 	LOGT("ProcessorMain DTOR");
-	for(ProcessorPlugin* p : *m_plugins) {
-		delete p;
-	}
-
-	delete m_plugins;
-
-	delete m_last_plugout_bufs;
 
 	for(AudioBuf* ab : *m_jackbufs_in) {
 		delete ab;
@@ -51,6 +44,10 @@ ProcessorMain::~ProcessorMain() {
 	}
 
 	delete m_jackbufs_out;
+}
+
+void ProcessorMain::set_cmd_server(CommandServer* cmd_server) {
+	m_cmd_server = cmd_server;
 }
 
 void ProcessorMain::stop() {
@@ -112,67 +109,13 @@ bool ProcessorMain::getMasterBypass() {
 	return m_master_bypass;
 }
 
-bool ProcessorMain::add_plugin(ProcessorPlugin* plugin) {
-	std::vector<ProcessorPlugin*>::iterator it = m_plugins->begin();
-	std::vector<ProcessorPlugin*>* last_plugin_out;
-	bool retval = true;
+//for debug purposes, to see if the main buffers are all aligned
+void ProcessorMain::dump_buffer_addrs() {
+	std::vector<AudioBuf*> inbuf;
+	std::vector<AudioBuf*> outbuf;
+	uint32_t i = 0;
 
-	while(it != m_plugins->end()) {
-		if(plugin == *it) {
-			LOGE("Can't add duplicate plugin {} to processor stack.", plugin->get_name());
-			return false;
-		}
-		it++;
-	}
 
-	m_plugins->push_back(plugin);
-
-	if(m_plugins->size() > 1) {
-		std::vector<AudioBuf*>* bufs = new std::vector<AudioBuf*>();
-		bool set_result;
-		for(uint32_t i = 1; i < m_plugins->size(); i++) {
-			m_plugins->at(i-1)->get_main_outbufs(bufs);
-			set_result = m_plugins->at(i)->set_main_inbufs(bufs);
-			if(!set_result) {
-				retval = false;
-			}
-		}
-		delete bufs;
-	}
-
-	m_plugins->at(m_plugins->size()-1)->get_main_outbufs(m_last_plugout_bufs);
-
-	return retval;
-}
-
-bool ProcessorMain::remove_plugin(ProcessorPlugin* plugin) {
-	bool found = false;
-
-	std::vector<ProcessorPlugin*>::iterator it = m_plugins->begin();
-
-	while(it != m_plugins->end()) {
-		if(plugin == *it) {
-			m_plugins->erase(it);
-			found = true;
-			break;
-		}
-	}
-
-	if(true == found) {
-		LOGI("Removed plugin {} from processor stack.", plugin->get_name());
-	}
-	else {
-		LOGW("Couldn't find plugin {} in processor stack.", plugin->get_name());
-	}
-
-	return found;
-}
-
-void ProcessorMain::list_plugins(vector<std::string>& list) {
-	list.clear();
-	for(ProcessorPlugin* p : *m_plugins) {
-		list.push_back(p->get_name());
-	}
 }
 
 
@@ -215,13 +158,57 @@ void ProcessorMain::start_jack() {
 	/* display the current sample rate.
 	 */
 
+	m_jack_sample_rate = jack_get_sample_rate(client);
 	LOGI("engine sample rate: {}", jack_get_sample_rate(client));
 	m_jack_buffer_size = jack_get_buffer_size(client);
 	LOGI("engine buffer size: {}", m_jack_buffer_size);
 	LOGI("jack version: {}", jack_get_version_string());
 	LOGI("jack current system time: {}", jack_get_time());
 
-	/* Set up the main audio buffers */
+
+	std::map<std::string, PluginConfigVal> config;
+	PluginConfigVal val;
+
+	memset(&val, 0, sizeof(PluginConfigVal));
+	val.name = "CHANS_IN";
+	val.uint32val = 2;
+	config[val.name] = val;
+
+	memset(&val, 0, sizeof(PluginConfigVal));
+	val.name = "CHANS_OUT";
+	val.uint32val = 2;
+	config[val.name] = val;
+
+	memset(&val, 0, sizeof(PluginConfigVal));
+	val.name = "BUFSIZE";
+	val.uint32val = 1024;
+	config[val.name] = val;
+	m_plug_meter_in = new PluginMeterPassthrough("MASTER_IN", m_jack_sample_rate, m_jack_buffer_size);
+	m_plug_meter_in->init(config);
+	m_plug_meter_out = new PluginMeterPassthrough("MASTER_OUT", m_jack_sample_rate, m_jack_buffer_size);
+	m_plug_meter_out->init(config);
+
+	/* create two ports */
+
+	input_port_L = jack_port_register (client, "fmsmoov_inputL",
+					 "32 bit float mono audio",
+					 JackPortIsInput, 0);
+	input_port_R = jack_port_register (client, "fmsmoov_inputR",
+					 "32 bit float mono audio",
+					 JackPortIsInput, 0);
+	output_port_L = jack_port_register (client, "fmsmoov_outputL",
+					 "32 bit float mono audio",
+					  JackPortIsOutput, 0);
+	output_port_R = jack_port_register (client, "fmsmoov_outputR",
+					 "32 bit float mono audio",
+					  JackPortIsOutput, 0);
+
+	if ((input_port_L == NULL) || (output_port_L == NULL) || (input_port_R == NULL)|| (output_port_R == NULL)) {
+		LOGC("no more JACK ports available\n");
+		exit (1);
+	}
+
+	/* Initialize the master jack buffer interface to the processor */
 	m_jackbufs_in = new vector<AudioBuf*>();
 	m_jackbufs_out = new vector<AudioBuf*>();
 
@@ -234,26 +221,6 @@ void ProcessorMain::start_jack() {
 		bufname.str("");
 		bufname << "JACK_OUT_" << i;
 		m_jackbufs_out->push_back(new AudioBuf(bufname.str(), AudioBuf::AUDIO_BUF_TYPE::REFERENCE, m_jack_buffer_size, NULL));
-	}
-
-	/* create two ports */
-
-	input_port_L = jack_port_register (client, "fmsmoov_inputL",
-					 "32 bit float mono audio",
-					 JackPortIsInput, 0);
-	input_port_R = jack_port_register (client, "fmsmoov_inputR",
-							 "32 bit float mono audio",
-							 JackPortIsInput, 0);
-	output_port_L = jack_port_register (client, "fmsmoov_outputL",
-					 "32 bit float mono audio",
-					  JackPortIsOutput, 0);
-	output_port_R = jack_port_register (client, "fmsmoov_outputR",
-							 "32 bit float mono audio",
-							  JackPortIsOutput, 0);
-
-	if ((input_port_L == NULL) || (output_port_L == NULL) || (input_port_R == NULL)|| (output_port_R == NULL)) {
-		LOGC("no more JACK ports available\n");
-		exit (1);
 	}
 
 	/* Tell the JACK server that we are ready to roll.  Our
@@ -353,105 +320,43 @@ int ProcessorMain::jack_process_callback(jack_nframes_t nframes, void *arg)
 	m_jackbufs_in->at(1)->setptr((jack_default_audio_sample_t*)jack_port_get_buffer (input_port_R, nframes), m_jack_buffer_size);
 	m_jackbufs_out->at(1)->setptr((jack_default_audio_sample_t*)jack_port_get_buffer (output_port_R, nframes), m_jack_buffer_size);
 
-	if(m_plugins->size() > 0) {
-		m_plugins->at(0)->set_main_inbufs(m_jackbufs_in);
-	}
+
 
 	return process();
 }
 
 int ProcessorMain::process()
 {
+	fmsmoov::ProcessorLiveData pld;
+
+	m_plug_meter_in->set_main_inbufs(m_jackbufs_in);
+	m_plug_meter_in->process();
+
+	m_plug_meter_in->get_live_data(pld);
+	m_pld.set_inl(pld.inl());
+	m_pld.set_inr(pld.inr());
+
 	if(true == m_master_bypass)
 	{
+
 		memcpy(m_jackbufs_out->at(0)->get(), m_jackbufs_in->at(0)->get(), m_jack_buffer_size * sizeof(float));
 		memcpy(m_jackbufs_out->at(1)->get(), m_jackbufs_in->at(1)->get(), m_jack_buffer_size * sizeof(float));
-
-		return 0;
+		goto finish;
 	}
 
-	for(ProcessorPlugin* p : *m_plugins) {
-		p->process();
-	}
+finish:
+	m_plug_meter_out->set_main_inbufs(m_jackbufs_out);
+	m_plug_meter_out->process();
+	m_plug_meter_out->get_live_data(pld);
+	m_pld.set_outl(pld.inl());
+	m_pld.set_outr(pld.inr());
 
-	memcpy(m_jackbufs_out->at(0)->get(), m_last_plugout_bufs->at(0)->get(), m_jack_buffer_size * sizeof(float));
-	memcpy(m_jackbufs_out->at(1)->get(), m_last_plugout_bufs->at(1)->get(), m_jack_buffer_size * sizeof(float));
-
-/*
-	{
-		memcpy(tempaL, inL, samps * sizeof(float));
-		memcpy(tempaR, inR, samps * sizeof(float));
-
-		if(false == hpf30Hz_bypass)
-		{
-			hpf30Hz->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == phase_rotator_bypass)
-		{
-			phase_rotator->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == stereo_enh_bypass)
-		{
-			stereo_enh->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == ws_agc_bypass)
-		{
-			ws_agc->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == agc2b_bypass)
-		{
-			agc2b->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == limiter6b_bypass)
-		{
-			limiter6b->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == lpf15kHz_bypass)
-		{
-			lpf15kHz->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		if(false == delay_line_bypass)
-		{
-			delay_line->process(tempaL, tempaR, tempbL, tempbR, samps);
-			memcpy(tempaL, tempbL, samps * sizeof(float));
-			memcpy(tempaR, tempbR, samps * sizeof(float));
-		}
-
-		gain_final->process(tempaL, tempaR, tempaL, tempaR, samps);
-
-		memcpy(outL, tempaL, samps * sizeof(float));
-		memcpy(outR, tempaR, samps * sizeof(float));
-
-	//	sig_gen->process(outL, outR, samps);
-
-	//	fft_out->process(outL, outR, fftL, fftR, samps);
-	}
+	m_cmd_server->publish_live_data(m_pld);
 
 #ifdef CAPTURE_TAP
 	fwrite(fftL, sizeof(float), samps/2, capture_tap);
 #endif
-*/
+
 	return 0;
 }
 
@@ -473,5 +378,10 @@ void ProcessorMain::jack_error_log_function_wrapper(const char* msg) {
 
 void ProcessorMain::jack_info_log_function_wrapper(const char* msg) {
 	SPDLOG_INFO(msg);
+}
+
+void ProcessorMain::get_audio_params(uint32_t& _sample_rate, uint32_t& _bufsize) {
+	_sample_rate = m_jack_sample_rate;
+	_bufsize = m_jack_buffer_size;
 }
 

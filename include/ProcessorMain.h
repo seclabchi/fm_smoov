@@ -17,7 +17,13 @@
 #include <jack/jack.h>
 
 #include "ProcessorPlugin.h"
+#include "processor_live_data.h"
+#include "plugin_config.h"
 #include "audiobuf.h"
+
+#include "fmsmoov.pb.h"
+
+class CommandServer;
 
 using namespace std;
 
@@ -28,13 +34,12 @@ public:
 	void stop();
 	void operator ()(string params);
 
+	void set_cmd_server(CommandServer* cmd_server);
+
 	void setMasterBypass(bool bypass);
 	bool getMasterBypass();
 
-	bool add_plugin(ProcessorPlugin* plugin);
-	bool remove_plugin(ProcessorPlugin* plugin);
-
-	void list_plugins(vector<std::string>& list);
+	void get_audio_params(uint32_t& _sample_rate, uint32_t& bufsize);
 
 private:
 	void start_jack();
@@ -49,24 +54,26 @@ private:
 	static void jack_error_log_function_wrapper(const char* msg);
 	static void jack_info_log_function_wrapper(const char* msg);
 
+	//for debug purposes, to see if the main buffers are all aligned
+	void dump_buffer_addrs();
+
 
 private:
 	static const uint32_t JACK_INTERFACE_CHANNELS = 2; //TODO: magic number fix?
 	std::shared_ptr<spdlog::logger> log;
 
+	CommandServer* m_cmd_server;
+	fmsmoov::ProcessorLiveData m_pld;
+	ProcessorPlugin* m_plug_meter_in;
+	ProcessorPlugin* m_plug_meter_out;
 	bool m_master_bypass;
-	vector<ProcessorPlugin*>* m_plugins;
-	vector<ProcessorPlugin*>::iterator m_plugiter;
 
 	vector<AudioBuf*>* m_jackbufs_in;
 	vector<AudioBuf*>* m_jackbufs_out;
-	vector<AudioBuf*>* m_last_plugout_bufs;
+	uint32_t m_requested_sample_rate;
+	uint32_t m_requested_bufsize;
+	uint32_t m_jack_sample_rate;
 	uint32_t m_jack_buffer_size;
-
-	float* inL;
-	float* inR;
-	float* outL;
-	float* outR;
 
 	const char **ports;
 	jack_port_t *input_port_L;

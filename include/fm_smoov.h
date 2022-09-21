@@ -14,9 +14,12 @@
 #include "spdlog/spdlog.h"
 
 #include "plugin_meter_passthrough.h"
+#include "plugin_30Hz_hpf.h"
 #include "plugin_gain.h"
 
 #include "ProcessorMain.h"
+#include "command_server.h"
+
 #include "agc.h"
 #include "gain.h"
 #include "crossover_twoband.h"
@@ -51,9 +54,11 @@ private:
 	std::shared_ptr<spdlog::logger> log;
 
 	std::thread* m_thread_audioproc;
+	std::thread* m_thread_cmdserver;
 	ProcessorMain* m_audioproc;
+	CommandServer* m_cmdserver;
 
-	PluginMeterPassthrough* m_plug_meter_passthrough;
+	Plugin30HzHpf* m_plug_30hz_hpf;
 	PluginGain* m_plug_gain;
 
 	bool master_bypass;
@@ -71,9 +76,6 @@ private:
 
 	LimiterSettings** limiter_settings;
 	AGCParams** agc_params;
-
-
-
 	PhaseRotator* phase_rotator;
 	AGC* ws_agc;
 	AGC2band* agc2b;

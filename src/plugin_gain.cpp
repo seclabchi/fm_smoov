@@ -7,12 +7,12 @@
 
 #include <plugin_gain.h>
 
-PluginGain::PluginGain() : ProcessorPlugin("GAIN") {
-	LOGT("PluginMain CTOR");
+PluginGain::PluginGain(uint32_t samprate, uint32_t bufsize) : ProcessorPlugin("GAIN", samprate, bufsize) {
+	LOGT("PluginGain CTOR");
 }
 
 PluginGain::~PluginGain() {
-	LOGT("PluginMain DTOR");
+	LOGT("PluginGain DTOR");
 }
 
 bool PluginGain::do_init(const std::map<std::string, PluginConfigVal>& config_vals) {
@@ -56,7 +56,7 @@ bool PluginGain::do_change_cfg(const std::map<std::string, PluginConfigVal>& con
 int PluginGain::do_process() {
 
 	for(uint32_t i = 0; i < m_bufsize; i++) {
-		//out_L[i] = in_L[i];
+		out_L[i] = in_L[i];
 		out_R[i] = in_R[i];
 	}
 

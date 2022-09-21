@@ -20,7 +20,7 @@ public:
 	} GAIN_PROCESS_TYPE;
 
 public:
-	PluginGain();
+	PluginGain(uint32_t samprate, uint32_t bufsize);
 	virtual ~PluginGain();
 	virtual int do_process();
 	virtual bool do_init(const std::map<std::string, PluginConfigVal>& config_vals);
