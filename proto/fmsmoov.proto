@@ -2,9 +2,65 @@ syntax = "proto3";
 
 package fmsmoov;
 
+enum GainType {
+	LINEAR = 0;
+	LOG = 1;
+}
+
+enum ResponseCode {
+	OK = 0;
+	ERROR = 1;
+}
+
+message GainPair {
+	float l = 1;
+	float r = 2;
+}
+
 message ProcessorLiveData {
     float inL = 1;
     float inR = 2;
     float outL = 3;
     float outR = 4;
+}
+
+message GainSetCommand {
+	string which = 1;
+	oneof gaintype_oneof {
+		GainPair gain_pair = 2;
+		float gain = 3;
+	}
+	GainType type = 4;
+} 
+
+message GainSetResponse {
+	ResponseCode response = 1;
+}
+
+message GainGetCommand {
+	string which = 1;
+}
+
+message GainGetResponse {
+	string which = 1;
+	oneof gaintype_oneof {
+		GainPair gain_pair = 2;
+		float gain = 3;
+	}
+	GainType type = 4;
+}
+
+message ProcessorCommand {
+	oneof cmd_oneof {
+		GainSetCommand gain_set = 1;
+		GainGetCommand gain_get = 2;
+	}
+}
+
+message ProcessorResponse {
+	ResponseCode response = 1;
+	oneof rsp_oneof {
+		GainSetResponse gain_set = 2;
+		GainGetResponse gain_get = 3;
+	}
 }

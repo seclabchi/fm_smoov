@@ -91,7 +91,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="command.pb.cc|command.pb.h|CommandHandler.cpp|CommandHandler.h|fft.cc|fft.h|person.pb.cc|person.pb.h|protocol_lws_minimal.cpp|websocket_server.cpp|websocket_server.h" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="code_recycle_pile"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="proto"/>
 						<entry excluding="websocket_server.cpp|protocol_lws_minimal.cpp|person.pb.cc|fft.cc|CommandHandler.cpp|command.pb.cc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
