@@ -327,18 +327,15 @@ int ProcessorMain::jack_process_callback(jack_nframes_t nframes, void *arg)
 
 int ProcessorMain::process()
 {
-	fmsmoov::ProcessorLiveData pld;
-
 	m_plug_meter_in->set_main_inbufs(m_jackbufs_in);
 	m_plug_meter_in->process();
 
-	m_plug_meter_in->get_live_data(pld);
-	m_pld.set_inl(pld.inl());
-	m_pld.set_inr(pld.inr());
+	//m_plug_meter_in->get_live_data(pld);
+	m_pld.set_inl(5.0);
+	m_pld.set_inr(6.0);
 
 	if(true == m_master_bypass)
 	{
-
 		memcpy(m_jackbufs_out->at(0)->get(), m_jackbufs_in->at(0)->get(), m_jack_buffer_size * sizeof(float));
 		memcpy(m_jackbufs_out->at(1)->get(), m_jackbufs_in->at(1)->get(), m_jack_buffer_size * sizeof(float));
 		goto finish;
@@ -347,9 +344,9 @@ int ProcessorMain::process()
 finish:
 	m_plug_meter_out->set_main_inbufs(m_jackbufs_out);
 	m_plug_meter_out->process();
-	m_plug_meter_out->get_live_data(pld);
-	m_pld.set_outl(pld.inl());
-	m_pld.set_outr(pld.inr());
+	//m_plug_meter_out->get_live_data(pld);
+	m_pld.set_outl(7.0);
+	m_pld.set_outr(8.0);
 
 	m_cmd_server->publish_live_data(m_pld);
 

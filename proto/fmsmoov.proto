@@ -18,10 +18,18 @@ message GainPair {
 }
 
 message ProcessorLiveData {
-    float inL = 1;
-    float inR = 2;
-    float outL = 3;
-    float outR = 4;
+    optional float inL = 1;
+    optional float inR = 2;
+    optional float outL = 3;
+    optional float outR = 4;
+}
+
+message ShutdownCommand {
+	string reason = 1;
+}
+
+message ShutdownResponse {
+	ResponseCode response = 1;
 }
 
 message GainSetCommand {
@@ -52,15 +60,18 @@ message GainGetResponse {
 
 message ProcessorCommand {
 	oneof cmd_oneof {
-		GainSetCommand gain_set = 1;
-		GainGetCommand gain_get = 2;
+		ShutdownCommand shutdown = 1;
+		GainSetCommand gain_set = 2;
+		GainGetCommand gain_get = 3;
 	}
 }
 
 message ProcessorResponse {
 	ResponseCode response = 1;
+	string response_msg = 2;
 	oneof rsp_oneof {
-		GainSetResponse gain_set = 2;
-		GainGetResponse gain_get = 3;
+		ShutdownResponse shutdown = 3;
+		GainSetResponse gain_set = 4;
+		GainGetResponse gain_get = 5;
 	}
 }

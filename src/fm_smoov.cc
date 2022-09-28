@@ -142,20 +142,8 @@ void FMSmoov::go()
 	cv_startup.wait(lk, [&]{return jack_started;}); // @suppress("Invalid arguments")
 
 
-	bool cmdserver_started = false;
-	std::mutex mutex_startup_cmdserver;
-	std::condition_variable cv_startup_cmdserver;
-	std::unique_lock lk_cmdserver(mutex_startup_cmdserver);
-
-	LOGD("Constructing CommandServer...");
-	m_cmdserver = new CommandServer(mutex_startup_cmdserver, cv_startup_cmdserver, cmdserver_started);
-
-	LOGD("Starting CommandServer...");
-	m_thread_cmdserver = new std::thread(std::ref(*m_cmdserver), "5678");
-	auto handle_cmdserver = m_thread_cmdserver->native_handle();
-	pthread_setname_np(handle_cmdserver, "cmdserver");
-	LOGD("Waiting for startup confirmation from CommandServer...");
-	cv_startup_cmdserver.wait(lk_cmdserver, [&]{return cmdserver_started;}); // @suppress("Invalid arguments")
+	m_cmdserver = new CommandServer();
+	m_cmdserver->start();
 
 	m_cmdserver->set_processor(m_audioproc);
 	m_audioproc->set_cmd_server(m_cmdserver);
@@ -226,12 +214,7 @@ void FMSmoov::stop()
 
 	LOGD("Signalling cmdserver to stop...");
 	m_cmdserver->stop();
-	LOGD("Waiting to join cmdserver...");
-	m_thread_cmdserver->join();
 
-	LOGD("Joined.  Continuing...");
-
-	delete m_thread_cmdserver;
 	delete m_cmdserver;
 
 
@@ -250,12 +233,12 @@ void FMSmoov::stop()
 	//cmd_handler->stop();
 
 
-	delete hpf30Hz;
-	delete phase_rotator;
-	delete stereo_enh;
+	//delete hpf30Hz;
+	//delete phase_rotator;
+	//delete stereo_enh;
 	//delete ws_agc;
-	delete lpf15kHz;
-	delete delay_line;
+	//delete lpf15kHz;
+	//delete delay_line;
 	//delete ws_server;
 
 	LOGI("All stop.");

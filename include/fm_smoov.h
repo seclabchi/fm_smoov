@@ -54,7 +54,7 @@ private:
 	std::shared_ptr<spdlog::logger> log;
 
 	std::thread* m_thread_audioproc;
-	std::thread* m_thread_cmdserver;
+
 	ProcessorMain* m_audioproc;
 	CommandServer* m_cmdserver;
 
