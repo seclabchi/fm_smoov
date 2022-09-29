@@ -149,45 +149,22 @@ const PluginConfig& ProcessorPlugin::get_config() {
 	return *m_config;
 }
 
-/* This will store the passed input buffer as a REFERENCE, regardless of the source
- * type.  And obviously, you shouldn't
- * delete the passed in buffers before removing them from here.
- * TODO: this should be probably tackled by using smart pointers.
- */
-bool ProcessorPlugin::set_main_inbufs(std::vector<AudioBuf*>* bufs) {
-	std::vector<AudioBuf*>::iterator it = bufs->begin();
-	AudioBuf* newbuf;
+void ProcessorPlugin::set_input(std::vector<AudioBuf*>* inbufs) {
+	m_bufs_in->clear();
 
-	uint32_t setbufs_size = bufs->size();
-	uint32_t plugin_bufs_size = m_bufs_in->size();
-
-	if(setbufs_size != plugin_bufs_size) {
-		LOGE("Attempting to set {} inbufs with {} buffers.", plugin_bufs_size, setbufs_size);
-		return false;
+	if(inbufs->at(0)->type() == AudioBuf::REFERENCE) {
+		m_bufs_in->push_back(inbufs->at(0));
+		m_bufs_in->push_back(inbufs->at(1));
 	}
-
-	uint32_t i = 0;
-	for(AudioBuf* ab : *bufs) {
-		m_bufs_in->at(i)->setptr(ab->get(), ab->size());
-		i++;
+	else {
+		m_bufs_in->push_back(new AudioBuf(inbufs->at(0)->name(), AudioBuf::REFERENCE, inbufs->at(0)->size(), inbufs->at(0)->get()));
+		m_bufs_in->push_back(new AudioBuf(inbufs->at(1)->name(), AudioBuf::REFERENCE, inbufs->at(1)->size(), inbufs->at(1)->get()));
 	}
-
-	return true;
 }
 
-void ProcessorPlugin::get_main_inbufs(std::vector<AudioBuf*>* inbufs) {
-	inbufs->clear();
-	inbufs->push_back(m_bufs_in->at(0));
-	inbufs->push_back(m_bufs_in->at(1));
-}
-
-//TODO:  Smart pointers look good here
-void ProcessorPlugin::get_main_outbufs(std::vector<AudioBuf*>* outbufs) {
-	outbufs->clear();
-	outbufs->push_back(m_bufs_out->at(0));
-	outbufs->push_back(m_bufs_out->at(1));
-}
-
-void ProcessorPlugin::get_live_data(fmsmoov::ProcessorLiveData& data) {
-	data.CopyFrom(m_live_data);
+std::vector<AudioBuf*>* ProcessorPlugin::get_output() {
+	std::vector<AudioBuf*>* out = new std::vector<AudioBuf*>();
+	out->push_back(new AudioBuf("OUT_L", AudioBuf::REFERENCE, m_bufs_out->at(0)->size(), m_bufs_out->at(0)->get()));
+	out->push_back(new AudioBuf("OUT_R", AudioBuf::REFERENCE, m_bufs_out->at(1)->size(), m_bufs_out->at(1)->get()));
+	return out;
 }

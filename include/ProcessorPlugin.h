@@ -36,11 +36,8 @@ public:
 	virtual bool add(ProcessorPlugin* plugin);
 	virtual bool remove(ProcessorPlugin* plugin);
 	virtual ProcessorPlugin& get_child(uint32_t child_num);
-	bool set_main_inbufs(std::vector<AudioBuf*>* bufs);
-	void get_main_inbufs(std::vector<AudioBuf*>* bufs);
-	void get_main_outbufs(std::vector<AudioBuf*>* outbufs);
-
-	void get_live_data(fmsmoov::ProcessorLiveData& data);
+	void set_input(std::vector<AudioBuf*>* inbufs);
+	std::vector<AudioBuf*>* get_output();
 
 	const std::string& get_name();
 	const PluginConfig& get_config();

@@ -16,9 +16,7 @@
 #include "spdlog/spdlog.h"
 #include <jack/jack.h>
 
-#include "ProcessorPlugin.h"
-#include "processor_live_data.h"
-#include "plugin_config.h"
+#include "processor_core.h"
 #include "audiobuf.h"
 
 #include "fmsmoov.pb.h"
@@ -40,6 +38,8 @@ public:
 	bool getMasterBypass();
 
 	void get_audio_params(uint32_t& _sample_rate, uint32_t& bufsize);
+	void handle_command(const fmsmoov::ProcessorCommand& cmd);
+
 
 private:
 	void start_jack();
@@ -62,10 +62,11 @@ private:
 	static const uint32_t JACK_INTERFACE_CHANNELS = 2; //TODO: magic number fix?
 	std::shared_ptr<spdlog::logger> log;
 
+	ProcessorCore* m_core;
+
 	CommandServer* m_cmd_server;
 	fmsmoov::ProcessorLiveData m_pld;
-	ProcessorPlugin* m_plug_meter_in;
-	ProcessorPlugin* m_plug_meter_out;
+
 	bool m_master_bypass;
 
 	vector<AudioBuf*>* m_jackbufs_in;
@@ -94,6 +95,7 @@ private:
 	std::mutex& mutex_startup;
 	std::condition_variable& cv_startup;
 	bool& m_jack_started;
+
 };
 
 #endif /* PROCESSORMAIN_H_ */

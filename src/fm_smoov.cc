@@ -103,37 +103,6 @@ void FMSmoov::go()
 	LOGD("Constructing ProcessorMain...");
 	m_audioproc = new ProcessorMain(mutex_startup, cv_startup, jack_started);
 
-	//TODO: gotta get this from jack BEFORE the processing starts.  I'm out of
-	//order here.
-	uint32_t samplerate = 48000;//m_audioproc->get_sample_rate();
-	uint32_t bufsize = 1024; //m_audioproc->get_buffer_size();
-
-	std::map<std::string, PluginConfigVal> config;
-	PluginConfigVal val;
-
-	memset(&val, 0, sizeof(PluginConfigVal));
-	val.name = "CHANS_IN";
-	val.uint32val = 2;
-	config[val.name] = val;
-
-	memset(&val, 0, sizeof(PluginConfigVal));
-	val.name = "CHANS_OUT";
-	val.uint32val = 2;
-	config[val.name] = val;
-
-	memset(&val, 0, sizeof(PluginConfigVal));
-	val.name = "BUFSIZE";
-	val.uint32val = 1024;
-	config[val.name] = val;
-
-	m_plug_30hz_hpf = new Plugin30HzHpf(samplerate, bufsize);
-	m_plug_30hz_hpf->init(config);
-	//m_audioproc->add_plugin(m_plug_30hz_hpf);
-
-	m_plug_gain = new PluginGain(samplerate, bufsize);
-	m_plug_gain->init(config);
-	//m_audioproc->add_plugin(m_plug_gain);
-
 	LOGD("Starting ProcessorMain...");
 	m_thread_audioproc = new std::thread(std::ref(*m_audioproc), "1234");
 	auto handle = m_thread_audioproc->native_handle();

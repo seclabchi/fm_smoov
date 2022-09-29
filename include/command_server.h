@@ -35,6 +35,7 @@ public:
 	//void operator ()(string params);
 	void set_processor(ProcessorMain* processor);
 	void publish_live_data(const fmsmoov::ProcessorLiveData& pld);
+	void send_reply(const fmsmoov::ProcessorResponse& rsp);
 private:
 	class Publisher {
 	public:
@@ -68,6 +69,8 @@ private:
 		virtual ~Responder();
 		void operator ()(string params);
 		void stop();
+		void set_processor(ProcessorMain* processor);
+		void send_reply(const fmsmoov::ProcessorResponse& rsp);
 	private:
 		std::shared_ptr<spdlog::logger> log;
 		bool m_shutdown_signalled;
@@ -79,6 +82,7 @@ private:
 		bool& m_responder_started;
 		bool m_responder_shutdown_complete;
 
+		ProcessorMain* m_processor;
 
 		zmqpp::context* m_context;
 		zmqpp::socket* m_socket_req;
@@ -94,7 +98,6 @@ private:
 	std::thread* m_thread_rep;
 
 	ProcessorMain* m_processor;
-
 
 	zmqpp::message_t *msg;
 	zmqpp::context* m_context;

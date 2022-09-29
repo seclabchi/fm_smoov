@@ -18,18 +18,28 @@ message GainPair {
 }
 
 message ProcessorLiveData {
-    optional float inL = 1;
-    optional float inR = 2;
-    optional float outL = 3;
-    optional float outR = 4;
+    optional float inL = 2;
+    optional float inR = 3;
+    optional float outL = 4;
+    optional float outR = 5;
 }
 
-message ShutdownCommand {
-	string reason = 1;
+message MasterBypassSetCommand {
+	bool bypass = 1;
 }
 
-message ShutdownResponse {
-	ResponseCode response = 1;
+message MasterBypassSetResponse {
+	bool bypass = 1;
+}
+
+message MasterBypassGetCommand {
+}
+
+message MasterBypassGetResponse {
+	bool bypass = 1;
+}
+
+message InternalShutdownCommand {
 }
 
 message GainSetCommand {
@@ -40,10 +50,6 @@ message GainSetCommand {
 	}
 	GainType type = 4;
 } 
-
-message GainSetResponse {
-	ResponseCode response = 1;
-}
 
 message GainGetCommand {
 	string which = 1;
@@ -60,18 +66,18 @@ message GainGetResponse {
 
 message ProcessorCommand {
 	oneof cmd_oneof {
-		ShutdownCommand shutdown = 1;
-		GainSetCommand gain_set = 2;
-		GainGetCommand gain_get = 3;
+		InternalShutdownCommand internal_shutdown_cmd = 1;
+		MasterBypassSetCommand master_bypass_set = 2;
+		MasterBypassGetCommand master_bypass_get = 3;
+		GainSetCommand gain_set = 4;
+		GainGetCommand gain_get = 5;
 	}
 }
 
 message ProcessorResponse {
 	ResponseCode response = 1;
 	string response_msg = 2;
-	oneof rsp_oneof {
-		ShutdownResponse shutdown = 3;
-		GainSetResponse gain_set = 4;
-		GainGetResponse gain_get = 5;
-	}
+	optional MasterBypassSetResponse master_bypass_set_rsp = 3;
+	optional MasterBypassGetResponse master_bypass_get_rsp = 4;
+	optional GainGetResponse gain_get_rsp = 5;
 }

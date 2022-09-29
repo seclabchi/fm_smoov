@@ -11,8 +11,6 @@
 #include <stdint.h>
 #include <string>
 
-#include "spdlog/spdlog.h"
-
 class AudioBuf {
 public:
 	typedef enum {
@@ -32,7 +30,6 @@ public:
 	const std::string name();
 	const AUDIO_BUF_TYPE type();
 private:
-	std::shared_ptr<spdlog::logger> log;
 	float* m_buf;
 	uint32_t m_size;
 	std::string m_name;

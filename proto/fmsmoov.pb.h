@@ -47,7 +47,7 @@ struct TableStruct_fmsmoov_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[10]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[12]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -67,9 +67,21 @@ extern GainPairDefaultTypeInternal _GainPair_default_instance_;
 class GainSetCommand;
 struct GainSetCommandDefaultTypeInternal;
 extern GainSetCommandDefaultTypeInternal _GainSetCommand_default_instance_;
-class GainSetResponse;
-struct GainSetResponseDefaultTypeInternal;
-extern GainSetResponseDefaultTypeInternal _GainSetResponse_default_instance_;
+class InternalShutdownCommand;
+struct InternalShutdownCommandDefaultTypeInternal;
+extern InternalShutdownCommandDefaultTypeInternal _InternalShutdownCommand_default_instance_;
+class MasterBypassGetCommand;
+struct MasterBypassGetCommandDefaultTypeInternal;
+extern MasterBypassGetCommandDefaultTypeInternal _MasterBypassGetCommand_default_instance_;
+class MasterBypassGetResponse;
+struct MasterBypassGetResponseDefaultTypeInternal;
+extern MasterBypassGetResponseDefaultTypeInternal _MasterBypassGetResponse_default_instance_;
+class MasterBypassSetCommand;
+struct MasterBypassSetCommandDefaultTypeInternal;
+extern MasterBypassSetCommandDefaultTypeInternal _MasterBypassSetCommand_default_instance_;
+class MasterBypassSetResponse;
+struct MasterBypassSetResponseDefaultTypeInternal;
+extern MasterBypassSetResponseDefaultTypeInternal _MasterBypassSetResponse_default_instance_;
 class ProcessorCommand;
 struct ProcessorCommandDefaultTypeInternal;
 extern ProcessorCommandDefaultTypeInternal _ProcessorCommand_default_instance_;
@@ -79,24 +91,20 @@ extern ProcessorLiveDataDefaultTypeInternal _ProcessorLiveData_default_instance_
 class ProcessorResponse;
 struct ProcessorResponseDefaultTypeInternal;
 extern ProcessorResponseDefaultTypeInternal _ProcessorResponse_default_instance_;
-class ShutdownCommand;
-struct ShutdownCommandDefaultTypeInternal;
-extern ShutdownCommandDefaultTypeInternal _ShutdownCommand_default_instance_;
-class ShutdownResponse;
-struct ShutdownResponseDefaultTypeInternal;
-extern ShutdownResponseDefaultTypeInternal _ShutdownResponse_default_instance_;
 }  // namespace fmsmoov
 PROTOBUF_NAMESPACE_OPEN
 template<> ::fmsmoov::GainGetCommand* Arena::CreateMaybeMessage<::fmsmoov::GainGetCommand>(Arena*);
 template<> ::fmsmoov::GainGetResponse* Arena::CreateMaybeMessage<::fmsmoov::GainGetResponse>(Arena*);
 template<> ::fmsmoov::GainPair* Arena::CreateMaybeMessage<::fmsmoov::GainPair>(Arena*);
 template<> ::fmsmoov::GainSetCommand* Arena::CreateMaybeMessage<::fmsmoov::GainSetCommand>(Arena*);
-template<> ::fmsmoov::GainSetResponse* Arena::CreateMaybeMessage<::fmsmoov::GainSetResponse>(Arena*);
+template<> ::fmsmoov::InternalShutdownCommand* Arena::CreateMaybeMessage<::fmsmoov::InternalShutdownCommand>(Arena*);
+template<> ::fmsmoov::MasterBypassGetCommand* Arena::CreateMaybeMessage<::fmsmoov::MasterBypassGetCommand>(Arena*);
+template<> ::fmsmoov::MasterBypassGetResponse* Arena::CreateMaybeMessage<::fmsmoov::MasterBypassGetResponse>(Arena*);
+template<> ::fmsmoov::MasterBypassSetCommand* Arena::CreateMaybeMessage<::fmsmoov::MasterBypassSetCommand>(Arena*);
+template<> ::fmsmoov::MasterBypassSetResponse* Arena::CreateMaybeMessage<::fmsmoov::MasterBypassSetResponse>(Arena*);
 template<> ::fmsmoov::ProcessorCommand* Arena::CreateMaybeMessage<::fmsmoov::ProcessorCommand>(Arena*);
 template<> ::fmsmoov::ProcessorLiveData* Arena::CreateMaybeMessage<::fmsmoov::ProcessorLiveData>(Arena*);
 template<> ::fmsmoov::ProcessorResponse* Arena::CreateMaybeMessage<::fmsmoov::ProcessorResponse>(Arena*);
-template<> ::fmsmoov::ShutdownCommand* Arena::CreateMaybeMessage<::fmsmoov::ShutdownCommand>(Arena*);
-template<> ::fmsmoov::ShutdownResponse* Arena::CreateMaybeMessage<::fmsmoov::ShutdownResponse>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace fmsmoov {
 
@@ -417,12 +425,12 @@ class ProcessorLiveData final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kInLFieldNumber = 1,
-    kInRFieldNumber = 2,
-    kOutLFieldNumber = 3,
-    kOutRFieldNumber = 4,
+    kInLFieldNumber = 2,
+    kInRFieldNumber = 3,
+    kOutLFieldNumber = 4,
+    kOutRFieldNumber = 5,
   };
-  // optional float inL = 1;
+  // optional float inL = 2;
   bool has_inl() const;
   private:
   bool _internal_has_inl() const;
@@ -435,7 +443,7 @@ class ProcessorLiveData final :
   void _internal_set_inl(float value);
   public:
 
-  // optional float inR = 2;
+  // optional float inR = 3;
   bool has_inr() const;
   private:
   bool _internal_has_inr() const;
@@ -448,7 +456,7 @@ class ProcessorLiveData final :
   void _internal_set_inr(float value);
   public:
 
-  // optional float outL = 3;
+  // optional float outL = 4;
   bool has_outl() const;
   private:
   bool _internal_has_outl() const;
@@ -461,7 +469,7 @@ class ProcessorLiveData final :
   void _internal_set_outl(float value);
   public:
 
-  // optional float outR = 4;
+  // optional float outR = 5;
   bool has_outr() const;
   private:
   bool _internal_has_outr() const;
@@ -491,24 +499,24 @@ class ProcessorLiveData final :
 };
 // -------------------------------------------------------------------
 
-class ShutdownCommand final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.ShutdownCommand) */ {
+class MasterBypassSetCommand final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.MasterBypassSetCommand) */ {
  public:
-  inline ShutdownCommand() : ShutdownCommand(nullptr) {}
-  ~ShutdownCommand() override;
-  explicit constexpr ShutdownCommand(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline MasterBypassSetCommand() : MasterBypassSetCommand(nullptr) {}
+  ~MasterBypassSetCommand() override;
+  explicit constexpr MasterBypassSetCommand(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  ShutdownCommand(const ShutdownCommand& from);
-  ShutdownCommand(ShutdownCommand&& from) noexcept
-    : ShutdownCommand() {
+  MasterBypassSetCommand(const MasterBypassSetCommand& from);
+  MasterBypassSetCommand(MasterBypassSetCommand&& from) noexcept
+    : MasterBypassSetCommand() {
     *this = ::std::move(from);
   }
 
-  inline ShutdownCommand& operator=(const ShutdownCommand& from) {
+  inline MasterBypassSetCommand& operator=(const MasterBypassSetCommand& from) {
     CopyFrom(from);
     return *this;
   }
-  inline ShutdownCommand& operator=(ShutdownCommand&& from) noexcept {
+  inline MasterBypassSetCommand& operator=(MasterBypassSetCommand&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()) {
       InternalSwap(&from);
@@ -527,20 +535,20 @@ class ShutdownCommand final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const ShutdownCommand& default_instance() {
+  static const MasterBypassSetCommand& default_instance() {
     return *internal_default_instance();
   }
-  static inline const ShutdownCommand* internal_default_instance() {
-    return reinterpret_cast<const ShutdownCommand*>(
-               &_ShutdownCommand_default_instance_);
+  static inline const MasterBypassSetCommand* internal_default_instance() {
+    return reinterpret_cast<const MasterBypassSetCommand*>(
+               &_MasterBypassSetCommand_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     2;
 
-  friend void swap(ShutdownCommand& a, ShutdownCommand& b) {
+  friend void swap(MasterBypassSetCommand& a, MasterBypassSetCommand& b) {
     a.Swap(&b);
   }
-  inline void Swap(ShutdownCommand* other) {
+  inline void Swap(MasterBypassSetCommand* other) {
     if (other == this) return;
     if (GetOwningArena() == other->GetOwningArena()) {
       InternalSwap(other);
@@ -548,7 +556,7 @@ class ShutdownCommand final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(ShutdownCommand* other) {
+  void UnsafeArenaSwap(MasterBypassSetCommand* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -556,17 +564,17 @@ class ShutdownCommand final :
 
   // implements Message ----------------------------------------------
 
-  inline ShutdownCommand* New() const final {
-    return new ShutdownCommand();
+  inline MasterBypassSetCommand* New() const final {
+    return new MasterBypassSetCommand();
   }
 
-  ShutdownCommand* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<ShutdownCommand>(arena);
+  MasterBypassSetCommand* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<MasterBypassSetCommand>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const ShutdownCommand& from);
+  void CopyFrom(const MasterBypassSetCommand& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const ShutdownCommand& from);
+  void MergeFrom(const MasterBypassSetCommand& from);
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
   public:
@@ -583,13 +591,13 @@ class ShutdownCommand final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(ShutdownCommand* other);
+  void InternalSwap(MasterBypassSetCommand* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "fmsmoov.ShutdownCommand";
+    return "fmsmoov.MasterBypassSetCommand";
   }
   protected:
-  explicit ShutdownCommand(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit MasterBypassSetCommand(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   private:
   static void ArenaDtor(void* object);
@@ -606,53 +614,48 @@ class ShutdownCommand final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kReasonFieldNumber = 1,
+    kBypassFieldNumber = 1,
   };
-  // string reason = 1;
-  void clear_reason();
-  const std::string& reason() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_reason(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_reason();
-  PROTOBUF_MUST_USE_RESULT std::string* release_reason();
-  void set_allocated_reason(std::string* reason);
+  // bool bypass = 1;
+  void clear_bypass();
+  bool bypass() const;
+  void set_bypass(bool value);
   private:
-  const std::string& _internal_reason() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_reason(const std::string& value);
-  std::string* _internal_mutable_reason();
+  bool _internal_bypass() const;
+  void _internal_set_bypass(bool value);
   public:
 
-  // @@protoc_insertion_point(class_scope:fmsmoov.ShutdownCommand)
+  // @@protoc_insertion_point(class_scope:fmsmoov.MasterBypassSetCommand)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr reason_;
+  bool bypass_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_fmsmoov_2eproto;
 };
 // -------------------------------------------------------------------
 
-class ShutdownResponse final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.ShutdownResponse) */ {
+class MasterBypassSetResponse final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.MasterBypassSetResponse) */ {
  public:
-  inline ShutdownResponse() : ShutdownResponse(nullptr) {}
-  ~ShutdownResponse() override;
-  explicit constexpr ShutdownResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline MasterBypassSetResponse() : MasterBypassSetResponse(nullptr) {}
+  ~MasterBypassSetResponse() override;
+  explicit constexpr MasterBypassSetResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  ShutdownResponse(const ShutdownResponse& from);
-  ShutdownResponse(ShutdownResponse&& from) noexcept
-    : ShutdownResponse() {
+  MasterBypassSetResponse(const MasterBypassSetResponse& from);
+  MasterBypassSetResponse(MasterBypassSetResponse&& from) noexcept
+    : MasterBypassSetResponse() {
     *this = ::std::move(from);
   }
 
-  inline ShutdownResponse& operator=(const ShutdownResponse& from) {
+  inline MasterBypassSetResponse& operator=(const MasterBypassSetResponse& from) {
     CopyFrom(from);
     return *this;
   }
-  inline ShutdownResponse& operator=(ShutdownResponse&& from) noexcept {
+  inline MasterBypassSetResponse& operator=(MasterBypassSetResponse&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()) {
       InternalSwap(&from);
@@ -671,20 +674,20 @@ class ShutdownResponse final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const ShutdownResponse& default_instance() {
+  static const MasterBypassSetResponse& default_instance() {
     return *internal_default_instance();
   }
-  static inline const ShutdownResponse* internal_default_instance() {
-    return reinterpret_cast<const ShutdownResponse*>(
-               &_ShutdownResponse_default_instance_);
+  static inline const MasterBypassSetResponse* internal_default_instance() {
+    return reinterpret_cast<const MasterBypassSetResponse*>(
+               &_MasterBypassSetResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     3;
 
-  friend void swap(ShutdownResponse& a, ShutdownResponse& b) {
+  friend void swap(MasterBypassSetResponse& a, MasterBypassSetResponse& b) {
     a.Swap(&b);
   }
-  inline void Swap(ShutdownResponse* other) {
+  inline void Swap(MasterBypassSetResponse* other) {
     if (other == this) return;
     if (GetOwningArena() == other->GetOwningArena()) {
       InternalSwap(other);
@@ -692,7 +695,7 @@ class ShutdownResponse final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(ShutdownResponse* other) {
+  void UnsafeArenaSwap(MasterBypassSetResponse* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -700,17 +703,17 @@ class ShutdownResponse final :
 
   // implements Message ----------------------------------------------
 
-  inline ShutdownResponse* New() const final {
-    return new ShutdownResponse();
+  inline MasterBypassSetResponse* New() const final {
+    return new MasterBypassSetResponse();
   }
 
-  ShutdownResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<ShutdownResponse>(arena);
+  MasterBypassSetResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<MasterBypassSetResponse>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const ShutdownResponse& from);
+  void CopyFrom(const MasterBypassSetResponse& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const ShutdownResponse& from);
+  void MergeFrom(const MasterBypassSetResponse& from);
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
   public:
@@ -727,13 +730,13 @@ class ShutdownResponse final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(ShutdownResponse* other);
+  void InternalSwap(MasterBypassSetResponse* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "fmsmoov.ShutdownResponse";
+    return "fmsmoov.MasterBypassSetResponse";
   }
   protected:
-  explicit ShutdownResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit MasterBypassSetResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   private:
   static void ArenaDtor(void* object);
@@ -750,25 +753,416 @@ class ShutdownResponse final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kResponseFieldNumber = 1,
+    kBypassFieldNumber = 1,
   };
-  // .fmsmoov.ResponseCode response = 1;
-  void clear_response();
-  ::fmsmoov::ResponseCode response() const;
-  void set_response(::fmsmoov::ResponseCode value);
+  // bool bypass = 1;
+  void clear_bypass();
+  bool bypass() const;
+  void set_bypass(bool value);
   private:
-  ::fmsmoov::ResponseCode _internal_response() const;
-  void _internal_set_response(::fmsmoov::ResponseCode value);
+  bool _internal_bypass() const;
+  void _internal_set_bypass(bool value);
   public:
 
-  // @@protoc_insertion_point(class_scope:fmsmoov.ShutdownResponse)
+  // @@protoc_insertion_point(class_scope:fmsmoov.MasterBypassSetResponse)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  int response_;
+  bool bypass_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_fmsmoov_2eproto;
+};
+// -------------------------------------------------------------------
+
+class MasterBypassGetCommand final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.MasterBypassGetCommand) */ {
+ public:
+  inline MasterBypassGetCommand() : MasterBypassGetCommand(nullptr) {}
+  ~MasterBypassGetCommand() override;
+  explicit constexpr MasterBypassGetCommand(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  MasterBypassGetCommand(const MasterBypassGetCommand& from);
+  MasterBypassGetCommand(MasterBypassGetCommand&& from) noexcept
+    : MasterBypassGetCommand() {
+    *this = ::std::move(from);
+  }
+
+  inline MasterBypassGetCommand& operator=(const MasterBypassGetCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MasterBypassGetCommand& operator=(MasterBypassGetCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const MasterBypassGetCommand& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const MasterBypassGetCommand* internal_default_instance() {
+    return reinterpret_cast<const MasterBypassGetCommand*>(
+               &_MasterBypassGetCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(MasterBypassGetCommand& a, MasterBypassGetCommand& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(MasterBypassGetCommand* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MasterBypassGetCommand* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline MasterBypassGetCommand* New() const final {
+    return new MasterBypassGetCommand();
+  }
+
+  MasterBypassGetCommand* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<MasterBypassGetCommand>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const MasterBypassGetCommand& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const MasterBypassGetCommand& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(MasterBypassGetCommand* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "fmsmoov.MasterBypassGetCommand";
+  }
+  protected:
+  explicit MasterBypassGetCommand(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:fmsmoov.MasterBypassGetCommand)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_fmsmoov_2eproto;
+};
+// -------------------------------------------------------------------
+
+class MasterBypassGetResponse final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.MasterBypassGetResponse) */ {
+ public:
+  inline MasterBypassGetResponse() : MasterBypassGetResponse(nullptr) {}
+  ~MasterBypassGetResponse() override;
+  explicit constexpr MasterBypassGetResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  MasterBypassGetResponse(const MasterBypassGetResponse& from);
+  MasterBypassGetResponse(MasterBypassGetResponse&& from) noexcept
+    : MasterBypassGetResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline MasterBypassGetResponse& operator=(const MasterBypassGetResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline MasterBypassGetResponse& operator=(MasterBypassGetResponse&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const MasterBypassGetResponse& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const MasterBypassGetResponse* internal_default_instance() {
+    return reinterpret_cast<const MasterBypassGetResponse*>(
+               &_MasterBypassGetResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(MasterBypassGetResponse& a, MasterBypassGetResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(MasterBypassGetResponse* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(MasterBypassGetResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline MasterBypassGetResponse* New() const final {
+    return new MasterBypassGetResponse();
+  }
+
+  MasterBypassGetResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<MasterBypassGetResponse>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const MasterBypassGetResponse& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const MasterBypassGetResponse& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(MasterBypassGetResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "fmsmoov.MasterBypassGetResponse";
+  }
+  protected:
+  explicit MasterBypassGetResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kBypassFieldNumber = 1,
+  };
+  // bool bypass = 1;
+  void clear_bypass();
+  bool bypass() const;
+  void set_bypass(bool value);
+  private:
+  bool _internal_bypass() const;
+  void _internal_set_bypass(bool value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:fmsmoov.MasterBypassGetResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  bool bypass_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_fmsmoov_2eproto;
+};
+// -------------------------------------------------------------------
+
+class InternalShutdownCommand final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.InternalShutdownCommand) */ {
+ public:
+  inline InternalShutdownCommand() : InternalShutdownCommand(nullptr) {}
+  ~InternalShutdownCommand() override;
+  explicit constexpr InternalShutdownCommand(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  InternalShutdownCommand(const InternalShutdownCommand& from);
+  InternalShutdownCommand(InternalShutdownCommand&& from) noexcept
+    : InternalShutdownCommand() {
+    *this = ::std::move(from);
+  }
+
+  inline InternalShutdownCommand& operator=(const InternalShutdownCommand& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline InternalShutdownCommand& operator=(InternalShutdownCommand&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const InternalShutdownCommand& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const InternalShutdownCommand* internal_default_instance() {
+    return reinterpret_cast<const InternalShutdownCommand*>(
+               &_InternalShutdownCommand_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  friend void swap(InternalShutdownCommand& a, InternalShutdownCommand& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(InternalShutdownCommand* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(InternalShutdownCommand* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline InternalShutdownCommand* New() const final {
+    return new InternalShutdownCommand();
+  }
+
+  InternalShutdownCommand* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<InternalShutdownCommand>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const InternalShutdownCommand& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const InternalShutdownCommand& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(InternalShutdownCommand* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "fmsmoov.InternalShutdownCommand";
+  }
+  protected:
+  explicit InternalShutdownCommand(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:fmsmoov.InternalShutdownCommand)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_fmsmoov_2eproto;
 };
@@ -824,7 +1218,7 @@ class GainSetCommand final :
                &_GainSetCommand_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    7;
 
   friend void swap(GainSetCommand& a, GainSetCommand& b) {
     a.Swap(&b);
@@ -983,145 +1377,6 @@ class GainSetCommand final :
 };
 // -------------------------------------------------------------------
 
-class GainSetResponse final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.GainSetResponse) */ {
- public:
-  inline GainSetResponse() : GainSetResponse(nullptr) {}
-  ~GainSetResponse() override;
-  explicit constexpr GainSetResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
-
-  GainSetResponse(const GainSetResponse& from);
-  GainSetResponse(GainSetResponse&& from) noexcept
-    : GainSetResponse() {
-    *this = ::std::move(from);
-  }
-
-  inline GainSetResponse& operator=(const GainSetResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline GainSetResponse& operator=(GainSetResponse&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetOwningArena() == from.GetOwningArena()) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const GainSetResponse& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const GainSetResponse* internal_default_instance() {
-    return reinterpret_cast<const GainSetResponse*>(
-               &_GainSetResponse_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    5;
-
-  friend void swap(GainSetResponse& a, GainSetResponse& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(GainSetResponse* other) {
-    if (other == this) return;
-    if (GetOwningArena() == other->GetOwningArena()) {
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(GainSetResponse* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  inline GainSetResponse* New() const final {
-    return new GainSetResponse();
-  }
-
-  GainSetResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<GainSetResponse>(arena);
-  }
-  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const GainSetResponse& from);
-  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const GainSetResponse& from);
-  private:
-  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
-      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(GainSetResponse* other);
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "fmsmoov.GainSetResponse";
-  }
-  protected:
-  explicit GainSetResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                       bool is_message_owned = false);
-  private:
-  static void ArenaDtor(void* object);
-  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
-  public:
-
-  static const ClassData _class_data_;
-  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kResponseFieldNumber = 1,
-  };
-  // .fmsmoov.ResponseCode response = 1;
-  void clear_response();
-  ::fmsmoov::ResponseCode response() const;
-  void set_response(::fmsmoov::ResponseCode value);
-  private:
-  ::fmsmoov::ResponseCode _internal_response() const;
-  void _internal_set_response(::fmsmoov::ResponseCode value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:fmsmoov.GainSetResponse)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  int response_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_fmsmoov_2eproto;
-};
-// -------------------------------------------------------------------
-
 class GainGetCommand final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.GainGetCommand) */ {
  public:
@@ -1166,7 +1421,7 @@ class GainGetCommand final :
                &_GainGetCommand_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    8;
 
   friend void swap(GainGetCommand& a, GainGetCommand& b) {
     a.Swap(&b);
@@ -1316,7 +1571,7 @@ class GainGetResponse final :
                &_GainGetResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    9;
 
   friend void swap(GainGetResponse& a, GainGetResponse& b) {
     a.Swap(&b);
@@ -1515,9 +1770,11 @@ class ProcessorCommand final :
     return *internal_default_instance();
   }
   enum CmdOneofCase {
-    kShutdown = 1,
-    kGainSet = 2,
-    kGainGet = 3,
+    kInternalShutdownCmd = 1,
+    kMasterBypassSet = 2,
+    kMasterBypassGet = 3,
+    kGainSet = 4,
+    kGainGet = 5,
     CMD_ONEOF_NOT_SET = 0,
   };
 
@@ -1526,7 +1783,7 @@ class ProcessorCommand final :
                &_ProcessorCommand_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    10;
 
   friend void swap(ProcessorCommand& a, ProcessorCommand& b) {
     a.Swap(&b);
@@ -1597,29 +1854,67 @@ class ProcessorCommand final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kShutdownFieldNumber = 1,
-    kGainSetFieldNumber = 2,
-    kGainGetFieldNumber = 3,
+    kInternalShutdownCmdFieldNumber = 1,
+    kMasterBypassSetFieldNumber = 2,
+    kMasterBypassGetFieldNumber = 3,
+    kGainSetFieldNumber = 4,
+    kGainGetFieldNumber = 5,
   };
-  // .fmsmoov.ShutdownCommand shutdown = 1;
-  bool has_shutdown() const;
+  // .fmsmoov.InternalShutdownCommand internal_shutdown_cmd = 1;
+  bool has_internal_shutdown_cmd() const;
   private:
-  bool _internal_has_shutdown() const;
+  bool _internal_has_internal_shutdown_cmd() const;
   public:
-  void clear_shutdown();
-  const ::fmsmoov::ShutdownCommand& shutdown() const;
-  PROTOBUF_MUST_USE_RESULT ::fmsmoov::ShutdownCommand* release_shutdown();
-  ::fmsmoov::ShutdownCommand* mutable_shutdown();
-  void set_allocated_shutdown(::fmsmoov::ShutdownCommand* shutdown);
+  void clear_internal_shutdown_cmd();
+  const ::fmsmoov::InternalShutdownCommand& internal_shutdown_cmd() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::InternalShutdownCommand* release_internal_shutdown_cmd();
+  ::fmsmoov::InternalShutdownCommand* mutable_internal_shutdown_cmd();
+  void set_allocated_internal_shutdown_cmd(::fmsmoov::InternalShutdownCommand* internal_shutdown_cmd);
   private:
-  const ::fmsmoov::ShutdownCommand& _internal_shutdown() const;
-  ::fmsmoov::ShutdownCommand* _internal_mutable_shutdown();
+  const ::fmsmoov::InternalShutdownCommand& _internal_internal_shutdown_cmd() const;
+  ::fmsmoov::InternalShutdownCommand* _internal_mutable_internal_shutdown_cmd();
   public:
-  void unsafe_arena_set_allocated_shutdown(
-      ::fmsmoov::ShutdownCommand* shutdown);
-  ::fmsmoov::ShutdownCommand* unsafe_arena_release_shutdown();
+  void unsafe_arena_set_allocated_internal_shutdown_cmd(
+      ::fmsmoov::InternalShutdownCommand* internal_shutdown_cmd);
+  ::fmsmoov::InternalShutdownCommand* unsafe_arena_release_internal_shutdown_cmd();
 
-  // .fmsmoov.GainSetCommand gain_set = 2;
+  // .fmsmoov.MasterBypassSetCommand master_bypass_set = 2;
+  bool has_master_bypass_set() const;
+  private:
+  bool _internal_has_master_bypass_set() const;
+  public:
+  void clear_master_bypass_set();
+  const ::fmsmoov::MasterBypassSetCommand& master_bypass_set() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::MasterBypassSetCommand* release_master_bypass_set();
+  ::fmsmoov::MasterBypassSetCommand* mutable_master_bypass_set();
+  void set_allocated_master_bypass_set(::fmsmoov::MasterBypassSetCommand* master_bypass_set);
+  private:
+  const ::fmsmoov::MasterBypassSetCommand& _internal_master_bypass_set() const;
+  ::fmsmoov::MasterBypassSetCommand* _internal_mutable_master_bypass_set();
+  public:
+  void unsafe_arena_set_allocated_master_bypass_set(
+      ::fmsmoov::MasterBypassSetCommand* master_bypass_set);
+  ::fmsmoov::MasterBypassSetCommand* unsafe_arena_release_master_bypass_set();
+
+  // .fmsmoov.MasterBypassGetCommand master_bypass_get = 3;
+  bool has_master_bypass_get() const;
+  private:
+  bool _internal_has_master_bypass_get() const;
+  public:
+  void clear_master_bypass_get();
+  const ::fmsmoov::MasterBypassGetCommand& master_bypass_get() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::MasterBypassGetCommand* release_master_bypass_get();
+  ::fmsmoov::MasterBypassGetCommand* mutable_master_bypass_get();
+  void set_allocated_master_bypass_get(::fmsmoov::MasterBypassGetCommand* master_bypass_get);
+  private:
+  const ::fmsmoov::MasterBypassGetCommand& _internal_master_bypass_get() const;
+  ::fmsmoov::MasterBypassGetCommand* _internal_mutable_master_bypass_get();
+  public:
+  void unsafe_arena_set_allocated_master_bypass_get(
+      ::fmsmoov::MasterBypassGetCommand* master_bypass_get);
+  ::fmsmoov::MasterBypassGetCommand* unsafe_arena_release_master_bypass_get();
+
+  // .fmsmoov.GainSetCommand gain_set = 4;
   bool has_gain_set() const;
   private:
   bool _internal_has_gain_set() const;
@@ -1637,7 +1932,7 @@ class ProcessorCommand final :
       ::fmsmoov::GainSetCommand* gain_set);
   ::fmsmoov::GainSetCommand* unsafe_arena_release_gain_set();
 
-  // .fmsmoov.GainGetCommand gain_get = 3;
+  // .fmsmoov.GainGetCommand gain_get = 5;
   bool has_gain_get() const;
   private:
   bool _internal_has_gain_get() const;
@@ -1660,7 +1955,9 @@ class ProcessorCommand final :
   // @@protoc_insertion_point(class_scope:fmsmoov.ProcessorCommand)
  private:
   class _Internal;
-  void set_has_shutdown();
+  void set_has_internal_shutdown_cmd();
+  void set_has_master_bypass_set();
+  void set_has_master_bypass_get();
   void set_has_gain_set();
   void set_has_gain_get();
 
@@ -1673,7 +1970,9 @@ class ProcessorCommand final :
   union CmdOneofUnion {
     constexpr CmdOneofUnion() : _constinit_{} {}
       ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
-    ::fmsmoov::ShutdownCommand* shutdown_;
+    ::fmsmoov::InternalShutdownCommand* internal_shutdown_cmd_;
+    ::fmsmoov::MasterBypassSetCommand* master_bypass_set_;
+    ::fmsmoov::MasterBypassGetCommand* master_bypass_get_;
     ::fmsmoov::GainSetCommand* gain_set_;
     ::fmsmoov::GainGetCommand* gain_get_;
   } cmd_oneof_;
@@ -1723,19 +2022,12 @@ class ProcessorResponse final :
   static const ProcessorResponse& default_instance() {
     return *internal_default_instance();
   }
-  enum RspOneofCase {
-    kShutdown = 3,
-    kGainSet = 4,
-    kGainGet = 5,
-    RSP_ONEOF_NOT_SET = 0,
-  };
-
   static inline const ProcessorResponse* internal_default_instance() {
     return reinterpret_cast<const ProcessorResponse*>(
                &_ProcessorResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    11;
 
   friend void swap(ProcessorResponse& a, ProcessorResponse& b) {
     a.Swap(&b);
@@ -1807,10 +2099,10 @@ class ProcessorResponse final :
 
   enum : int {
     kResponseMsgFieldNumber = 2,
+    kMasterBypassSetRspFieldNumber = 3,
+    kMasterBypassGetRspFieldNumber = 4,
+    kGainGetRspFieldNumber = 5,
     kResponseFieldNumber = 1,
-    kShutdownFieldNumber = 3,
-    kGainSetFieldNumber = 4,
-    kGainGetFieldNumber = 5,
   };
   // string response_msg = 2;
   void clear_response_msg();
@@ -1826,6 +2118,60 @@ class ProcessorResponse final :
   std::string* _internal_mutable_response_msg();
   public:
 
+  // optional .fmsmoov.MasterBypassSetResponse master_bypass_set_rsp = 3;
+  bool has_master_bypass_set_rsp() const;
+  private:
+  bool _internal_has_master_bypass_set_rsp() const;
+  public:
+  void clear_master_bypass_set_rsp();
+  const ::fmsmoov::MasterBypassSetResponse& master_bypass_set_rsp() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::MasterBypassSetResponse* release_master_bypass_set_rsp();
+  ::fmsmoov::MasterBypassSetResponse* mutable_master_bypass_set_rsp();
+  void set_allocated_master_bypass_set_rsp(::fmsmoov::MasterBypassSetResponse* master_bypass_set_rsp);
+  private:
+  const ::fmsmoov::MasterBypassSetResponse& _internal_master_bypass_set_rsp() const;
+  ::fmsmoov::MasterBypassSetResponse* _internal_mutable_master_bypass_set_rsp();
+  public:
+  void unsafe_arena_set_allocated_master_bypass_set_rsp(
+      ::fmsmoov::MasterBypassSetResponse* master_bypass_set_rsp);
+  ::fmsmoov::MasterBypassSetResponse* unsafe_arena_release_master_bypass_set_rsp();
+
+  // optional .fmsmoov.MasterBypassGetResponse master_bypass_get_rsp = 4;
+  bool has_master_bypass_get_rsp() const;
+  private:
+  bool _internal_has_master_bypass_get_rsp() const;
+  public:
+  void clear_master_bypass_get_rsp();
+  const ::fmsmoov::MasterBypassGetResponse& master_bypass_get_rsp() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::MasterBypassGetResponse* release_master_bypass_get_rsp();
+  ::fmsmoov::MasterBypassGetResponse* mutable_master_bypass_get_rsp();
+  void set_allocated_master_bypass_get_rsp(::fmsmoov::MasterBypassGetResponse* master_bypass_get_rsp);
+  private:
+  const ::fmsmoov::MasterBypassGetResponse& _internal_master_bypass_get_rsp() const;
+  ::fmsmoov::MasterBypassGetResponse* _internal_mutable_master_bypass_get_rsp();
+  public:
+  void unsafe_arena_set_allocated_master_bypass_get_rsp(
+      ::fmsmoov::MasterBypassGetResponse* master_bypass_get_rsp);
+  ::fmsmoov::MasterBypassGetResponse* unsafe_arena_release_master_bypass_get_rsp();
+
+  // optional .fmsmoov.GainGetResponse gain_get_rsp = 5;
+  bool has_gain_get_rsp() const;
+  private:
+  bool _internal_has_gain_get_rsp() const;
+  public:
+  void clear_gain_get_rsp();
+  const ::fmsmoov::GainGetResponse& gain_get_rsp() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::GainGetResponse* release_gain_get_rsp();
+  ::fmsmoov::GainGetResponse* mutable_gain_get_rsp();
+  void set_allocated_gain_get_rsp(::fmsmoov::GainGetResponse* gain_get_rsp);
+  private:
+  const ::fmsmoov::GainGetResponse& _internal_gain_get_rsp() const;
+  ::fmsmoov::GainGetResponse* _internal_mutable_gain_get_rsp();
+  public:
+  void unsafe_arena_set_allocated_gain_get_rsp(
+      ::fmsmoov::GainGetResponse* gain_get_rsp);
+  ::fmsmoov::GainGetResponse* unsafe_arena_release_gain_get_rsp();
+
   // .fmsmoov.ResponseCode response = 1;
   void clear_response();
   ::fmsmoov::ResponseCode response() const;
@@ -1835,87 +2181,20 @@ class ProcessorResponse final :
   void _internal_set_response(::fmsmoov::ResponseCode value);
   public:
 
-  // .fmsmoov.ShutdownResponse shutdown = 3;
-  bool has_shutdown() const;
-  private:
-  bool _internal_has_shutdown() const;
-  public:
-  void clear_shutdown();
-  const ::fmsmoov::ShutdownResponse& shutdown() const;
-  PROTOBUF_MUST_USE_RESULT ::fmsmoov::ShutdownResponse* release_shutdown();
-  ::fmsmoov::ShutdownResponse* mutable_shutdown();
-  void set_allocated_shutdown(::fmsmoov::ShutdownResponse* shutdown);
-  private:
-  const ::fmsmoov::ShutdownResponse& _internal_shutdown() const;
-  ::fmsmoov::ShutdownResponse* _internal_mutable_shutdown();
-  public:
-  void unsafe_arena_set_allocated_shutdown(
-      ::fmsmoov::ShutdownResponse* shutdown);
-  ::fmsmoov::ShutdownResponse* unsafe_arena_release_shutdown();
-
-  // .fmsmoov.GainSetResponse gain_set = 4;
-  bool has_gain_set() const;
-  private:
-  bool _internal_has_gain_set() const;
-  public:
-  void clear_gain_set();
-  const ::fmsmoov::GainSetResponse& gain_set() const;
-  PROTOBUF_MUST_USE_RESULT ::fmsmoov::GainSetResponse* release_gain_set();
-  ::fmsmoov::GainSetResponse* mutable_gain_set();
-  void set_allocated_gain_set(::fmsmoov::GainSetResponse* gain_set);
-  private:
-  const ::fmsmoov::GainSetResponse& _internal_gain_set() const;
-  ::fmsmoov::GainSetResponse* _internal_mutable_gain_set();
-  public:
-  void unsafe_arena_set_allocated_gain_set(
-      ::fmsmoov::GainSetResponse* gain_set);
-  ::fmsmoov::GainSetResponse* unsafe_arena_release_gain_set();
-
-  // .fmsmoov.GainGetResponse gain_get = 5;
-  bool has_gain_get() const;
-  private:
-  bool _internal_has_gain_get() const;
-  public:
-  void clear_gain_get();
-  const ::fmsmoov::GainGetResponse& gain_get() const;
-  PROTOBUF_MUST_USE_RESULT ::fmsmoov::GainGetResponse* release_gain_get();
-  ::fmsmoov::GainGetResponse* mutable_gain_get();
-  void set_allocated_gain_get(::fmsmoov::GainGetResponse* gain_get);
-  private:
-  const ::fmsmoov::GainGetResponse& _internal_gain_get() const;
-  ::fmsmoov::GainGetResponse* _internal_mutable_gain_get();
-  public:
-  void unsafe_arena_set_allocated_gain_get(
-      ::fmsmoov::GainGetResponse* gain_get);
-  ::fmsmoov::GainGetResponse* unsafe_arena_release_gain_get();
-
-  void clear_rsp_oneof();
-  RspOneofCase rsp_oneof_case() const;
   // @@protoc_insertion_point(class_scope:fmsmoov.ProcessorResponse)
  private:
   class _Internal;
-  void set_has_shutdown();
-  void set_has_gain_set();
-  void set_has_gain_get();
-
-  inline bool has_rsp_oneof() const;
-  inline void clear_has_rsp_oneof();
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr response_msg_;
-  int response_;
-  union RspOneofUnion {
-    constexpr RspOneofUnion() : _constinit_{} {}
-      ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized _constinit_;
-    ::fmsmoov::ShutdownResponse* shutdown_;
-    ::fmsmoov::GainSetResponse* gain_set_;
-    ::fmsmoov::GainGetResponse* gain_get_;
-  } rsp_oneof_;
+  ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  ::PROTOBUF_NAMESPACE_ID::uint32 _oneof_case_[1];
-
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr response_msg_;
+  ::fmsmoov::MasterBypassSetResponse* master_bypass_set_rsp_;
+  ::fmsmoov::MasterBypassGetResponse* master_bypass_get_rsp_;
+  ::fmsmoov::GainGetResponse* gain_get_rsp_;
+  int response_;
   friend struct ::TableStruct_fmsmoov_2eproto;
 };
 // ===================================================================
@@ -1973,7 +2252,7 @@ inline void GainPair::set_r(float value) {
 
 // ProcessorLiveData
 
-// optional float inL = 1;
+// optional float inL = 2;
 inline bool ProcessorLiveData::_internal_has_inl() const {
   bool value = (_has_bits_[0] & 0x00000001u) != 0;
   return value;
@@ -2001,7 +2280,7 @@ inline void ProcessorLiveData::set_inl(float value) {
   // @@protoc_insertion_point(field_set:fmsmoov.ProcessorLiveData.inL)
 }
 
-// optional float inR = 2;
+// optional float inR = 3;
 inline bool ProcessorLiveData::_internal_has_inr() const {
   bool value = (_has_bits_[0] & 0x00000002u) != 0;
   return value;
@@ -2029,7 +2308,7 @@ inline void ProcessorLiveData::set_inr(float value) {
   // @@protoc_insertion_point(field_set:fmsmoov.ProcessorLiveData.inR)
 }
 
-// optional float outL = 3;
+// optional float outL = 4;
 inline bool ProcessorLiveData::_internal_has_outl() const {
   bool value = (_has_bits_[0] & 0x00000004u) != 0;
   return value;
@@ -2057,7 +2336,7 @@ inline void ProcessorLiveData::set_outl(float value) {
   // @@protoc_insertion_point(field_set:fmsmoov.ProcessorLiveData.outL)
 }
 
-// optional float outR = 4;
+// optional float outR = 5;
 inline bool ProcessorLiveData::_internal_has_outr() const {
   bool value = (_has_bits_[0] & 0x00000008u) != 0;
   return value;
@@ -2087,77 +2366,83 @@ inline void ProcessorLiveData::set_outr(float value) {
 
 // -------------------------------------------------------------------
 
-// ShutdownCommand
+// MasterBypassSetCommand
 
-// string reason = 1;
-inline void ShutdownCommand::clear_reason() {
-  reason_.ClearToEmpty();
+// bool bypass = 1;
+inline void MasterBypassSetCommand::clear_bypass() {
+  bypass_ = false;
 }
-inline const std::string& ShutdownCommand::reason() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.ShutdownCommand.reason)
-  return _internal_reason();
+inline bool MasterBypassSetCommand::_internal_bypass() const {
+  return bypass_;
 }
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void ShutdownCommand::set_reason(ArgT0&& arg0, ArgT... args) {
- 
- reason_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:fmsmoov.ShutdownCommand.reason)
+inline bool MasterBypassSetCommand::bypass() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.MasterBypassSetCommand.bypass)
+  return _internal_bypass();
 }
-inline std::string* ShutdownCommand::mutable_reason() {
-  std::string* _s = _internal_mutable_reason();
-  // @@protoc_insertion_point(field_mutable:fmsmoov.ShutdownCommand.reason)
-  return _s;
-}
-inline const std::string& ShutdownCommand::_internal_reason() const {
-  return reason_.Get();
-}
-inline void ShutdownCommand::_internal_set_reason(const std::string& value) {
+inline void MasterBypassSetCommand::_internal_set_bypass(bool value) {
   
-  reason_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+  bypass_ = value;
 }
-inline std::string* ShutdownCommand::_internal_mutable_reason() {
-  
-  return reason_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
-}
-inline std::string* ShutdownCommand::release_reason() {
-  // @@protoc_insertion_point(field_release:fmsmoov.ShutdownCommand.reason)
-  return reason_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
-}
-inline void ShutdownCommand::set_allocated_reason(std::string* reason) {
-  if (reason != nullptr) {
-    
-  } else {
-    
-  }
-  reason_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), reason,
-      GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ShutdownCommand.reason)
+inline void MasterBypassSetCommand::set_bypass(bool value) {
+  _internal_set_bypass(value);
+  // @@protoc_insertion_point(field_set:fmsmoov.MasterBypassSetCommand.bypass)
 }
 
 // -------------------------------------------------------------------
 
-// ShutdownResponse
+// MasterBypassSetResponse
 
-// .fmsmoov.ResponseCode response = 1;
-inline void ShutdownResponse::clear_response() {
-  response_ = 0;
+// bool bypass = 1;
+inline void MasterBypassSetResponse::clear_bypass() {
+  bypass_ = false;
 }
-inline ::fmsmoov::ResponseCode ShutdownResponse::_internal_response() const {
-  return static_cast< ::fmsmoov::ResponseCode >(response_);
+inline bool MasterBypassSetResponse::_internal_bypass() const {
+  return bypass_;
 }
-inline ::fmsmoov::ResponseCode ShutdownResponse::response() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.ShutdownResponse.response)
-  return _internal_response();
+inline bool MasterBypassSetResponse::bypass() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.MasterBypassSetResponse.bypass)
+  return _internal_bypass();
 }
-inline void ShutdownResponse::_internal_set_response(::fmsmoov::ResponseCode value) {
+inline void MasterBypassSetResponse::_internal_set_bypass(bool value) {
   
-  response_ = value;
+  bypass_ = value;
 }
-inline void ShutdownResponse::set_response(::fmsmoov::ResponseCode value) {
-  _internal_set_response(value);
-  // @@protoc_insertion_point(field_set:fmsmoov.ShutdownResponse.response)
+inline void MasterBypassSetResponse::set_bypass(bool value) {
+  _internal_set_bypass(value);
+  // @@protoc_insertion_point(field_set:fmsmoov.MasterBypassSetResponse.bypass)
 }
+
+// -------------------------------------------------------------------
+
+// MasterBypassGetCommand
+
+// -------------------------------------------------------------------
+
+// MasterBypassGetResponse
+
+// bool bypass = 1;
+inline void MasterBypassGetResponse::clear_bypass() {
+  bypass_ = false;
+}
+inline bool MasterBypassGetResponse::_internal_bypass() const {
+  return bypass_;
+}
+inline bool MasterBypassGetResponse::bypass() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.MasterBypassGetResponse.bypass)
+  return _internal_bypass();
+}
+inline void MasterBypassGetResponse::_internal_set_bypass(bool value) {
+  
+  bypass_ = value;
+}
+inline void MasterBypassGetResponse::set_bypass(bool value) {
+  _internal_set_bypass(value);
+  // @@protoc_insertion_point(field_set:fmsmoov.MasterBypassGetResponse.bypass)
+}
+
+// -------------------------------------------------------------------
+
+// InternalShutdownCommand
 
 // -------------------------------------------------------------------
 
@@ -2350,30 +2635,6 @@ inline void GainSetCommand::clear_has_gaintype_oneof() {
 inline GainSetCommand::GaintypeOneofCase GainSetCommand::gaintype_oneof_case() const {
   return GainSetCommand::GaintypeOneofCase(_oneof_case_[0]);
 }
-// -------------------------------------------------------------------
-
-// GainSetResponse
-
-// .fmsmoov.ResponseCode response = 1;
-inline void GainSetResponse::clear_response() {
-  response_ = 0;
-}
-inline ::fmsmoov::ResponseCode GainSetResponse::_internal_response() const {
-  return static_cast< ::fmsmoov::ResponseCode >(response_);
-}
-inline ::fmsmoov::ResponseCode GainSetResponse::response() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.GainSetResponse.response)
-  return _internal_response();
-}
-inline void GainSetResponse::_internal_set_response(::fmsmoov::ResponseCode value) {
-  
-  response_ = value;
-}
-inline void GainSetResponse::set_response(::fmsmoov::ResponseCode value) {
-  _internal_set_response(value);
-  // @@protoc_insertion_point(field_set:fmsmoov.GainSetResponse.response)
-}
-
 // -------------------------------------------------------------------
 
 // GainGetCommand
@@ -2619,81 +2880,229 @@ inline GainGetResponse::GaintypeOneofCase GainGetResponse::gaintype_oneof_case()
 
 // ProcessorCommand
 
-// .fmsmoov.ShutdownCommand shutdown = 1;
-inline bool ProcessorCommand::_internal_has_shutdown() const {
-  return cmd_oneof_case() == kShutdown;
+// .fmsmoov.InternalShutdownCommand internal_shutdown_cmd = 1;
+inline bool ProcessorCommand::_internal_has_internal_shutdown_cmd() const {
+  return cmd_oneof_case() == kInternalShutdownCmd;
 }
-inline bool ProcessorCommand::has_shutdown() const {
-  return _internal_has_shutdown();
+inline bool ProcessorCommand::has_internal_shutdown_cmd() const {
+  return _internal_has_internal_shutdown_cmd();
 }
-inline void ProcessorCommand::set_has_shutdown() {
-  _oneof_case_[0] = kShutdown;
+inline void ProcessorCommand::set_has_internal_shutdown_cmd() {
+  _oneof_case_[0] = kInternalShutdownCmd;
 }
-inline void ProcessorCommand::clear_shutdown() {
-  if (_internal_has_shutdown()) {
+inline void ProcessorCommand::clear_internal_shutdown_cmd() {
+  if (_internal_has_internal_shutdown_cmd()) {
     if (GetArenaForAllocation() == nullptr) {
-      delete cmd_oneof_.shutdown_;
+      delete cmd_oneof_.internal_shutdown_cmd_;
     }
     clear_has_cmd_oneof();
   }
 }
-inline ::fmsmoov::ShutdownCommand* ProcessorCommand::release_shutdown() {
-  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorCommand.shutdown)
-  if (_internal_has_shutdown()) {
+inline ::fmsmoov::InternalShutdownCommand* ProcessorCommand::release_internal_shutdown_cmd() {
+  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorCommand.internal_shutdown_cmd)
+  if (_internal_has_internal_shutdown_cmd()) {
     clear_has_cmd_oneof();
-      ::fmsmoov::ShutdownCommand* temp = cmd_oneof_.shutdown_;
+      ::fmsmoov::InternalShutdownCommand* temp = cmd_oneof_.internal_shutdown_cmd_;
     if (GetArenaForAllocation() != nullptr) {
       temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
     }
-    cmd_oneof_.shutdown_ = nullptr;
+    cmd_oneof_.internal_shutdown_cmd_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline const ::fmsmoov::ShutdownCommand& ProcessorCommand::_internal_shutdown() const {
-  return _internal_has_shutdown()
-      ? *cmd_oneof_.shutdown_
-      : reinterpret_cast< ::fmsmoov::ShutdownCommand&>(::fmsmoov::_ShutdownCommand_default_instance_);
+inline const ::fmsmoov::InternalShutdownCommand& ProcessorCommand::_internal_internal_shutdown_cmd() const {
+  return _internal_has_internal_shutdown_cmd()
+      ? *cmd_oneof_.internal_shutdown_cmd_
+      : reinterpret_cast< ::fmsmoov::InternalShutdownCommand&>(::fmsmoov::_InternalShutdownCommand_default_instance_);
 }
-inline const ::fmsmoov::ShutdownCommand& ProcessorCommand::shutdown() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorCommand.shutdown)
-  return _internal_shutdown();
+inline const ::fmsmoov::InternalShutdownCommand& ProcessorCommand::internal_shutdown_cmd() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorCommand.internal_shutdown_cmd)
+  return _internal_internal_shutdown_cmd();
 }
-inline ::fmsmoov::ShutdownCommand* ProcessorCommand::unsafe_arena_release_shutdown() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:fmsmoov.ProcessorCommand.shutdown)
-  if (_internal_has_shutdown()) {
+inline ::fmsmoov::InternalShutdownCommand* ProcessorCommand::unsafe_arena_release_internal_shutdown_cmd() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:fmsmoov.ProcessorCommand.internal_shutdown_cmd)
+  if (_internal_has_internal_shutdown_cmd()) {
     clear_has_cmd_oneof();
-    ::fmsmoov::ShutdownCommand* temp = cmd_oneof_.shutdown_;
-    cmd_oneof_.shutdown_ = nullptr;
+    ::fmsmoov::InternalShutdownCommand* temp = cmd_oneof_.internal_shutdown_cmd_;
+    cmd_oneof_.internal_shutdown_cmd_ = nullptr;
     return temp;
   } else {
     return nullptr;
   }
 }
-inline void ProcessorCommand::unsafe_arena_set_allocated_shutdown(::fmsmoov::ShutdownCommand* shutdown) {
+inline void ProcessorCommand::unsafe_arena_set_allocated_internal_shutdown_cmd(::fmsmoov::InternalShutdownCommand* internal_shutdown_cmd) {
   clear_cmd_oneof();
-  if (shutdown) {
-    set_has_shutdown();
-    cmd_oneof_.shutdown_ = shutdown;
+  if (internal_shutdown_cmd) {
+    set_has_internal_shutdown_cmd();
+    cmd_oneof_.internal_shutdown_cmd_ = internal_shutdown_cmd;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorCommand.shutdown)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorCommand.internal_shutdown_cmd)
 }
-inline ::fmsmoov::ShutdownCommand* ProcessorCommand::_internal_mutable_shutdown() {
-  if (!_internal_has_shutdown()) {
+inline ::fmsmoov::InternalShutdownCommand* ProcessorCommand::_internal_mutable_internal_shutdown_cmd() {
+  if (!_internal_has_internal_shutdown_cmd()) {
     clear_cmd_oneof();
-    set_has_shutdown();
-    cmd_oneof_.shutdown_ = CreateMaybeMessage< ::fmsmoov::ShutdownCommand >(GetArenaForAllocation());
+    set_has_internal_shutdown_cmd();
+    cmd_oneof_.internal_shutdown_cmd_ = CreateMaybeMessage< ::fmsmoov::InternalShutdownCommand >(GetArenaForAllocation());
   }
-  return cmd_oneof_.shutdown_;
+  return cmd_oneof_.internal_shutdown_cmd_;
 }
-inline ::fmsmoov::ShutdownCommand* ProcessorCommand::mutable_shutdown() {
-  ::fmsmoov::ShutdownCommand* _msg = _internal_mutable_shutdown();
-  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorCommand.shutdown)
+inline ::fmsmoov::InternalShutdownCommand* ProcessorCommand::mutable_internal_shutdown_cmd() {
+  ::fmsmoov::InternalShutdownCommand* _msg = _internal_mutable_internal_shutdown_cmd();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorCommand.internal_shutdown_cmd)
   return _msg;
 }
 
-// .fmsmoov.GainSetCommand gain_set = 2;
+// .fmsmoov.MasterBypassSetCommand master_bypass_set = 2;
+inline bool ProcessorCommand::_internal_has_master_bypass_set() const {
+  return cmd_oneof_case() == kMasterBypassSet;
+}
+inline bool ProcessorCommand::has_master_bypass_set() const {
+  return _internal_has_master_bypass_set();
+}
+inline void ProcessorCommand::set_has_master_bypass_set() {
+  _oneof_case_[0] = kMasterBypassSet;
+}
+inline void ProcessorCommand::clear_master_bypass_set() {
+  if (_internal_has_master_bypass_set()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete cmd_oneof_.master_bypass_set_;
+    }
+    clear_has_cmd_oneof();
+  }
+}
+inline ::fmsmoov::MasterBypassSetCommand* ProcessorCommand::release_master_bypass_set() {
+  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorCommand.master_bypass_set)
+  if (_internal_has_master_bypass_set()) {
+    clear_has_cmd_oneof();
+      ::fmsmoov::MasterBypassSetCommand* temp = cmd_oneof_.master_bypass_set_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    cmd_oneof_.master_bypass_set_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::fmsmoov::MasterBypassSetCommand& ProcessorCommand::_internal_master_bypass_set() const {
+  return _internal_has_master_bypass_set()
+      ? *cmd_oneof_.master_bypass_set_
+      : reinterpret_cast< ::fmsmoov::MasterBypassSetCommand&>(::fmsmoov::_MasterBypassSetCommand_default_instance_);
+}
+inline const ::fmsmoov::MasterBypassSetCommand& ProcessorCommand::master_bypass_set() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorCommand.master_bypass_set)
+  return _internal_master_bypass_set();
+}
+inline ::fmsmoov::MasterBypassSetCommand* ProcessorCommand::unsafe_arena_release_master_bypass_set() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:fmsmoov.ProcessorCommand.master_bypass_set)
+  if (_internal_has_master_bypass_set()) {
+    clear_has_cmd_oneof();
+    ::fmsmoov::MasterBypassSetCommand* temp = cmd_oneof_.master_bypass_set_;
+    cmd_oneof_.master_bypass_set_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void ProcessorCommand::unsafe_arena_set_allocated_master_bypass_set(::fmsmoov::MasterBypassSetCommand* master_bypass_set) {
+  clear_cmd_oneof();
+  if (master_bypass_set) {
+    set_has_master_bypass_set();
+    cmd_oneof_.master_bypass_set_ = master_bypass_set;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorCommand.master_bypass_set)
+}
+inline ::fmsmoov::MasterBypassSetCommand* ProcessorCommand::_internal_mutable_master_bypass_set() {
+  if (!_internal_has_master_bypass_set()) {
+    clear_cmd_oneof();
+    set_has_master_bypass_set();
+    cmd_oneof_.master_bypass_set_ = CreateMaybeMessage< ::fmsmoov::MasterBypassSetCommand >(GetArenaForAllocation());
+  }
+  return cmd_oneof_.master_bypass_set_;
+}
+inline ::fmsmoov::MasterBypassSetCommand* ProcessorCommand::mutable_master_bypass_set() {
+  ::fmsmoov::MasterBypassSetCommand* _msg = _internal_mutable_master_bypass_set();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorCommand.master_bypass_set)
+  return _msg;
+}
+
+// .fmsmoov.MasterBypassGetCommand master_bypass_get = 3;
+inline bool ProcessorCommand::_internal_has_master_bypass_get() const {
+  return cmd_oneof_case() == kMasterBypassGet;
+}
+inline bool ProcessorCommand::has_master_bypass_get() const {
+  return _internal_has_master_bypass_get();
+}
+inline void ProcessorCommand::set_has_master_bypass_get() {
+  _oneof_case_[0] = kMasterBypassGet;
+}
+inline void ProcessorCommand::clear_master_bypass_get() {
+  if (_internal_has_master_bypass_get()) {
+    if (GetArenaForAllocation() == nullptr) {
+      delete cmd_oneof_.master_bypass_get_;
+    }
+    clear_has_cmd_oneof();
+  }
+}
+inline ::fmsmoov::MasterBypassGetCommand* ProcessorCommand::release_master_bypass_get() {
+  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorCommand.master_bypass_get)
+  if (_internal_has_master_bypass_get()) {
+    clear_has_cmd_oneof();
+      ::fmsmoov::MasterBypassGetCommand* temp = cmd_oneof_.master_bypass_get_;
+    if (GetArenaForAllocation() != nullptr) {
+      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+    }
+    cmd_oneof_.master_bypass_get_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::fmsmoov::MasterBypassGetCommand& ProcessorCommand::_internal_master_bypass_get() const {
+  return _internal_has_master_bypass_get()
+      ? *cmd_oneof_.master_bypass_get_
+      : reinterpret_cast< ::fmsmoov::MasterBypassGetCommand&>(::fmsmoov::_MasterBypassGetCommand_default_instance_);
+}
+inline const ::fmsmoov::MasterBypassGetCommand& ProcessorCommand::master_bypass_get() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorCommand.master_bypass_get)
+  return _internal_master_bypass_get();
+}
+inline ::fmsmoov::MasterBypassGetCommand* ProcessorCommand::unsafe_arena_release_master_bypass_get() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:fmsmoov.ProcessorCommand.master_bypass_get)
+  if (_internal_has_master_bypass_get()) {
+    clear_has_cmd_oneof();
+    ::fmsmoov::MasterBypassGetCommand* temp = cmd_oneof_.master_bypass_get_;
+    cmd_oneof_.master_bypass_get_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void ProcessorCommand::unsafe_arena_set_allocated_master_bypass_get(::fmsmoov::MasterBypassGetCommand* master_bypass_get) {
+  clear_cmd_oneof();
+  if (master_bypass_get) {
+    set_has_master_bypass_get();
+    cmd_oneof_.master_bypass_get_ = master_bypass_get;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorCommand.master_bypass_get)
+}
+inline ::fmsmoov::MasterBypassGetCommand* ProcessorCommand::_internal_mutable_master_bypass_get() {
+  if (!_internal_has_master_bypass_get()) {
+    clear_cmd_oneof();
+    set_has_master_bypass_get();
+    cmd_oneof_.master_bypass_get_ = CreateMaybeMessage< ::fmsmoov::MasterBypassGetCommand >(GetArenaForAllocation());
+  }
+  return cmd_oneof_.master_bypass_get_;
+}
+inline ::fmsmoov::MasterBypassGetCommand* ProcessorCommand::mutable_master_bypass_get() {
+  ::fmsmoov::MasterBypassGetCommand* _msg = _internal_mutable_master_bypass_get();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorCommand.master_bypass_get)
+  return _msg;
+}
+
+// .fmsmoov.GainSetCommand gain_set = 4;
 inline bool ProcessorCommand::_internal_has_gain_set() const {
   return cmd_oneof_case() == kGainSet;
 }
@@ -2767,7 +3176,7 @@ inline ::fmsmoov::GainSetCommand* ProcessorCommand::mutable_gain_set() {
   return _msg;
 }
 
-// .fmsmoov.GainGetCommand gain_get = 3;
+// .fmsmoov.GainGetCommand gain_get = 5;
 inline bool ProcessorCommand::_internal_has_gain_get() const {
   return cmd_oneof_case() == kGainGet;
 }
@@ -2920,240 +3329,283 @@ inline void ProcessorResponse::set_allocated_response_msg(std::string* response_
   // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorResponse.response_msg)
 }
 
-// .fmsmoov.ShutdownResponse shutdown = 3;
-inline bool ProcessorResponse::_internal_has_shutdown() const {
-  return rsp_oneof_case() == kShutdown;
+// optional .fmsmoov.MasterBypassSetResponse master_bypass_set_rsp = 3;
+inline bool ProcessorResponse::_internal_has_master_bypass_set_rsp() const {
+  bool value = (_has_bits_[0] & 0x00000001u) != 0;
+  PROTOBUF_ASSUME(!value || master_bypass_set_rsp_ != nullptr);
+  return value;
 }
-inline bool ProcessorResponse::has_shutdown() const {
-  return _internal_has_shutdown();
+inline bool ProcessorResponse::has_master_bypass_set_rsp() const {
+  return _internal_has_master_bypass_set_rsp();
 }
-inline void ProcessorResponse::set_has_shutdown() {
-  _oneof_case_[0] = kShutdown;
+inline void ProcessorResponse::clear_master_bypass_set_rsp() {
+  if (master_bypass_set_rsp_ != nullptr) master_bypass_set_rsp_->Clear();
+  _has_bits_[0] &= ~0x00000001u;
 }
-inline void ProcessorResponse::clear_shutdown() {
-  if (_internal_has_shutdown()) {
-    if (GetArenaForAllocation() == nullptr) {
-      delete rsp_oneof_.shutdown_;
-    }
-    clear_has_rsp_oneof();
+inline const ::fmsmoov::MasterBypassSetResponse& ProcessorResponse::_internal_master_bypass_set_rsp() const {
+  const ::fmsmoov::MasterBypassSetResponse* p = master_bypass_set_rsp_;
+  return p != nullptr ? *p : reinterpret_cast<const ::fmsmoov::MasterBypassSetResponse&>(
+      ::fmsmoov::_MasterBypassSetResponse_default_instance_);
+}
+inline const ::fmsmoov::MasterBypassSetResponse& ProcessorResponse::master_bypass_set_rsp() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorResponse.master_bypass_set_rsp)
+  return _internal_master_bypass_set_rsp();
+}
+inline void ProcessorResponse::unsafe_arena_set_allocated_master_bypass_set_rsp(
+    ::fmsmoov::MasterBypassSetResponse* master_bypass_set_rsp) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(master_bypass_set_rsp_);
   }
-}
-inline ::fmsmoov::ShutdownResponse* ProcessorResponse::release_shutdown() {
-  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorResponse.shutdown)
-  if (_internal_has_shutdown()) {
-    clear_has_rsp_oneof();
-      ::fmsmoov::ShutdownResponse* temp = rsp_oneof_.shutdown_;
-    if (GetArenaForAllocation() != nullptr) {
-      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-    }
-    rsp_oneof_.shutdown_ = nullptr;
-    return temp;
+  master_bypass_set_rsp_ = master_bypass_set_rsp;
+  if (master_bypass_set_rsp) {
+    _has_bits_[0] |= 0x00000001u;
   } else {
-    return nullptr;
+    _has_bits_[0] &= ~0x00000001u;
   }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorResponse.master_bypass_set_rsp)
 }
-inline const ::fmsmoov::ShutdownResponse& ProcessorResponse::_internal_shutdown() const {
-  return _internal_has_shutdown()
-      ? *rsp_oneof_.shutdown_
-      : reinterpret_cast< ::fmsmoov::ShutdownResponse&>(::fmsmoov::_ShutdownResponse_default_instance_);
-}
-inline const ::fmsmoov::ShutdownResponse& ProcessorResponse::shutdown() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorResponse.shutdown)
-  return _internal_shutdown();
-}
-inline ::fmsmoov::ShutdownResponse* ProcessorResponse::unsafe_arena_release_shutdown() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:fmsmoov.ProcessorResponse.shutdown)
-  if (_internal_has_shutdown()) {
-    clear_has_rsp_oneof();
-    ::fmsmoov::ShutdownResponse* temp = rsp_oneof_.shutdown_;
-    rsp_oneof_.shutdown_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
+inline ::fmsmoov::MasterBypassSetResponse* ProcessorResponse::release_master_bypass_set_rsp() {
+  _has_bits_[0] &= ~0x00000001u;
+  ::fmsmoov::MasterBypassSetResponse* temp = master_bypass_set_rsp_;
+  master_bypass_set_rsp_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
   }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
 }
-inline void ProcessorResponse::unsafe_arena_set_allocated_shutdown(::fmsmoov::ShutdownResponse* shutdown) {
-  clear_rsp_oneof();
-  if (shutdown) {
-    set_has_shutdown();
-    rsp_oneof_.shutdown_ = shutdown;
+inline ::fmsmoov::MasterBypassSetResponse* ProcessorResponse::unsafe_arena_release_master_bypass_set_rsp() {
+  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorResponse.master_bypass_set_rsp)
+  _has_bits_[0] &= ~0x00000001u;
+  ::fmsmoov::MasterBypassSetResponse* temp = master_bypass_set_rsp_;
+  master_bypass_set_rsp_ = nullptr;
+  return temp;
+}
+inline ::fmsmoov::MasterBypassSetResponse* ProcessorResponse::_internal_mutable_master_bypass_set_rsp() {
+  _has_bits_[0] |= 0x00000001u;
+  if (master_bypass_set_rsp_ == nullptr) {
+    auto* p = CreateMaybeMessage<::fmsmoov::MasterBypassSetResponse>(GetArenaForAllocation());
+    master_bypass_set_rsp_ = p;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorResponse.shutdown)
+  return master_bypass_set_rsp_;
 }
-inline ::fmsmoov::ShutdownResponse* ProcessorResponse::_internal_mutable_shutdown() {
-  if (!_internal_has_shutdown()) {
-    clear_rsp_oneof();
-    set_has_shutdown();
-    rsp_oneof_.shutdown_ = CreateMaybeMessage< ::fmsmoov::ShutdownResponse >(GetArenaForAllocation());
-  }
-  return rsp_oneof_.shutdown_;
-}
-inline ::fmsmoov::ShutdownResponse* ProcessorResponse::mutable_shutdown() {
-  ::fmsmoov::ShutdownResponse* _msg = _internal_mutable_shutdown();
-  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorResponse.shutdown)
+inline ::fmsmoov::MasterBypassSetResponse* ProcessorResponse::mutable_master_bypass_set_rsp() {
+  ::fmsmoov::MasterBypassSetResponse* _msg = _internal_mutable_master_bypass_set_rsp();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorResponse.master_bypass_set_rsp)
   return _msg;
 }
+inline void ProcessorResponse::set_allocated_master_bypass_set_rsp(::fmsmoov::MasterBypassSetResponse* master_bypass_set_rsp) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete master_bypass_set_rsp_;
+  }
+  if (master_bypass_set_rsp) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::MasterBypassSetResponse>::GetOwningArena(master_bypass_set_rsp);
+    if (message_arena != submessage_arena) {
+      master_bypass_set_rsp = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, master_bypass_set_rsp, submessage_arena);
+    }
+    _has_bits_[0] |= 0x00000001u;
+  } else {
+    _has_bits_[0] &= ~0x00000001u;
+  }
+  master_bypass_set_rsp_ = master_bypass_set_rsp;
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorResponse.master_bypass_set_rsp)
+}
 
-// .fmsmoov.GainSetResponse gain_set = 4;
-inline bool ProcessorResponse::_internal_has_gain_set() const {
-  return rsp_oneof_case() == kGainSet;
+// optional .fmsmoov.MasterBypassGetResponse master_bypass_get_rsp = 4;
+inline bool ProcessorResponse::_internal_has_master_bypass_get_rsp() const {
+  bool value = (_has_bits_[0] & 0x00000002u) != 0;
+  PROTOBUF_ASSUME(!value || master_bypass_get_rsp_ != nullptr);
+  return value;
 }
-inline bool ProcessorResponse::has_gain_set() const {
-  return _internal_has_gain_set();
+inline bool ProcessorResponse::has_master_bypass_get_rsp() const {
+  return _internal_has_master_bypass_get_rsp();
 }
-inline void ProcessorResponse::set_has_gain_set() {
-  _oneof_case_[0] = kGainSet;
+inline void ProcessorResponse::clear_master_bypass_get_rsp() {
+  if (master_bypass_get_rsp_ != nullptr) master_bypass_get_rsp_->Clear();
+  _has_bits_[0] &= ~0x00000002u;
 }
-inline void ProcessorResponse::clear_gain_set() {
-  if (_internal_has_gain_set()) {
-    if (GetArenaForAllocation() == nullptr) {
-      delete rsp_oneof_.gain_set_;
-    }
-    clear_has_rsp_oneof();
+inline const ::fmsmoov::MasterBypassGetResponse& ProcessorResponse::_internal_master_bypass_get_rsp() const {
+  const ::fmsmoov::MasterBypassGetResponse* p = master_bypass_get_rsp_;
+  return p != nullptr ? *p : reinterpret_cast<const ::fmsmoov::MasterBypassGetResponse&>(
+      ::fmsmoov::_MasterBypassGetResponse_default_instance_);
+}
+inline const ::fmsmoov::MasterBypassGetResponse& ProcessorResponse::master_bypass_get_rsp() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorResponse.master_bypass_get_rsp)
+  return _internal_master_bypass_get_rsp();
+}
+inline void ProcessorResponse::unsafe_arena_set_allocated_master_bypass_get_rsp(
+    ::fmsmoov::MasterBypassGetResponse* master_bypass_get_rsp) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(master_bypass_get_rsp_);
   }
-}
-inline ::fmsmoov::GainSetResponse* ProcessorResponse::release_gain_set() {
-  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorResponse.gain_set)
-  if (_internal_has_gain_set()) {
-    clear_has_rsp_oneof();
-      ::fmsmoov::GainSetResponse* temp = rsp_oneof_.gain_set_;
-    if (GetArenaForAllocation() != nullptr) {
-      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-    }
-    rsp_oneof_.gain_set_ = nullptr;
-    return temp;
+  master_bypass_get_rsp_ = master_bypass_get_rsp;
+  if (master_bypass_get_rsp) {
+    _has_bits_[0] |= 0x00000002u;
   } else {
-    return nullptr;
+    _has_bits_[0] &= ~0x00000002u;
   }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorResponse.master_bypass_get_rsp)
 }
-inline const ::fmsmoov::GainSetResponse& ProcessorResponse::_internal_gain_set() const {
-  return _internal_has_gain_set()
-      ? *rsp_oneof_.gain_set_
-      : reinterpret_cast< ::fmsmoov::GainSetResponse&>(::fmsmoov::_GainSetResponse_default_instance_);
-}
-inline const ::fmsmoov::GainSetResponse& ProcessorResponse::gain_set() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorResponse.gain_set)
-  return _internal_gain_set();
-}
-inline ::fmsmoov::GainSetResponse* ProcessorResponse::unsafe_arena_release_gain_set() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:fmsmoov.ProcessorResponse.gain_set)
-  if (_internal_has_gain_set()) {
-    clear_has_rsp_oneof();
-    ::fmsmoov::GainSetResponse* temp = rsp_oneof_.gain_set_;
-    rsp_oneof_.gain_set_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
+inline ::fmsmoov::MasterBypassGetResponse* ProcessorResponse::release_master_bypass_get_rsp() {
+  _has_bits_[0] &= ~0x00000002u;
+  ::fmsmoov::MasterBypassGetResponse* temp = master_bypass_get_rsp_;
+  master_bypass_get_rsp_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
   }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
 }
-inline void ProcessorResponse::unsafe_arena_set_allocated_gain_set(::fmsmoov::GainSetResponse* gain_set) {
-  clear_rsp_oneof();
-  if (gain_set) {
-    set_has_gain_set();
-    rsp_oneof_.gain_set_ = gain_set;
+inline ::fmsmoov::MasterBypassGetResponse* ProcessorResponse::unsafe_arena_release_master_bypass_get_rsp() {
+  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorResponse.master_bypass_get_rsp)
+  _has_bits_[0] &= ~0x00000002u;
+  ::fmsmoov::MasterBypassGetResponse* temp = master_bypass_get_rsp_;
+  master_bypass_get_rsp_ = nullptr;
+  return temp;
+}
+inline ::fmsmoov::MasterBypassGetResponse* ProcessorResponse::_internal_mutable_master_bypass_get_rsp() {
+  _has_bits_[0] |= 0x00000002u;
+  if (master_bypass_get_rsp_ == nullptr) {
+    auto* p = CreateMaybeMessage<::fmsmoov::MasterBypassGetResponse>(GetArenaForAllocation());
+    master_bypass_get_rsp_ = p;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorResponse.gain_set)
+  return master_bypass_get_rsp_;
 }
-inline ::fmsmoov::GainSetResponse* ProcessorResponse::_internal_mutable_gain_set() {
-  if (!_internal_has_gain_set()) {
-    clear_rsp_oneof();
-    set_has_gain_set();
-    rsp_oneof_.gain_set_ = CreateMaybeMessage< ::fmsmoov::GainSetResponse >(GetArenaForAllocation());
-  }
-  return rsp_oneof_.gain_set_;
-}
-inline ::fmsmoov::GainSetResponse* ProcessorResponse::mutable_gain_set() {
-  ::fmsmoov::GainSetResponse* _msg = _internal_mutable_gain_set();
-  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorResponse.gain_set)
+inline ::fmsmoov::MasterBypassGetResponse* ProcessorResponse::mutable_master_bypass_get_rsp() {
+  ::fmsmoov::MasterBypassGetResponse* _msg = _internal_mutable_master_bypass_get_rsp();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorResponse.master_bypass_get_rsp)
   return _msg;
 }
+inline void ProcessorResponse::set_allocated_master_bypass_get_rsp(::fmsmoov::MasterBypassGetResponse* master_bypass_get_rsp) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete master_bypass_get_rsp_;
+  }
+  if (master_bypass_get_rsp) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::MasterBypassGetResponse>::GetOwningArena(master_bypass_get_rsp);
+    if (message_arena != submessage_arena) {
+      master_bypass_get_rsp = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, master_bypass_get_rsp, submessage_arena);
+    }
+    _has_bits_[0] |= 0x00000002u;
+  } else {
+    _has_bits_[0] &= ~0x00000002u;
+  }
+  master_bypass_get_rsp_ = master_bypass_get_rsp;
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorResponse.master_bypass_get_rsp)
+}
 
-// .fmsmoov.GainGetResponse gain_get = 5;
-inline bool ProcessorResponse::_internal_has_gain_get() const {
-  return rsp_oneof_case() == kGainGet;
+// optional .fmsmoov.GainGetResponse gain_get_rsp = 5;
+inline bool ProcessorResponse::_internal_has_gain_get_rsp() const {
+  bool value = (_has_bits_[0] & 0x00000004u) != 0;
+  PROTOBUF_ASSUME(!value || gain_get_rsp_ != nullptr);
+  return value;
 }
-inline bool ProcessorResponse::has_gain_get() const {
-  return _internal_has_gain_get();
+inline bool ProcessorResponse::has_gain_get_rsp() const {
+  return _internal_has_gain_get_rsp();
 }
-inline void ProcessorResponse::set_has_gain_get() {
-  _oneof_case_[0] = kGainGet;
+inline void ProcessorResponse::clear_gain_get_rsp() {
+  if (gain_get_rsp_ != nullptr) gain_get_rsp_->Clear();
+  _has_bits_[0] &= ~0x00000004u;
 }
-inline void ProcessorResponse::clear_gain_get() {
-  if (_internal_has_gain_get()) {
-    if (GetArenaForAllocation() == nullptr) {
-      delete rsp_oneof_.gain_get_;
-    }
-    clear_has_rsp_oneof();
+inline const ::fmsmoov::GainGetResponse& ProcessorResponse::_internal_gain_get_rsp() const {
+  const ::fmsmoov::GainGetResponse* p = gain_get_rsp_;
+  return p != nullptr ? *p : reinterpret_cast<const ::fmsmoov::GainGetResponse&>(
+      ::fmsmoov::_GainGetResponse_default_instance_);
+}
+inline const ::fmsmoov::GainGetResponse& ProcessorResponse::gain_get_rsp() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorResponse.gain_get_rsp)
+  return _internal_gain_get_rsp();
+}
+inline void ProcessorResponse::unsafe_arena_set_allocated_gain_get_rsp(
+    ::fmsmoov::GainGetResponse* gain_get_rsp) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(gain_get_rsp_);
   }
-}
-inline ::fmsmoov::GainGetResponse* ProcessorResponse::release_gain_get() {
-  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorResponse.gain_get)
-  if (_internal_has_gain_get()) {
-    clear_has_rsp_oneof();
-      ::fmsmoov::GainGetResponse* temp = rsp_oneof_.gain_get_;
-    if (GetArenaForAllocation() != nullptr) {
-      temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
-    }
-    rsp_oneof_.gain_get_ = nullptr;
-    return temp;
+  gain_get_rsp_ = gain_get_rsp;
+  if (gain_get_rsp) {
+    _has_bits_[0] |= 0x00000004u;
   } else {
-    return nullptr;
+    _has_bits_[0] &= ~0x00000004u;
   }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorResponse.gain_get_rsp)
 }
-inline const ::fmsmoov::GainGetResponse& ProcessorResponse::_internal_gain_get() const {
-  return _internal_has_gain_get()
-      ? *rsp_oneof_.gain_get_
-      : reinterpret_cast< ::fmsmoov::GainGetResponse&>(::fmsmoov::_GainGetResponse_default_instance_);
-}
-inline const ::fmsmoov::GainGetResponse& ProcessorResponse::gain_get() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.ProcessorResponse.gain_get)
-  return _internal_gain_get();
-}
-inline ::fmsmoov::GainGetResponse* ProcessorResponse::unsafe_arena_release_gain_get() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:fmsmoov.ProcessorResponse.gain_get)
-  if (_internal_has_gain_get()) {
-    clear_has_rsp_oneof();
-    ::fmsmoov::GainGetResponse* temp = rsp_oneof_.gain_get_;
-    rsp_oneof_.gain_get_ = nullptr;
-    return temp;
-  } else {
-    return nullptr;
+inline ::fmsmoov::GainGetResponse* ProcessorResponse::release_gain_get_rsp() {
+  _has_bits_[0] &= ~0x00000004u;
+  ::fmsmoov::GainGetResponse* temp = gain_get_rsp_;
+  gain_get_rsp_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
   }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
 }
-inline void ProcessorResponse::unsafe_arena_set_allocated_gain_get(::fmsmoov::GainGetResponse* gain_get) {
-  clear_rsp_oneof();
-  if (gain_get) {
-    set_has_gain_get();
-    rsp_oneof_.gain_get_ = gain_get;
+inline ::fmsmoov::GainGetResponse* ProcessorResponse::unsafe_arena_release_gain_get_rsp() {
+  // @@protoc_insertion_point(field_release:fmsmoov.ProcessorResponse.gain_get_rsp)
+  _has_bits_[0] &= ~0x00000004u;
+  ::fmsmoov::GainGetResponse* temp = gain_get_rsp_;
+  gain_get_rsp_ = nullptr;
+  return temp;
+}
+inline ::fmsmoov::GainGetResponse* ProcessorResponse::_internal_mutable_gain_get_rsp() {
+  _has_bits_[0] |= 0x00000004u;
+  if (gain_get_rsp_ == nullptr) {
+    auto* p = CreateMaybeMessage<::fmsmoov::GainGetResponse>(GetArenaForAllocation());
+    gain_get_rsp_ = p;
   }
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.ProcessorResponse.gain_get)
+  return gain_get_rsp_;
 }
-inline ::fmsmoov::GainGetResponse* ProcessorResponse::_internal_mutable_gain_get() {
-  if (!_internal_has_gain_get()) {
-    clear_rsp_oneof();
-    set_has_gain_get();
-    rsp_oneof_.gain_get_ = CreateMaybeMessage< ::fmsmoov::GainGetResponse >(GetArenaForAllocation());
-  }
-  return rsp_oneof_.gain_get_;
-}
-inline ::fmsmoov::GainGetResponse* ProcessorResponse::mutable_gain_get() {
-  ::fmsmoov::GainGetResponse* _msg = _internal_mutable_gain_get();
-  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorResponse.gain_get)
+inline ::fmsmoov::GainGetResponse* ProcessorResponse::mutable_gain_get_rsp() {
+  ::fmsmoov::GainGetResponse* _msg = _internal_mutable_gain_get_rsp();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.ProcessorResponse.gain_get_rsp)
   return _msg;
 }
+inline void ProcessorResponse::set_allocated_gain_get_rsp(::fmsmoov::GainGetResponse* gain_get_rsp) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete gain_get_rsp_;
+  }
+  if (gain_get_rsp) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::GainGetResponse>::GetOwningArena(gain_get_rsp);
+    if (message_arena != submessage_arena) {
+      gain_get_rsp = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, gain_get_rsp, submessage_arena);
+    }
+    _has_bits_[0] |= 0x00000004u;
+  } else {
+    _has_bits_[0] &= ~0x00000004u;
+  }
+  gain_get_rsp_ = gain_get_rsp;
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorResponse.gain_get_rsp)
+}
 
-inline bool ProcessorResponse::has_rsp_oneof() const {
-  return rsp_oneof_case() != RSP_ONEOF_NOT_SET;
-}
-inline void ProcessorResponse::clear_has_rsp_oneof() {
-  _oneof_case_[0] = RSP_ONEOF_NOT_SET;
-}
-inline ProcessorResponse::RspOneofCase ProcessorResponse::rsp_oneof_case() const {
-  return ProcessorResponse::RspOneofCase(_oneof_case_[0]);
-}
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

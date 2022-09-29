@@ -45,31 +45,64 @@ struct ProcessorLiveDataDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessorLiveDataDefaultTypeInternal _ProcessorLiveData_default_instance_;
-constexpr ShutdownCommand::ShutdownCommand(
+constexpr MasterBypassSetCommand::MasterBypassSetCommand(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : reason_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
-struct ShutdownCommandDefaultTypeInternal {
-  constexpr ShutdownCommandDefaultTypeInternal()
+  : bypass_(false){}
+struct MasterBypassSetCommandDefaultTypeInternal {
+  constexpr MasterBypassSetCommandDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
-  ~ShutdownCommandDefaultTypeInternal() {}
+  ~MasterBypassSetCommandDefaultTypeInternal() {}
   union {
-    ShutdownCommand _instance;
+    MasterBypassSetCommand _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ShutdownCommandDefaultTypeInternal _ShutdownCommand_default_instance_;
-constexpr ShutdownResponse::ShutdownResponse(
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MasterBypassSetCommandDefaultTypeInternal _MasterBypassSetCommand_default_instance_;
+constexpr MasterBypassSetResponse::MasterBypassSetResponse(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : response_(0)
-{}
-struct ShutdownResponseDefaultTypeInternal {
-  constexpr ShutdownResponseDefaultTypeInternal()
+  : bypass_(false){}
+struct MasterBypassSetResponseDefaultTypeInternal {
+  constexpr MasterBypassSetResponseDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
-  ~ShutdownResponseDefaultTypeInternal() {}
+  ~MasterBypassSetResponseDefaultTypeInternal() {}
   union {
-    ShutdownResponse _instance;
+    MasterBypassSetResponse _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ShutdownResponseDefaultTypeInternal _ShutdownResponse_default_instance_;
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MasterBypassSetResponseDefaultTypeInternal _MasterBypassSetResponse_default_instance_;
+constexpr MasterBypassGetCommand::MasterBypassGetCommand(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized){}
+struct MasterBypassGetCommandDefaultTypeInternal {
+  constexpr MasterBypassGetCommandDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~MasterBypassGetCommandDefaultTypeInternal() {}
+  union {
+    MasterBypassGetCommand _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MasterBypassGetCommandDefaultTypeInternal _MasterBypassGetCommand_default_instance_;
+constexpr MasterBypassGetResponse::MasterBypassGetResponse(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : bypass_(false){}
+struct MasterBypassGetResponseDefaultTypeInternal {
+  constexpr MasterBypassGetResponseDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~MasterBypassGetResponseDefaultTypeInternal() {}
+  union {
+    MasterBypassGetResponse _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT MasterBypassGetResponseDefaultTypeInternal _MasterBypassGetResponse_default_instance_;
+constexpr InternalShutdownCommand::InternalShutdownCommand(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized){}
+struct InternalShutdownCommandDefaultTypeInternal {
+  constexpr InternalShutdownCommandDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~InternalShutdownCommandDefaultTypeInternal() {}
+  union {
+    InternalShutdownCommand _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT InternalShutdownCommandDefaultTypeInternal _InternalShutdownCommand_default_instance_;
 constexpr GainSetCommand::GainSetCommand(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : which_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
@@ -85,19 +118,6 @@ struct GainSetCommandDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT GainSetCommandDefaultTypeInternal _GainSetCommand_default_instance_;
-constexpr GainSetResponse::GainSetResponse(
-  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
-  : response_(0)
-{}
-struct GainSetResponseDefaultTypeInternal {
-  constexpr GainSetResponseDefaultTypeInternal()
-    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
-  ~GainSetResponseDefaultTypeInternal() {}
-  union {
-    GainSetResponse _instance;
-  };
-};
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT GainSetResponseDefaultTypeInternal _GainSetResponse_default_instance_;
 constexpr GainGetCommand::GainGetCommand(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : which_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string){}
@@ -140,9 +160,11 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessorCommandDefaultTypeInte
 constexpr ProcessorResponse::ProcessorResponse(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : response_msg_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , master_bypass_set_rsp_(nullptr)
+  , master_bypass_get_rsp_(nullptr)
+  , gain_get_rsp_(nullptr)
   , response_(0)
-
-  , _oneof_case_{}{}
+{}
 struct ProcessorResponseDefaultTypeInternal {
   constexpr ProcessorResponseDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -153,7 +175,7 @@ struct ProcessorResponseDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessorResponseDefaultTypeInternal _ProcessorResponse_default_instance_;
 }  // namespace fmsmoov
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_fmsmoov_2eproto[10];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_fmsmoov_2eproto[12];
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_fmsmoov_2eproto[2];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_fmsmoov_2eproto = nullptr;
 
@@ -179,17 +201,33 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_fmsmoov_2eproto::offsets[] PRO
   2,
   3,
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::ShutdownCommand, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::MasterBypassSetCommand, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::ShutdownCommand, reason_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::MasterBypassSetCommand, bypass_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::ShutdownResponse, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::MasterBypassSetResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::ShutdownResponse, response_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::MasterBypassSetResponse, bypass_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::MasterBypassGetCommand, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::MasterBypassGetResponse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::MasterBypassGetResponse, bypass_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::InternalShutdownCommand, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::fmsmoov::GainSetCommand, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -200,12 +238,6 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_fmsmoov_2eproto::offsets[] PRO
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   PROTOBUF_FIELD_OFFSET(::fmsmoov::GainSetCommand, type_),
   PROTOBUF_FIELD_OFFSET(::fmsmoov::GainSetCommand, gaintype_oneof_),
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::GainSetResponse, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::GainSetResponse, response_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::fmsmoov::GainGetCommand, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -230,39 +262,49 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_fmsmoov_2eproto::offsets[] PRO
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
+  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorCommand, cmd_oneof_),
-  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorResponse, _has_bits_),
   PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorResponse, _internal_metadata_),
   ~0u,  // no _extensions_
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorResponse, _oneof_case_[0]),
+  ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorResponse, response_),
   PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorResponse, response_msg_),
-  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
-  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
-  ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorResponse, rsp_oneof_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorResponse, master_bypass_set_rsp_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorResponse, master_bypass_get_rsp_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorResponse, gain_get_rsp_),
+  ~0u,
+  ~0u,
+  0,
+  1,
+  2,
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::fmsmoov::GainPair)},
   { 7, 16, sizeof(::fmsmoov::ProcessorLiveData)},
-  { 20, -1, sizeof(::fmsmoov::ShutdownCommand)},
-  { 26, -1, sizeof(::fmsmoov::ShutdownResponse)},
-  { 32, -1, sizeof(::fmsmoov::GainSetCommand)},
-  { 42, -1, sizeof(::fmsmoov::GainSetResponse)},
-  { 48, -1, sizeof(::fmsmoov::GainGetCommand)},
-  { 54, -1, sizeof(::fmsmoov::GainGetResponse)},
-  { 64, -1, sizeof(::fmsmoov::ProcessorCommand)},
-  { 73, -1, sizeof(::fmsmoov::ProcessorResponse)},
+  { 20, -1, sizeof(::fmsmoov::MasterBypassSetCommand)},
+  { 26, -1, sizeof(::fmsmoov::MasterBypassSetResponse)},
+  { 32, -1, sizeof(::fmsmoov::MasterBypassGetCommand)},
+  { 37, -1, sizeof(::fmsmoov::MasterBypassGetResponse)},
+  { 43, -1, sizeof(::fmsmoov::InternalShutdownCommand)},
+  { 48, -1, sizeof(::fmsmoov::GainSetCommand)},
+  { 58, -1, sizeof(::fmsmoov::GainGetCommand)},
+  { 64, -1, sizeof(::fmsmoov::GainGetResponse)},
+  { 74, -1, sizeof(::fmsmoov::ProcessorCommand)},
+  { 85, 95, sizeof(::fmsmoov::ProcessorResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_GainPair_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_ProcessorLiveData_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_ShutdownCommand_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_ShutdownResponse_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_MasterBypassSetCommand_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_MasterBypassSetResponse_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_MasterBypassGetCommand_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_MasterBypassGetResponse_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_InternalShutdownCommand_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_GainSetCommand_default_instance_),
-  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_GainSetResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_GainGetCommand_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_GainGetResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_ProcessorCommand_default_instance_),
@@ -272,38 +314,45 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 const char descriptor_table_protodef_fmsmoov_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\rfmsmoov.proto\022\007fmsmoov\" \n\010GainPair\022\t\n\001"
   "l\030\001 \001(\002\022\t\n\001r\030\002 \001(\002\"\177\n\021ProcessorLiveData\022"
-  "\020\n\003inL\030\001 \001(\002H\000\210\001\001\022\020\n\003inR\030\002 \001(\002H\001\210\001\001\022\021\n\004o"
-  "utL\030\003 \001(\002H\002\210\001\001\022\021\n\004outR\030\004 \001(\002H\003\210\001\001B\006\n\004_in"
-  "LB\006\n\004_inRB\007\n\005_outLB\007\n\005_outR\"!\n\017ShutdownC"
-  "ommand\022\016\n\006reason\030\001 \001(\t\";\n\020ShutdownRespon"
-  "se\022\'\n\010response\030\001 \001(\0162\025.fmsmoov.ResponseC"
-  "ode\"\212\001\n\016GainSetCommand\022\r\n\005which\030\001 \001(\t\022&\n"
-  "\tgain_pair\030\002 \001(\0132\021.fmsmoov.GainPairH\000\022\016\n"
-  "\004gain\030\003 \001(\002H\000\022\037\n\004type\030\004 \001(\0162\021.fmsmoov.Ga"
-  "inTypeB\020\n\016gaintype_oneof\":\n\017GainSetRespo"
-  "nse\022\'\n\010response\030\001 \001(\0162\025.fmsmoov.Response"
-  "Code\"\037\n\016GainGetCommand\022\r\n\005which\030\001 \001(\t\"\213\001"
-  "\n\017GainGetResponse\022\r\n\005which\030\001 \001(\t\022&\n\tgain"
-  "_pair\030\002 \001(\0132\021.fmsmoov.GainPairH\000\022\016\n\004gain"
-  "\030\003 \001(\002H\000\022\037\n\004type\030\004 \001(\0162\021.fmsmoov.GainTyp"
-  "eB\020\n\016gaintype_oneof\"\247\001\n\020ProcessorCommand"
-  "\022,\n\010shutdown\030\001 \001(\0132\030.fmsmoov.ShutdownCom"
-  "mandH\000\022+\n\010gain_set\030\002 \001(\0132\027.fmsmoov.GainS"
-  "etCommandH\000\022+\n\010gain_get\030\003 \001(\0132\027.fmsmoov."
-  "GainGetCommandH\000B\013\n\tcmd_oneof\"\352\001\n\021Proces"
-  "sorResponse\022\'\n\010response\030\001 \001(\0162\025.fmsmoov."
-  "ResponseCode\022\024\n\014response_msg\030\002 \001(\t\022-\n\010sh"
-  "utdown\030\003 \001(\0132\031.fmsmoov.ShutdownResponseH"
-  "\000\022,\n\010gain_set\030\004 \001(\0132\030.fmsmoov.GainSetRes"
-  "ponseH\000\022,\n\010gain_get\030\005 \001(\0132\030.fmsmoov.Gain"
-  "GetResponseH\000B\013\n\trsp_oneof*\037\n\010GainType\022\n"
+  "\020\n\003inL\030\002 \001(\002H\000\210\001\001\022\020\n\003inR\030\003 \001(\002H\001\210\001\001\022\021\n\004o"
+  "utL\030\004 \001(\002H\002\210\001\001\022\021\n\004outR\030\005 \001(\002H\003\210\001\001B\006\n\004_in"
+  "LB\006\n\004_inRB\007\n\005_outLB\007\n\005_outR\"(\n\026MasterByp"
+  "assSetCommand\022\016\n\006bypass\030\001 \001(\010\")\n\027MasterB"
+  "ypassSetResponse\022\016\n\006bypass\030\001 \001(\010\"\030\n\026Mast"
+  "erBypassGetCommand\")\n\027MasterBypassGetRes"
+  "ponse\022\016\n\006bypass\030\001 \001(\010\"\031\n\027InternalShutdow"
+  "nCommand\"\212\001\n\016GainSetCommand\022\r\n\005which\030\001 \001"
+  "(\t\022&\n\tgain_pair\030\002 \001(\0132\021.fmsmoov.GainPair"
+  "H\000\022\016\n\004gain\030\003 \001(\002H\000\022\037\n\004type\030\004 \001(\0162\021.fmsmo"
+  "ov.GainTypeB\020\n\016gaintype_oneof\"\037\n\016GainGet"
+  "Command\022\r\n\005which\030\001 \001(\t\"\213\001\n\017GainGetRespon"
+  "se\022\r\n\005which\030\001 \001(\t\022&\n\tgain_pair\030\002 \001(\0132\021.f"
+  "msmoov.GainPairH\000\022\016\n\004gain\030\003 \001(\002H\000\022\037\n\004typ"
+  "e\030\004 \001(\0162\021.fmsmoov.GainTypeB\020\n\016gaintype_o"
+  "neof\"\270\002\n\020ProcessorCommand\022A\n\025internal_sh"
+  "utdown_cmd\030\001 \001(\0132 .fmsmoov.InternalShutd"
+  "ownCommandH\000\022<\n\021master_bypass_set\030\002 \001(\0132"
+  "\037.fmsmoov.MasterBypassSetCommandH\000\022<\n\021ma"
+  "ster_bypass_get\030\003 \001(\0132\037.fmsmoov.MasterBy"
+  "passGetCommandH\000\022+\n\010gain_set\030\004 \001(\0132\027.fms"
+  "moov.GainSetCommandH\000\022+\n\010gain_get\030\005 \001(\0132"
+  "\027.fmsmoov.GainGetCommandH\000B\013\n\tcmd_oneof\""
+  "\330\002\n\021ProcessorResponse\022\'\n\010response\030\001 \001(\0162"
+  "\025.fmsmoov.ResponseCode\022\024\n\014response_msg\030\002"
+  " \001(\t\022D\n\025master_bypass_set_rsp\030\003 \001(\0132 .fm"
+  "smoov.MasterBypassSetResponseH\000\210\001\001\022D\n\025ma"
+  "ster_bypass_get_rsp\030\004 \001(\0132 .fmsmoov.Mast"
+  "erBypassGetResponseH\001\210\001\001\0223\n\014gain_get_rsp"
+  "\030\005 \001(\0132\030.fmsmoov.GainGetResponseH\002\210\001\001B\030\n"
+  "\026_master_bypass_set_rspB\030\n\026_master_bypas"
+  "s_get_rspB\017\n\r_gain_get_rsp*\037\n\010GainType\022\n"
   "\n\006LINEAR\020\000\022\007\n\003LOG\020\001*!\n\014ResponseCode\022\006\n\002O"
   "K\020\000\022\t\n\005ERROR\020\001b\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_fmsmoov_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_fmsmoov_2eproto = {
-  false, false, 1142, descriptor_table_protodef_fmsmoov_2eproto, "fmsmoov.proto", 
-  &descriptor_table_fmsmoov_2eproto_once, nullptr, 0, 10,
+  false, false, 1422, descriptor_table_protodef_fmsmoov_2eproto, "fmsmoov.proto", 
+  &descriptor_table_fmsmoov_2eproto_once, nullptr, 0, 12,
   schemas, file_default_instances, TableStruct_fmsmoov_2eproto::offsets,
   file_level_metadata_fmsmoov_2eproto, file_level_enum_descriptors_fmsmoov_2eproto, file_level_service_descriptors_fmsmoov_2eproto,
 };
@@ -648,33 +697,33 @@ const char* ProcessorLiveData::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // optional float inL = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 13)) {
+      // optional float inL = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 21)) {
           _Internal::set_has_inl(&has_bits);
           inl_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
           ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // optional float inR = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 21)) {
+      // optional float inR = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 29)) {
           _Internal::set_has_inr(&has_bits);
           inr_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
           ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // optional float outL = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 29)) {
+      // optional float outL = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 37)) {
           _Internal::set_has_outl(&has_bits);
           outl_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
           ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // optional float outR = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 37)) {
+      // optional float outR = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 45)) {
           _Internal::set_has_outr(&has_bits);
           outr_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
           ptr += sizeof(float);
@@ -710,28 +759,28 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // optional float inL = 1;
+  // optional float inL = 2;
   if (_internal_has_inl()) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(1, this->_internal_inl(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(2, this->_internal_inl(), target);
   }
 
-  // optional float inR = 2;
+  // optional float inR = 3;
   if (_internal_has_inr()) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(2, this->_internal_inr(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(3, this->_internal_inr(), target);
   }
 
-  // optional float outL = 3;
+  // optional float outL = 4;
   if (_internal_has_outl()) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(3, this->_internal_outl(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(4, this->_internal_outl(), target);
   }
 
-  // optional float outR = 4;
+  // optional float outR = 5;
   if (_internal_has_outr()) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(4, this->_internal_outr(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(5, this->_internal_outr(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -752,22 +801,22 @@ size_t ProcessorLiveData::ByteSizeLong() const {
 
   cached_has_bits = _has_bits_[0];
   if (cached_has_bits & 0x0000000fu) {
-    // optional float inL = 1;
+    // optional float inL = 2;
     if (cached_has_bits & 0x00000001u) {
       total_size += 1 + 4;
     }
 
-    // optional float inR = 2;
+    // optional float inR = 3;
     if (cached_has_bits & 0x00000002u) {
       total_size += 1 + 4;
     }
 
-    // optional float outL = 3;
+    // optional float outL = 4;
     if (cached_has_bits & 0x00000004u) {
       total_size += 1 + 4;
     }
 
-    // optional float outR = 4;
+    // optional float outR = 5;
     if (cached_has_bits & 0x00000008u) {
       total_size += 1 + 4;
     }
@@ -851,78 +900,71 @@ void ProcessorLiveData::InternalSwap(ProcessorLiveData* other) {
 
 // ===================================================================
 
-class ShutdownCommand::_Internal {
+class MasterBypassSetCommand::_Internal {
  public:
 };
 
-ShutdownCommand::ShutdownCommand(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+MasterBypassSetCommand::MasterBypassSetCommand(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
   }
-  // @@protoc_insertion_point(arena_constructor:fmsmoov.ShutdownCommand)
+  // @@protoc_insertion_point(arena_constructor:fmsmoov.MasterBypassSetCommand)
 }
-ShutdownCommand::ShutdownCommand(const ShutdownCommand& from)
+MasterBypassSetCommand::MasterBypassSetCommand(const MasterBypassSetCommand& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  reason_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (!from._internal_reason().empty()) {
-    reason_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_reason(), 
-      GetArenaForAllocation());
-  }
-  // @@protoc_insertion_point(copy_constructor:fmsmoov.ShutdownCommand)
+  bypass_ = from.bypass_;
+  // @@protoc_insertion_point(copy_constructor:fmsmoov.MasterBypassSetCommand)
 }
 
-inline void ShutdownCommand::SharedCtor() {
-reason_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+inline void MasterBypassSetCommand::SharedCtor() {
+bypass_ = false;
 }
 
-ShutdownCommand::~ShutdownCommand() {
-  // @@protoc_insertion_point(destructor:fmsmoov.ShutdownCommand)
+MasterBypassSetCommand::~MasterBypassSetCommand() {
+  // @@protoc_insertion_point(destructor:fmsmoov.MasterBypassSetCommand)
   if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
   _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-inline void ShutdownCommand::SharedDtor() {
+inline void MasterBypassSetCommand::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  reason_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
 }
 
-void ShutdownCommand::ArenaDtor(void* object) {
-  ShutdownCommand* _this = reinterpret_cast< ShutdownCommand* >(object);
+void MasterBypassSetCommand::ArenaDtor(void* object) {
+  MasterBypassSetCommand* _this = reinterpret_cast< MasterBypassSetCommand* >(object);
   (void)_this;
 }
-void ShutdownCommand::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+void MasterBypassSetCommand::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
 }
-void ShutdownCommand::SetCachedSize(int size) const {
+void MasterBypassSetCommand::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
 
-void ShutdownCommand::Clear() {
-// @@protoc_insertion_point(message_clear_start:fmsmoov.ShutdownCommand)
+void MasterBypassSetCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:fmsmoov.MasterBypassSetCommand)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  reason_.ClearToEmpty();
+  bypass_ = false;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* ShutdownCommand::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* MasterBypassSetCommand::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // string reason = 1;
+      // bool bypass = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          auto str = _internal_mutable_reason();
-          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "fmsmoov.ShutdownCommand.reason"));
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          bypass_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -949,43 +991,37 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* ShutdownCommand::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* MasterBypassSetCommand::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.ShutdownCommand)
+  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.MasterBypassSetCommand)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // string reason = 1;
-  if (!this->_internal_reason().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_reason().data(), static_cast<int>(this->_internal_reason().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "fmsmoov.ShutdownCommand.reason");
-    target = stream->WriteStringMaybeAliased(
-        1, this->_internal_reason(), target);
+  // bool bypass = 1;
+  if (this->_internal_bypass() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(1, this->_internal_bypass(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.ShutdownCommand)
+  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.MasterBypassSetCommand)
   return target;
 }
 
-size_t ShutdownCommand::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:fmsmoov.ShutdownCommand)
+size_t MasterBypassSetCommand::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:fmsmoov.MasterBypassSetCommand)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string reason = 1;
-  if (!this->_internal_reason().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_reason());
+  // bool bypass = 1;
+  if (this->_internal_bypass() != 0) {
+    total_size += 1 + 1;
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -997,53 +1033,49 @@ size_t ShutdownCommand::ByteSizeLong() const {
   return total_size;
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ShutdownCommand::_class_data_ = {
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MasterBypassSetCommand::_class_data_ = {
     ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    ShutdownCommand::MergeImpl
+    MasterBypassSetCommand::MergeImpl
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ShutdownCommand::GetClassData() const { return &_class_data_; }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*MasterBypassSetCommand::GetClassData() const { return &_class_data_; }
 
-void ShutdownCommand::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
+void MasterBypassSetCommand::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
                       const ::PROTOBUF_NAMESPACE_ID::Message&from) {
-  static_cast<ShutdownCommand *>(to)->MergeFrom(
-      static_cast<const ShutdownCommand &>(from));
+  static_cast<MasterBypassSetCommand *>(to)->MergeFrom(
+      static_cast<const MasterBypassSetCommand &>(from));
 }
 
 
-void ShutdownCommand::MergeFrom(const ShutdownCommand& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.ShutdownCommand)
+void MasterBypassSetCommand::MergeFrom(const MasterBypassSetCommand& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.MasterBypassSetCommand)
   GOOGLE_DCHECK_NE(&from, this);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!from._internal_reason().empty()) {
-    _internal_set_reason(from._internal_reason());
+  if (from._internal_bypass() != 0) {
+    _internal_set_bypass(from._internal_bypass());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void ShutdownCommand::CopyFrom(const ShutdownCommand& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.ShutdownCommand)
+void MasterBypassSetCommand::CopyFrom(const MasterBypassSetCommand& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.MasterBypassSetCommand)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ShutdownCommand::IsInitialized() const {
+bool MasterBypassSetCommand::IsInitialized() const {
   return true;
 }
 
-void ShutdownCommand::InternalSwap(ShutdownCommand* other) {
+void MasterBypassSetCommand::InternalSwap(MasterBypassSetCommand* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      &reason_, GetArenaForAllocation(),
-      &other->reason_, other->GetArenaForAllocation()
-  );
+  swap(bypass_, other->bypass_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata ShutdownCommand::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata MasterBypassSetCommand::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
       file_level_metadata_fmsmoov_2eproto[2]);
@@ -1051,73 +1083,72 @@ void ShutdownCommand::InternalSwap(ShutdownCommand* other) {
 
 // ===================================================================
 
-class ShutdownResponse::_Internal {
+class MasterBypassSetResponse::_Internal {
  public:
 };
 
-ShutdownResponse::ShutdownResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+MasterBypassSetResponse::MasterBypassSetResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
   }
-  // @@protoc_insertion_point(arena_constructor:fmsmoov.ShutdownResponse)
+  // @@protoc_insertion_point(arena_constructor:fmsmoov.MasterBypassSetResponse)
 }
-ShutdownResponse::ShutdownResponse(const ShutdownResponse& from)
+MasterBypassSetResponse::MasterBypassSetResponse(const MasterBypassSetResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  response_ = from.response_;
-  // @@protoc_insertion_point(copy_constructor:fmsmoov.ShutdownResponse)
+  bypass_ = from.bypass_;
+  // @@protoc_insertion_point(copy_constructor:fmsmoov.MasterBypassSetResponse)
 }
 
-inline void ShutdownResponse::SharedCtor() {
-response_ = 0;
+inline void MasterBypassSetResponse::SharedCtor() {
+bypass_ = false;
 }
 
-ShutdownResponse::~ShutdownResponse() {
-  // @@protoc_insertion_point(destructor:fmsmoov.ShutdownResponse)
+MasterBypassSetResponse::~MasterBypassSetResponse() {
+  // @@protoc_insertion_point(destructor:fmsmoov.MasterBypassSetResponse)
   if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
   _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-inline void ShutdownResponse::SharedDtor() {
+inline void MasterBypassSetResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
 }
 
-void ShutdownResponse::ArenaDtor(void* object) {
-  ShutdownResponse* _this = reinterpret_cast< ShutdownResponse* >(object);
+void MasterBypassSetResponse::ArenaDtor(void* object) {
+  MasterBypassSetResponse* _this = reinterpret_cast< MasterBypassSetResponse* >(object);
   (void)_this;
 }
-void ShutdownResponse::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+void MasterBypassSetResponse::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
 }
-void ShutdownResponse::SetCachedSize(int size) const {
+void MasterBypassSetResponse::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
 
-void ShutdownResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:fmsmoov.ShutdownResponse)
+void MasterBypassSetResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:fmsmoov.MasterBypassSetResponse)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  response_ = 0;
+  bypass_ = false;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* ShutdownResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* MasterBypassSetResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // .fmsmoov.ResponseCode response = 1;
+      // bool bypass = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
-          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          bypass_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
-          _internal_set_response(static_cast<::fmsmoov::ResponseCode>(val));
         } else goto handle_unusual;
         continue;
       default: {
@@ -1143,39 +1174,37 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* ShutdownResponse::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* MasterBypassSetResponse::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.ShutdownResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.MasterBypassSetResponse)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .fmsmoov.ResponseCode response = 1;
-  if (this->_internal_response() != 0) {
+  // bool bypass = 1;
+  if (this->_internal_bypass() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
-      1, this->_internal_response(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(1, this->_internal_bypass(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.ShutdownResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.MasterBypassSetResponse)
   return target;
 }
 
-size_t ShutdownResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:fmsmoov.ShutdownResponse)
+size_t MasterBypassSetResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:fmsmoov.MasterBypassSetResponse)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // .fmsmoov.ResponseCode response = 1;
-  if (this->_internal_response() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_response());
+  // bool bypass = 1;
+  if (this->_internal_bypass() != 0) {
+    total_size += 1 + 1;
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1187,52 +1216,541 @@ size_t ShutdownResponse::ByteSizeLong() const {
   return total_size;
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData ShutdownResponse::_class_data_ = {
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MasterBypassSetResponse::_class_data_ = {
     ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    ShutdownResponse::MergeImpl
+    MasterBypassSetResponse::MergeImpl
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*ShutdownResponse::GetClassData() const { return &_class_data_; }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*MasterBypassSetResponse::GetClassData() const { return &_class_data_; }
 
-void ShutdownResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
+void MasterBypassSetResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
                       const ::PROTOBUF_NAMESPACE_ID::Message&from) {
-  static_cast<ShutdownResponse *>(to)->MergeFrom(
-      static_cast<const ShutdownResponse &>(from));
+  static_cast<MasterBypassSetResponse *>(to)->MergeFrom(
+      static_cast<const MasterBypassSetResponse &>(from));
 }
 
 
-void ShutdownResponse::MergeFrom(const ShutdownResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.ShutdownResponse)
+void MasterBypassSetResponse::MergeFrom(const MasterBypassSetResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.MasterBypassSetResponse)
   GOOGLE_DCHECK_NE(&from, this);
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_response() != 0) {
-    _internal_set_response(from._internal_response());
+  if (from._internal_bypass() != 0) {
+    _internal_set_bypass(from._internal_bypass());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void ShutdownResponse::CopyFrom(const ShutdownResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.ShutdownResponse)
+void MasterBypassSetResponse::CopyFrom(const MasterBypassSetResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.MasterBypassSetResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool ShutdownResponse::IsInitialized() const {
+bool MasterBypassSetResponse::IsInitialized() const {
   return true;
 }
 
-void ShutdownResponse::InternalSwap(ShutdownResponse* other) {
+void MasterBypassSetResponse::InternalSwap(MasterBypassSetResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(response_, other->response_);
+  swap(bypass_, other->bypass_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata ShutdownResponse::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata MasterBypassSetResponse::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
       file_level_metadata_fmsmoov_2eproto[3]);
+}
+
+// ===================================================================
+
+class MasterBypassGetCommand::_Internal {
+ public:
+};
+
+MasterBypassGetCommand::MasterBypassGetCommand(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:fmsmoov.MasterBypassGetCommand)
+}
+MasterBypassGetCommand::MasterBypassGetCommand(const MasterBypassGetCommand& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:fmsmoov.MasterBypassGetCommand)
+}
+
+inline void MasterBypassGetCommand::SharedCtor() {
+}
+
+MasterBypassGetCommand::~MasterBypassGetCommand() {
+  // @@protoc_insertion_point(destructor:fmsmoov.MasterBypassGetCommand)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void MasterBypassGetCommand::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void MasterBypassGetCommand::ArenaDtor(void* object) {
+  MasterBypassGetCommand* _this = reinterpret_cast< MasterBypassGetCommand* >(object);
+  (void)_this;
+}
+void MasterBypassGetCommand::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void MasterBypassGetCommand::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void MasterBypassGetCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:fmsmoov.MasterBypassGetCommand)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* MasterBypassGetCommand::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+        if ((tag == 0) || ((tag & 7) == 4)) {
+          CHK_(ptr);
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* MasterBypassGetCommand::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.MasterBypassGetCommand)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.MasterBypassGetCommand)
+  return target;
+}
+
+size_t MasterBypassGetCommand::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:fmsmoov.MasterBypassGetCommand)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MasterBypassGetCommand::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    MasterBypassGetCommand::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*MasterBypassGetCommand::GetClassData() const { return &_class_data_; }
+
+void MasterBypassGetCommand::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message&from) {
+  static_cast<MasterBypassGetCommand *>(to)->MergeFrom(
+      static_cast<const MasterBypassGetCommand &>(from));
+}
+
+
+void MasterBypassGetCommand::MergeFrom(const MasterBypassGetCommand& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.MasterBypassGetCommand)
+  GOOGLE_DCHECK_NE(&from, this);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void MasterBypassGetCommand::CopyFrom(const MasterBypassGetCommand& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.MasterBypassGetCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool MasterBypassGetCommand::IsInitialized() const {
+  return true;
+}
+
+void MasterBypassGetCommand::InternalSwap(MasterBypassGetCommand* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata MasterBypassGetCommand::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
+      file_level_metadata_fmsmoov_2eproto[4]);
+}
+
+// ===================================================================
+
+class MasterBypassGetResponse::_Internal {
+ public:
+};
+
+MasterBypassGetResponse::MasterBypassGetResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:fmsmoov.MasterBypassGetResponse)
+}
+MasterBypassGetResponse::MasterBypassGetResponse(const MasterBypassGetResponse& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  bypass_ = from.bypass_;
+  // @@protoc_insertion_point(copy_constructor:fmsmoov.MasterBypassGetResponse)
+}
+
+inline void MasterBypassGetResponse::SharedCtor() {
+bypass_ = false;
+}
+
+MasterBypassGetResponse::~MasterBypassGetResponse() {
+  // @@protoc_insertion_point(destructor:fmsmoov.MasterBypassGetResponse)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void MasterBypassGetResponse::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void MasterBypassGetResponse::ArenaDtor(void* object) {
+  MasterBypassGetResponse* _this = reinterpret_cast< MasterBypassGetResponse* >(object);
+  (void)_this;
+}
+void MasterBypassGetResponse::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void MasterBypassGetResponse::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void MasterBypassGetResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:fmsmoov.MasterBypassGetResponse)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  bypass_ = false;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* MasterBypassGetResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // bool bypass = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          bypass_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag == 0) || ((tag & 7) == 4)) {
+          CHK_(ptr);
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* MasterBypassGetResponse::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.MasterBypassGetResponse)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // bool bypass = 1;
+  if (this->_internal_bypass() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteBoolToArray(1, this->_internal_bypass(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.MasterBypassGetResponse)
+  return target;
+}
+
+size_t MasterBypassGetResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:fmsmoov.MasterBypassGetResponse)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // bool bypass = 1;
+  if (this->_internal_bypass() != 0) {
+    total_size += 1 + 1;
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData MasterBypassGetResponse::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    MasterBypassGetResponse::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*MasterBypassGetResponse::GetClassData() const { return &_class_data_; }
+
+void MasterBypassGetResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message&from) {
+  static_cast<MasterBypassGetResponse *>(to)->MergeFrom(
+      static_cast<const MasterBypassGetResponse &>(from));
+}
+
+
+void MasterBypassGetResponse::MergeFrom(const MasterBypassGetResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.MasterBypassGetResponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_bypass() != 0) {
+    _internal_set_bypass(from._internal_bypass());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void MasterBypassGetResponse::CopyFrom(const MasterBypassGetResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.MasterBypassGetResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool MasterBypassGetResponse::IsInitialized() const {
+  return true;
+}
+
+void MasterBypassGetResponse::InternalSwap(MasterBypassGetResponse* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(bypass_, other->bypass_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata MasterBypassGetResponse::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
+      file_level_metadata_fmsmoov_2eproto[5]);
+}
+
+// ===================================================================
+
+class InternalShutdownCommand::_Internal {
+ public:
+};
+
+InternalShutdownCommand::InternalShutdownCommand(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:fmsmoov.InternalShutdownCommand)
+}
+InternalShutdownCommand::InternalShutdownCommand(const InternalShutdownCommand& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:fmsmoov.InternalShutdownCommand)
+}
+
+inline void InternalShutdownCommand::SharedCtor() {
+}
+
+InternalShutdownCommand::~InternalShutdownCommand() {
+  // @@protoc_insertion_point(destructor:fmsmoov.InternalShutdownCommand)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void InternalShutdownCommand::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void InternalShutdownCommand::ArenaDtor(void* object) {
+  InternalShutdownCommand* _this = reinterpret_cast< InternalShutdownCommand* >(object);
+  (void)_this;
+}
+void InternalShutdownCommand::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void InternalShutdownCommand::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void InternalShutdownCommand::Clear() {
+// @@protoc_insertion_point(message_clear_start:fmsmoov.InternalShutdownCommand)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* InternalShutdownCommand::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+        if ((tag == 0) || ((tag & 7) == 4)) {
+          CHK_(ptr);
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* InternalShutdownCommand::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.InternalShutdownCommand)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.InternalShutdownCommand)
+  return target;
+}
+
+size_t InternalShutdownCommand::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:fmsmoov.InternalShutdownCommand)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData InternalShutdownCommand::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    InternalShutdownCommand::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*InternalShutdownCommand::GetClassData() const { return &_class_data_; }
+
+void InternalShutdownCommand::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message&from) {
+  static_cast<InternalShutdownCommand *>(to)->MergeFrom(
+      static_cast<const InternalShutdownCommand &>(from));
+}
+
+
+void InternalShutdownCommand::MergeFrom(const InternalShutdownCommand& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.InternalShutdownCommand)
+  GOOGLE_DCHECK_NE(&from, this);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void InternalShutdownCommand::CopyFrom(const InternalShutdownCommand& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.InternalShutdownCommand)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool InternalShutdownCommand::IsInitialized() const {
+  return true;
+}
+
+void InternalShutdownCommand::InternalSwap(InternalShutdownCommand* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata InternalShutdownCommand::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
+      file_level_metadata_fmsmoov_2eproto[6]);
 }
 
 // ===================================================================
@@ -1580,193 +2098,7 @@ void GainSetCommand::InternalSwap(GainSetCommand* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata GainSetCommand::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[4]);
-}
-
-// ===================================================================
-
-class GainSetResponse::_Internal {
- public:
-};
-
-GainSetResponse::GainSetResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
-  if (!is_message_owned) {
-    RegisterArenaDtor(arena);
-  }
-  // @@protoc_insertion_point(arena_constructor:fmsmoov.GainSetResponse)
-}
-GainSetResponse::GainSetResponse(const GainSetResponse& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  response_ = from.response_;
-  // @@protoc_insertion_point(copy_constructor:fmsmoov.GainSetResponse)
-}
-
-inline void GainSetResponse::SharedCtor() {
-response_ = 0;
-}
-
-GainSetResponse::~GainSetResponse() {
-  // @@protoc_insertion_point(destructor:fmsmoov.GainSetResponse)
-  if (GetArenaForAllocation() != nullptr) return;
-  SharedDtor();
-  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-inline void GainSetResponse::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-}
-
-void GainSetResponse::ArenaDtor(void* object) {
-  GainSetResponse* _this = reinterpret_cast< GainSetResponse* >(object);
-  (void)_this;
-}
-void GainSetResponse::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
-}
-void GainSetResponse::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-
-void GainSetResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:fmsmoov.GainSetResponse)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  response_ = 0;
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-const char* GainSetResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
-    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // .fmsmoov.ResponseCode response = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
-          ::PROTOBUF_NAMESPACE_ID::uint64 val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-          _internal_set_response(static_cast<::fmsmoov::ResponseCode>(val));
-        } else goto handle_unusual;
-        continue;
-      default: {
-      handle_unusual:
-        if ((tag == 0) || ((tag & 7) == 4)) {
-          CHK_(ptr);
-          ctx->SetLastTag(tag);
-          goto success;
-        }
-        ptr = UnknownFieldParse(tag,
-            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-            ptr, ctx);
-        CHK_(ptr != nullptr);
-        continue;
-      }
-    }  // switch
-  }  // while
-success:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto success;
-#undef CHK_
-}
-
-::PROTOBUF_NAMESPACE_ID::uint8* GainSetResponse::_InternalSerialize(
-    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.GainSetResponse)
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // .fmsmoov.ResponseCode response = 1;
-  if (this->_internal_response() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteEnumToArray(
-      1, this->_internal_response(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.GainSetResponse)
-  return target;
-}
-
-size_t GainSetResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:fmsmoov.GainSetResponse)
-  size_t total_size = 0;
-
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // .fmsmoov.ResponseCode response = 1;
-  if (this->_internal_response() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_response());
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
-        _internal_metadata_, total_size, &_cached_size_);
-  }
-  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
-  SetCachedSize(cached_size);
-  return total_size;
-}
-
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData GainSetResponse::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    GainSetResponse::MergeImpl
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GainSetResponse::GetClassData() const { return &_class_data_; }
-
-void GainSetResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message&from) {
-  static_cast<GainSetResponse *>(to)->MergeFrom(
-      static_cast<const GainSetResponse &>(from));
-}
-
-
-void GainSetResponse::MergeFrom(const GainSetResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.GainSetResponse)
-  GOOGLE_DCHECK_NE(&from, this);
-  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from._internal_response() != 0) {
-    _internal_set_response(from._internal_response());
-  }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void GainSetResponse::CopyFrom(const GainSetResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.GainSetResponse)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool GainSetResponse::IsInitialized() const {
-  return true;
-}
-
-void GainSetResponse::InternalSwap(GainSetResponse* other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(response_, other->response_);
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata GainSetResponse::GetMetadata() const {
-  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
-      &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[5]);
+      file_level_metadata_fmsmoov_2eproto[7]);
 }
 
 // ===================================================================
@@ -1966,7 +2298,7 @@ void GainGetCommand::InternalSwap(GainGetCommand* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata GainGetCommand::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[6]);
+      file_level_metadata_fmsmoov_2eproto[8]);
 }
 
 // ===================================================================
@@ -2314,21 +2646,31 @@ void GainGetResponse::InternalSwap(GainGetResponse* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata GainGetResponse::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[7]);
+      file_level_metadata_fmsmoov_2eproto[9]);
 }
 
 // ===================================================================
 
 class ProcessorCommand::_Internal {
  public:
-  static const ::fmsmoov::ShutdownCommand& shutdown(const ProcessorCommand* msg);
+  static const ::fmsmoov::InternalShutdownCommand& internal_shutdown_cmd(const ProcessorCommand* msg);
+  static const ::fmsmoov::MasterBypassSetCommand& master_bypass_set(const ProcessorCommand* msg);
+  static const ::fmsmoov::MasterBypassGetCommand& master_bypass_get(const ProcessorCommand* msg);
   static const ::fmsmoov::GainSetCommand& gain_set(const ProcessorCommand* msg);
   static const ::fmsmoov::GainGetCommand& gain_get(const ProcessorCommand* msg);
 };
 
-const ::fmsmoov::ShutdownCommand&
-ProcessorCommand::_Internal::shutdown(const ProcessorCommand* msg) {
-  return *msg->cmd_oneof_.shutdown_;
+const ::fmsmoov::InternalShutdownCommand&
+ProcessorCommand::_Internal::internal_shutdown_cmd(const ProcessorCommand* msg) {
+  return *msg->cmd_oneof_.internal_shutdown_cmd_;
+}
+const ::fmsmoov::MasterBypassSetCommand&
+ProcessorCommand::_Internal::master_bypass_set(const ProcessorCommand* msg) {
+  return *msg->cmd_oneof_.master_bypass_set_;
+}
+const ::fmsmoov::MasterBypassGetCommand&
+ProcessorCommand::_Internal::master_bypass_get(const ProcessorCommand* msg) {
+  return *msg->cmd_oneof_.master_bypass_get_;
 }
 const ::fmsmoov::GainSetCommand&
 ProcessorCommand::_Internal::gain_set(const ProcessorCommand* msg) {
@@ -2338,20 +2680,50 @@ const ::fmsmoov::GainGetCommand&
 ProcessorCommand::_Internal::gain_get(const ProcessorCommand* msg) {
   return *msg->cmd_oneof_.gain_get_;
 }
-void ProcessorCommand::set_allocated_shutdown(::fmsmoov::ShutdownCommand* shutdown) {
+void ProcessorCommand::set_allocated_internal_shutdown_cmd(::fmsmoov::InternalShutdownCommand* internal_shutdown_cmd) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
   clear_cmd_oneof();
-  if (shutdown) {
+  if (internal_shutdown_cmd) {
     ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::ShutdownCommand>::GetOwningArena(shutdown);
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::InternalShutdownCommand>::GetOwningArena(internal_shutdown_cmd);
     if (message_arena != submessage_arena) {
-      shutdown = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, shutdown, submessage_arena);
+      internal_shutdown_cmd = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, internal_shutdown_cmd, submessage_arena);
     }
-    set_has_shutdown();
-    cmd_oneof_.shutdown_ = shutdown;
+    set_has_internal_shutdown_cmd();
+    cmd_oneof_.internal_shutdown_cmd_ = internal_shutdown_cmd;
   }
-  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorCommand.shutdown)
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorCommand.internal_shutdown_cmd)
+}
+void ProcessorCommand::set_allocated_master_bypass_set(::fmsmoov::MasterBypassSetCommand* master_bypass_set) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  clear_cmd_oneof();
+  if (master_bypass_set) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::MasterBypassSetCommand>::GetOwningArena(master_bypass_set);
+    if (message_arena != submessage_arena) {
+      master_bypass_set = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, master_bypass_set, submessage_arena);
+    }
+    set_has_master_bypass_set();
+    cmd_oneof_.master_bypass_set_ = master_bypass_set;
+  }
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorCommand.master_bypass_set)
+}
+void ProcessorCommand::set_allocated_master_bypass_get(::fmsmoov::MasterBypassGetCommand* master_bypass_get) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  clear_cmd_oneof();
+  if (master_bypass_get) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::MasterBypassGetCommand>::GetOwningArena(master_bypass_get);
+    if (message_arena != submessage_arena) {
+      master_bypass_get = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, master_bypass_get, submessage_arena);
+    }
+    set_has_master_bypass_get();
+    cmd_oneof_.master_bypass_get_ = master_bypass_get;
+  }
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorCommand.master_bypass_get)
 }
 void ProcessorCommand::set_allocated_gain_set(::fmsmoov::GainSetCommand* gain_set) {
   ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
@@ -2397,8 +2769,16 @@ ProcessorCommand::ProcessorCommand(const ProcessorCommand& from)
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   clear_has_cmd_oneof();
   switch (from.cmd_oneof_case()) {
-    case kShutdown: {
-      _internal_mutable_shutdown()->::fmsmoov::ShutdownCommand::MergeFrom(from._internal_shutdown());
+    case kInternalShutdownCmd: {
+      _internal_mutable_internal_shutdown_cmd()->::fmsmoov::InternalShutdownCommand::MergeFrom(from._internal_internal_shutdown_cmd());
+      break;
+    }
+    case kMasterBypassSet: {
+      _internal_mutable_master_bypass_set()->::fmsmoov::MasterBypassSetCommand::MergeFrom(from._internal_master_bypass_set());
+      break;
+    }
+    case kMasterBypassGet: {
+      _internal_mutable_master_bypass_get()->::fmsmoov::MasterBypassGetCommand::MergeFrom(from._internal_master_bypass_get());
       break;
     }
     case kGainSet: {
@@ -2447,9 +2827,21 @@ void ProcessorCommand::SetCachedSize(int size) const {
 void ProcessorCommand::clear_cmd_oneof() {
 // @@protoc_insertion_point(one_of_clear_start:fmsmoov.ProcessorCommand)
   switch (cmd_oneof_case()) {
-    case kShutdown: {
+    case kInternalShutdownCmd: {
       if (GetArenaForAllocation() == nullptr) {
-        delete cmd_oneof_.shutdown_;
+        delete cmd_oneof_.internal_shutdown_cmd_;
+      }
+      break;
+    }
+    case kMasterBypassSet: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete cmd_oneof_.master_bypass_set_;
+      }
+      break;
+    }
+    case kMasterBypassGet: {
+      if (GetArenaForAllocation() == nullptr) {
+        delete cmd_oneof_.master_bypass_get_;
       }
       break;
     }
@@ -2489,23 +2881,37 @@ const char* ProcessorCommand::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPA
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // .fmsmoov.ShutdownCommand shutdown = 1;
+      // .fmsmoov.InternalShutdownCommand internal_shutdown_cmd = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
-          ptr = ctx->ParseMessage(_internal_mutable_shutdown(), ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_internal_shutdown_cmd(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // .fmsmoov.GainSetCommand gain_set = 2;
+      // .fmsmoov.MasterBypassSetCommand master_bypass_set = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_master_bypass_set(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .fmsmoov.MasterBypassGetCommand master_bypass_get = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          ptr = ctx->ParseMessage(_internal_mutable_master_bypass_get(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .fmsmoov.GainSetCommand gain_set = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
           ptr = ctx->ParseMessage(_internal_mutable_gain_set(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // .fmsmoov.GainGetCommand gain_get = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+      // .fmsmoov.GainGetCommand gain_get = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
           ptr = ctx->ParseMessage(_internal_mutable_gain_get(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
@@ -2539,28 +2945,44 @@ failure:
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // .fmsmoov.ShutdownCommand shutdown = 1;
-  if (_internal_has_shutdown()) {
+  // .fmsmoov.InternalShutdownCommand internal_shutdown_cmd = 1;
+  if (_internal_has_internal_shutdown_cmd()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        1, _Internal::shutdown(this), target, stream);
+        1, _Internal::internal_shutdown_cmd(this), target, stream);
   }
 
-  // .fmsmoov.GainSetCommand gain_set = 2;
+  // .fmsmoov.MasterBypassSetCommand master_bypass_set = 2;
+  if (_internal_has_master_bypass_set()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        2, _Internal::master_bypass_set(this), target, stream);
+  }
+
+  // .fmsmoov.MasterBypassGetCommand master_bypass_get = 3;
+  if (_internal_has_master_bypass_get()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        3, _Internal::master_bypass_get(this), target, stream);
+  }
+
+  // .fmsmoov.GainSetCommand gain_set = 4;
   if (_internal_has_gain_set()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        2, _Internal::gain_set(this), target, stream);
+        4, _Internal::gain_set(this), target, stream);
   }
 
-  // .fmsmoov.GainGetCommand gain_get = 3;
+  // .fmsmoov.GainGetCommand gain_get = 5;
   if (_internal_has_gain_get()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        3, _Internal::gain_get(this), target, stream);
+        5, _Internal::gain_get(this), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2580,21 +3002,35 @@ size_t ProcessorCommand::ByteSizeLong() const {
   (void) cached_has_bits;
 
   switch (cmd_oneof_case()) {
-    // .fmsmoov.ShutdownCommand shutdown = 1;
-    case kShutdown: {
+    // .fmsmoov.InternalShutdownCommand internal_shutdown_cmd = 1;
+    case kInternalShutdownCmd: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *cmd_oneof_.shutdown_);
+          *cmd_oneof_.internal_shutdown_cmd_);
       break;
     }
-    // .fmsmoov.GainSetCommand gain_set = 2;
+    // .fmsmoov.MasterBypassSetCommand master_bypass_set = 2;
+    case kMasterBypassSet: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *cmd_oneof_.master_bypass_set_);
+      break;
+    }
+    // .fmsmoov.MasterBypassGetCommand master_bypass_get = 3;
+    case kMasterBypassGet: {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *cmd_oneof_.master_bypass_get_);
+      break;
+    }
+    // .fmsmoov.GainSetCommand gain_set = 4;
     case kGainSet: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
           *cmd_oneof_.gain_set_);
       break;
     }
-    // .fmsmoov.GainGetCommand gain_get = 3;
+    // .fmsmoov.GainGetCommand gain_get = 5;
     case kGainGet: {
       total_size += 1 +
         ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
@@ -2634,8 +3070,16 @@ void ProcessorCommand::MergeFrom(const ProcessorCommand& from) {
   (void) cached_has_bits;
 
   switch (from.cmd_oneof_case()) {
-    case kShutdown: {
-      _internal_mutable_shutdown()->::fmsmoov::ShutdownCommand::MergeFrom(from._internal_shutdown());
+    case kInternalShutdownCmd: {
+      _internal_mutable_internal_shutdown_cmd()->::fmsmoov::InternalShutdownCommand::MergeFrom(from._internal_internal_shutdown_cmd());
+      break;
+    }
+    case kMasterBypassSet: {
+      _internal_mutable_master_bypass_set()->::fmsmoov::MasterBypassSetCommand::MergeFrom(from._internal_master_bypass_set());
+      break;
+    }
+    case kMasterBypassGet: {
+      _internal_mutable_master_bypass_get()->::fmsmoov::MasterBypassGetCommand::MergeFrom(from._internal_master_bypass_get());
       break;
     }
     case kGainSet: {
@@ -2674,74 +3118,39 @@ void ProcessorCommand::InternalSwap(ProcessorCommand* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ProcessorCommand::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[8]);
+      file_level_metadata_fmsmoov_2eproto[10]);
 }
 
 // ===================================================================
 
 class ProcessorResponse::_Internal {
  public:
-  static const ::fmsmoov::ShutdownResponse& shutdown(const ProcessorResponse* msg);
-  static const ::fmsmoov::GainSetResponse& gain_set(const ProcessorResponse* msg);
-  static const ::fmsmoov::GainGetResponse& gain_get(const ProcessorResponse* msg);
+  using HasBits = decltype(std::declval<ProcessorResponse>()._has_bits_);
+  static const ::fmsmoov::MasterBypassSetResponse& master_bypass_set_rsp(const ProcessorResponse* msg);
+  static void set_has_master_bypass_set_rsp(HasBits* has_bits) {
+    (*has_bits)[0] |= 1u;
+  }
+  static const ::fmsmoov::MasterBypassGetResponse& master_bypass_get_rsp(const ProcessorResponse* msg);
+  static void set_has_master_bypass_get_rsp(HasBits* has_bits) {
+    (*has_bits)[0] |= 2u;
+  }
+  static const ::fmsmoov::GainGetResponse& gain_get_rsp(const ProcessorResponse* msg);
+  static void set_has_gain_get_rsp(HasBits* has_bits) {
+    (*has_bits)[0] |= 4u;
+  }
 };
 
-const ::fmsmoov::ShutdownResponse&
-ProcessorResponse::_Internal::shutdown(const ProcessorResponse* msg) {
-  return *msg->rsp_oneof_.shutdown_;
+const ::fmsmoov::MasterBypassSetResponse&
+ProcessorResponse::_Internal::master_bypass_set_rsp(const ProcessorResponse* msg) {
+  return *msg->master_bypass_set_rsp_;
 }
-const ::fmsmoov::GainSetResponse&
-ProcessorResponse::_Internal::gain_set(const ProcessorResponse* msg) {
-  return *msg->rsp_oneof_.gain_set_;
+const ::fmsmoov::MasterBypassGetResponse&
+ProcessorResponse::_Internal::master_bypass_get_rsp(const ProcessorResponse* msg) {
+  return *msg->master_bypass_get_rsp_;
 }
 const ::fmsmoov::GainGetResponse&
-ProcessorResponse::_Internal::gain_get(const ProcessorResponse* msg) {
-  return *msg->rsp_oneof_.gain_get_;
-}
-void ProcessorResponse::set_allocated_shutdown(::fmsmoov::ShutdownResponse* shutdown) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  clear_rsp_oneof();
-  if (shutdown) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::ShutdownResponse>::GetOwningArena(shutdown);
-    if (message_arena != submessage_arena) {
-      shutdown = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, shutdown, submessage_arena);
-    }
-    set_has_shutdown();
-    rsp_oneof_.shutdown_ = shutdown;
-  }
-  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorResponse.shutdown)
-}
-void ProcessorResponse::set_allocated_gain_set(::fmsmoov::GainSetResponse* gain_set) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  clear_rsp_oneof();
-  if (gain_set) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::GainSetResponse>::GetOwningArena(gain_set);
-    if (message_arena != submessage_arena) {
-      gain_set = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, gain_set, submessage_arena);
-    }
-    set_has_gain_set();
-    rsp_oneof_.gain_set_ = gain_set;
-  }
-  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorResponse.gain_set)
-}
-void ProcessorResponse::set_allocated_gain_get(::fmsmoov::GainGetResponse* gain_get) {
-  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
-  clear_rsp_oneof();
-  if (gain_get) {
-    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
-      ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::GainGetResponse>::GetOwningArena(gain_get);
-    if (message_arena != submessage_arena) {
-      gain_get = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
-          message_arena, gain_get, submessage_arena);
-    }
-    set_has_gain_get();
-    rsp_oneof_.gain_get_ = gain_get;
-  }
-  // @@protoc_insertion_point(field_set_allocated:fmsmoov.ProcessorResponse.gain_get)
+ProcessorResponse::_Internal::gain_get_rsp(const ProcessorResponse* msg) {
+  return *msg->gain_get_rsp_;
 }
 ProcessorResponse::ProcessorResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
@@ -2753,39 +3162,39 @@ ProcessorResponse::ProcessorResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
   // @@protoc_insertion_point(arena_constructor:fmsmoov.ProcessorResponse)
 }
 ProcessorResponse::ProcessorResponse(const ProcessorResponse& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      _has_bits_(from._has_bits_) {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   response_msg_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (!from._internal_response_msg().empty()) {
     response_msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_response_msg(), 
       GetArenaForAllocation());
   }
-  response_ = from.response_;
-  clear_has_rsp_oneof();
-  switch (from.rsp_oneof_case()) {
-    case kShutdown: {
-      _internal_mutable_shutdown()->::fmsmoov::ShutdownResponse::MergeFrom(from._internal_shutdown());
-      break;
-    }
-    case kGainSet: {
-      _internal_mutable_gain_set()->::fmsmoov::GainSetResponse::MergeFrom(from._internal_gain_set());
-      break;
-    }
-    case kGainGet: {
-      _internal_mutable_gain_get()->::fmsmoov::GainGetResponse::MergeFrom(from._internal_gain_get());
-      break;
-    }
-    case RSP_ONEOF_NOT_SET: {
-      break;
-    }
+  if (from._internal_has_master_bypass_set_rsp()) {
+    master_bypass_set_rsp_ = new ::fmsmoov::MasterBypassSetResponse(*from.master_bypass_set_rsp_);
+  } else {
+    master_bypass_set_rsp_ = nullptr;
   }
+  if (from._internal_has_master_bypass_get_rsp()) {
+    master_bypass_get_rsp_ = new ::fmsmoov::MasterBypassGetResponse(*from.master_bypass_get_rsp_);
+  } else {
+    master_bypass_get_rsp_ = nullptr;
+  }
+  if (from._internal_has_gain_get_rsp()) {
+    gain_get_rsp_ = new ::fmsmoov::GainGetResponse(*from.gain_get_rsp_);
+  } else {
+    gain_get_rsp_ = nullptr;
+  }
+  response_ = from.response_;
   // @@protoc_insertion_point(copy_constructor:fmsmoov.ProcessorResponse)
 }
 
 inline void ProcessorResponse::SharedCtor() {
 response_msg_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-response_ = 0;
-clear_has_rsp_oneof();
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&master_bypass_set_rsp_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&response_) -
+    reinterpret_cast<char*>(&master_bypass_set_rsp_)) + sizeof(response_));
 }
 
 ProcessorResponse::~ProcessorResponse() {
@@ -2798,9 +3207,9 @@ ProcessorResponse::~ProcessorResponse() {
 inline void ProcessorResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   response_msg_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
-  if (has_rsp_oneof()) {
-    clear_rsp_oneof();
-  }
+  if (this != internal_default_instance()) delete master_bypass_set_rsp_;
+  if (this != internal_default_instance()) delete master_bypass_get_rsp_;
+  if (this != internal_default_instance()) delete gain_get_rsp_;
 }
 
 void ProcessorResponse::ArenaDtor(void* object) {
@@ -2813,35 +3222,6 @@ void ProcessorResponse::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
 
-void ProcessorResponse::clear_rsp_oneof() {
-// @@protoc_insertion_point(one_of_clear_start:fmsmoov.ProcessorResponse)
-  switch (rsp_oneof_case()) {
-    case kShutdown: {
-      if (GetArenaForAllocation() == nullptr) {
-        delete rsp_oneof_.shutdown_;
-      }
-      break;
-    }
-    case kGainSet: {
-      if (GetArenaForAllocation() == nullptr) {
-        delete rsp_oneof_.gain_set_;
-      }
-      break;
-    }
-    case kGainGet: {
-      if (GetArenaForAllocation() == nullptr) {
-        delete rsp_oneof_.gain_get_;
-      }
-      break;
-    }
-    case RSP_ONEOF_NOT_SET: {
-      break;
-    }
-  }
-  _oneof_case_[0] = RSP_ONEOF_NOT_SET;
-}
-
-
 void ProcessorResponse::Clear() {
 // @@protoc_insertion_point(message_clear_start:fmsmoov.ProcessorResponse)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -2849,13 +3229,29 @@ void ProcessorResponse::Clear() {
   (void) cached_has_bits;
 
   response_msg_.ClearToEmpty();
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000007u) {
+    if (cached_has_bits & 0x00000001u) {
+      GOOGLE_DCHECK(master_bypass_set_rsp_ != nullptr);
+      master_bypass_set_rsp_->Clear();
+    }
+    if (cached_has_bits & 0x00000002u) {
+      GOOGLE_DCHECK(master_bypass_get_rsp_ != nullptr);
+      master_bypass_get_rsp_->Clear();
+    }
+    if (cached_has_bits & 0x00000004u) {
+      GOOGLE_DCHECK(gain_get_rsp_ != nullptr);
+      gain_get_rsp_->Clear();
+    }
+  }
   response_ = 0;
-  clear_rsp_oneof();
+  _has_bits_.Clear();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* ProcessorResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  _Internal::HasBits has_bits{};
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -2877,24 +3273,24 @@ const char* ProcessorResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // .fmsmoov.ShutdownResponse shutdown = 3;
+      // optional .fmsmoov.MasterBypassSetResponse master_bypass_set_rsp = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
-          ptr = ctx->ParseMessage(_internal_mutable_shutdown(), ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_master_bypass_set_rsp(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // .fmsmoov.GainSetResponse gain_set = 4;
+      // optional .fmsmoov.MasterBypassGetResponse master_bypass_get_rsp = 4;
       case 4:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
-          ptr = ctx->ParseMessage(_internal_mutable_gain_set(), ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_master_bypass_get_rsp(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
-      // .fmsmoov.GainGetResponse gain_get = 5;
+      // optional .fmsmoov.GainGetResponse gain_get_rsp = 5;
       case 5:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
-          ptr = ctx->ParseMessage(_internal_mutable_gain_get(), ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_gain_get_rsp(), ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -2914,6 +3310,7 @@ const char* ProcessorResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESP
     }  // switch
   }  // while
 success:
+  _has_bits_.Or(has_bits);
   return ptr;
 failure:
   ptr = nullptr;
@@ -2944,28 +3341,28 @@ failure:
         2, this->_internal_response_msg(), target);
   }
 
-  // .fmsmoov.ShutdownResponse shutdown = 3;
-  if (_internal_has_shutdown()) {
+  // optional .fmsmoov.MasterBypassSetResponse master_bypass_set_rsp = 3;
+  if (_internal_has_master_bypass_set_rsp()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        3, _Internal::shutdown(this), target, stream);
+        3, _Internal::master_bypass_set_rsp(this), target, stream);
   }
 
-  // .fmsmoov.GainSetResponse gain_set = 4;
-  if (_internal_has_gain_set()) {
+  // optional .fmsmoov.MasterBypassGetResponse master_bypass_get_rsp = 4;
+  if (_internal_has_master_bypass_get_rsp()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        4, _Internal::gain_set(this), target, stream);
+        4, _Internal::master_bypass_get_rsp(this), target, stream);
   }
 
-  // .fmsmoov.GainGetResponse gain_get = 5;
-  if (_internal_has_gain_get()) {
+  // optional .fmsmoov.GainGetResponse gain_get_rsp = 5;
+  if (_internal_has_gain_get_rsp()) {
     target = stream->EnsureSpace(target);
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
       InternalWriteMessage(
-        5, _Internal::gain_get(this), target, stream);
+        5, _Internal::gain_get_rsp(this), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2991,38 +3388,36 @@ size_t ProcessorResponse::ByteSizeLong() const {
         this->_internal_response_msg());
   }
 
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000007u) {
+    // optional .fmsmoov.MasterBypassSetResponse master_bypass_set_rsp = 3;
+    if (cached_has_bits & 0x00000001u) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *master_bypass_set_rsp_);
+    }
+
+    // optional .fmsmoov.MasterBypassGetResponse master_bypass_get_rsp = 4;
+    if (cached_has_bits & 0x00000002u) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *master_bypass_get_rsp_);
+    }
+
+    // optional .fmsmoov.GainGetResponse gain_get_rsp = 5;
+    if (cached_has_bits & 0x00000004u) {
+      total_size += 1 +
+        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+          *gain_get_rsp_);
+    }
+
+  }
   // .fmsmoov.ResponseCode response = 1;
   if (this->_internal_response() != 0) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::EnumSize(this->_internal_response());
   }
 
-  switch (rsp_oneof_case()) {
-    // .fmsmoov.ShutdownResponse shutdown = 3;
-    case kShutdown: {
-      total_size += 1 +
-        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *rsp_oneof_.shutdown_);
-      break;
-    }
-    // .fmsmoov.GainSetResponse gain_set = 4;
-    case kGainSet: {
-      total_size += 1 +
-        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *rsp_oneof_.gain_set_);
-      break;
-    }
-    // .fmsmoov.GainGetResponse gain_get = 5;
-    case kGainGet: {
-      total_size += 1 +
-        ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-          *rsp_oneof_.gain_get_);
-      break;
-    }
-    case RSP_ONEOF_NOT_SET: {
-      break;
-    }
-  }
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
         _internal_metadata_, total_size, &_cached_size_);
@@ -3054,25 +3449,20 @@ void ProcessorResponse::MergeFrom(const ProcessorResponse& from) {
   if (!from._internal_response_msg().empty()) {
     _internal_set_response_msg(from._internal_response_msg());
   }
+  cached_has_bits = from._has_bits_[0];
+  if (cached_has_bits & 0x00000007u) {
+    if (cached_has_bits & 0x00000001u) {
+      _internal_mutable_master_bypass_set_rsp()->::fmsmoov::MasterBypassSetResponse::MergeFrom(from._internal_master_bypass_set_rsp());
+    }
+    if (cached_has_bits & 0x00000002u) {
+      _internal_mutable_master_bypass_get_rsp()->::fmsmoov::MasterBypassGetResponse::MergeFrom(from._internal_master_bypass_get_rsp());
+    }
+    if (cached_has_bits & 0x00000004u) {
+      _internal_mutable_gain_get_rsp()->::fmsmoov::GainGetResponse::MergeFrom(from._internal_gain_get_rsp());
+    }
+  }
   if (from._internal_response() != 0) {
     _internal_set_response(from._internal_response());
-  }
-  switch (from.rsp_oneof_case()) {
-    case kShutdown: {
-      _internal_mutable_shutdown()->::fmsmoov::ShutdownResponse::MergeFrom(from._internal_shutdown());
-      break;
-    }
-    case kGainSet: {
-      _internal_mutable_gain_set()->::fmsmoov::GainSetResponse::MergeFrom(from._internal_gain_set());
-      break;
-    }
-    case kGainGet: {
-      _internal_mutable_gain_get()->::fmsmoov::GainGetResponse::MergeFrom(from._internal_gain_get());
-      break;
-    }
-    case RSP_ONEOF_NOT_SET: {
-      break;
-    }
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -3091,20 +3481,24 @@ bool ProcessorResponse::IsInitialized() const {
 void ProcessorResponse::InternalSwap(ProcessorResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
       &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       &response_msg_, GetArenaForAllocation(),
       &other->response_msg_, other->GetArenaForAllocation()
   );
-  swap(response_, other->response_);
-  swap(rsp_oneof_, other->rsp_oneof_);
-  swap(_oneof_case_[0], other->_oneof_case_[0]);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(ProcessorResponse, response_)
+      + sizeof(ProcessorResponse::response_)
+      - PROTOBUF_FIELD_OFFSET(ProcessorResponse, master_bypass_set_rsp_)>(
+          reinterpret_cast<char*>(&master_bypass_set_rsp_),
+          reinterpret_cast<char*>(&other->master_bypass_set_rsp_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata ProcessorResponse::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[9]);
+      file_level_metadata_fmsmoov_2eproto[11]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -3116,17 +3510,23 @@ template<> PROTOBUF_NOINLINE ::fmsmoov::GainPair* Arena::CreateMaybeMessage< ::f
 template<> PROTOBUF_NOINLINE ::fmsmoov::ProcessorLiveData* Arena::CreateMaybeMessage< ::fmsmoov::ProcessorLiveData >(Arena* arena) {
   return Arena::CreateMessageInternal< ::fmsmoov::ProcessorLiveData >(arena);
 }
-template<> PROTOBUF_NOINLINE ::fmsmoov::ShutdownCommand* Arena::CreateMaybeMessage< ::fmsmoov::ShutdownCommand >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::fmsmoov::ShutdownCommand >(arena);
+template<> PROTOBUF_NOINLINE ::fmsmoov::MasterBypassSetCommand* Arena::CreateMaybeMessage< ::fmsmoov::MasterBypassSetCommand >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::fmsmoov::MasterBypassSetCommand >(arena);
 }
-template<> PROTOBUF_NOINLINE ::fmsmoov::ShutdownResponse* Arena::CreateMaybeMessage< ::fmsmoov::ShutdownResponse >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::fmsmoov::ShutdownResponse >(arena);
+template<> PROTOBUF_NOINLINE ::fmsmoov::MasterBypassSetResponse* Arena::CreateMaybeMessage< ::fmsmoov::MasterBypassSetResponse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::fmsmoov::MasterBypassSetResponse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::fmsmoov::MasterBypassGetCommand* Arena::CreateMaybeMessage< ::fmsmoov::MasterBypassGetCommand >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::fmsmoov::MasterBypassGetCommand >(arena);
+}
+template<> PROTOBUF_NOINLINE ::fmsmoov::MasterBypassGetResponse* Arena::CreateMaybeMessage< ::fmsmoov::MasterBypassGetResponse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::fmsmoov::MasterBypassGetResponse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::fmsmoov::InternalShutdownCommand* Arena::CreateMaybeMessage< ::fmsmoov::InternalShutdownCommand >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::fmsmoov::InternalShutdownCommand >(arena);
 }
 template<> PROTOBUF_NOINLINE ::fmsmoov::GainSetCommand* Arena::CreateMaybeMessage< ::fmsmoov::GainSetCommand >(Arena* arena) {
   return Arena::CreateMessageInternal< ::fmsmoov::GainSetCommand >(arena);
-}
-template<> PROTOBUF_NOINLINE ::fmsmoov::GainSetResponse* Arena::CreateMaybeMessage< ::fmsmoov::GainSetResponse >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::fmsmoov::GainSetResponse >(arena);
 }
 template<> PROTOBUF_NOINLINE ::fmsmoov::GainGetCommand* Arena::CreateMaybeMessage< ::fmsmoov::GainGetCommand >(Arena* arena) {
   return Arena::CreateMessageInternal< ::fmsmoov::GainGetCommand >(arena);

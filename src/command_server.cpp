@@ -31,6 +31,11 @@ CommandServer::~CommandServer() {
 
 void CommandServer::set_processor(ProcessorMain* processor) {
 	m_processor = processor;
+	m_responder->set_processor(processor);
+}
+
+void CommandServer::send_reply(const fmsmoov::ProcessorResponse& rsp) {
+	m_responder->send_reply(rsp);
 }
 
 void CommandServer::start() {
@@ -93,7 +98,7 @@ CommandServer::Publisher::Publisher(std::mutex& _mutex_startup, std::condition_v
 {
 	log = spdlog::stdout_color_mt("PUBLISHER");
 	log->set_pattern("%^[%H%M%S.%e][%s:%#][%n][%l] %v%$");
-	log->set_level(spdlog::level::trace);
+	log->set_level(spdlog::level::debug);
 	LOGT("Publisher CTOR");
 	m_shutdown_signalled = false;
 	m_publisher_shutdown_complete = false;
@@ -138,7 +143,7 @@ void CommandServer::Publisher::operator ()(string params) {
 			LOGD("Publisher got shutdown signal.  Shutting down...");
 		}
 		else {
-			LOGI("Publisher publish live data...");
+			LOGT("Publisher publish live data...");
 			msg = new zmqpp::message_t(m_pld.SerializeAsString(), m_pld.ByteSizeLong());
 			m_socket_pub->send(*msg);
 			delete msg;
@@ -194,14 +199,14 @@ void CommandServer::Responder::operator ()(string params) {
 		LOGI("Responder wait for request...");
 		if(req_poller.poll()) {
 			req_msg = new zmqpp::message_t();
-			rsp_msg = new zmqpp::message_t(req_msg);
 			m_socket_req->receive(*req_msg);
 			string request;
 			*req_msg >> request;
-			LOGD("Recieved request: {}", request);
-			m_socket_req->send(*rsp_msg);
 			delete req_msg;
-			delete rsp_msg;
+			fmsmoov::ProcessorCommand cmdproto;
+			cmdproto.ParseFromString(request);
+			LOGD("Recieved request of length: {}", cmdproto.ByteSizeLong());
+			m_processor->handle_command(cmdproto);
 		}
 	}
 
@@ -212,3 +217,14 @@ void CommandServer::Responder::operator ()(string params) {
 void CommandServer::Responder::stop() {
 	m_shutdown_signalled = true;
 }
+
+void CommandServer::Responder::set_processor(ProcessorMain* processor) {
+	m_processor = processor;
+}
+
+void CommandServer::Responder::send_reply(const fmsmoov::ProcessorResponse& rsp) {
+	rsp_msg = new zmqpp::message_t(rsp.SerializeAsString(), rsp.ByteSizeLong());
+	m_socket_req->send(*rsp_msg);
+	delete rsp_msg;
+}
+

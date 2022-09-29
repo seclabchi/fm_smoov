@@ -165,28 +165,8 @@ void ProcessorMain::start_jack() {
 	LOGI("jack version: {}", jack_get_version_string());
 	LOGI("jack current system time: {}", jack_get_time());
 
-
-	std::map<std::string, PluginConfigVal> config;
-	PluginConfigVal val;
-
-	memset(&val, 0, sizeof(PluginConfigVal));
-	val.name = "CHANS_IN";
-	val.uint32val = 2;
-	config[val.name] = val;
-
-	memset(&val, 0, sizeof(PluginConfigVal));
-	val.name = "CHANS_OUT";
-	val.uint32val = 2;
-	config[val.name] = val;
-
-	memset(&val, 0, sizeof(PluginConfigVal));
-	val.name = "BUFSIZE";
-	val.uint32val = 1024;
-	config[val.name] = val;
-	m_plug_meter_in = new PluginMeterPassthrough("MASTER_IN", m_jack_sample_rate, m_jack_buffer_size);
-	m_plug_meter_in->init(config);
-	m_plug_meter_out = new PluginMeterPassthrough("MASTER_OUT", m_jack_sample_rate, m_jack_buffer_size);
-	m_plug_meter_out->init(config);
+	/* create the processor core */
+	m_core = new ProcessorCore(m_jack_sample_rate, m_jack_buffer_size);
 
 	/* create two ports */
 
@@ -327,27 +307,10 @@ int ProcessorMain::jack_process_callback(jack_nframes_t nframes, void *arg)
 
 int ProcessorMain::process()
 {
-	m_plug_meter_in->set_main_inbufs(m_jackbufs_in);
-	m_plug_meter_in->process();
-
-	//m_plug_meter_in->get_live_data(pld);
-	m_pld.set_inl(5.0);
-	m_pld.set_inr(6.0);
-
-	if(true == m_master_bypass)
-	{
-		memcpy(m_jackbufs_out->at(0)->get(), m_jackbufs_in->at(0)->get(), m_jack_buffer_size * sizeof(float));
-		memcpy(m_jackbufs_out->at(1)->get(), m_jackbufs_in->at(1)->get(), m_jack_buffer_size * sizeof(float));
-		goto finish;
-	}
-
-finish:
-	m_plug_meter_out->set_main_inbufs(m_jackbufs_out);
-	m_plug_meter_out->process();
-	//m_plug_meter_out->get_live_data(pld);
-	m_pld.set_outl(7.0);
-	m_pld.set_outr(8.0);
-
+	m_core->set_jack_inbufs(m_jackbufs_in);
+	m_core->set_jack_outbufs(m_jackbufs_out);
+	m_core->process();
+	m_core->get_live_data(m_pld);
 	m_cmd_server->publish_live_data(m_pld);
 
 #ifdef CAPTURE_TAP
@@ -380,5 +343,40 @@ void ProcessorMain::jack_info_log_function_wrapper(const char* msg) {
 void ProcessorMain::get_audio_params(uint32_t& _sample_rate, uint32_t& _bufsize) {
 	_sample_rate = m_jack_sample_rate;
 	_bufsize = m_jack_buffer_size;
+}
+
+void ProcessorMain::handle_command(const fmsmoov::ProcessorCommand& cmd) {
+	fmsmoov::ResponseCode rsp = fmsmoov::ResponseCode::OK;
+	fmsmoov::ProcessorResponse rspproto;
+
+	if(cmd.has_internal_shutdown_cmd()) {
+		rspproto.set_response_msg("Goodbye!");
+	}
+	else if(cmd.has_master_bypass_set()) {
+		m_master_bypass = cmd.master_bypass_set().bypass();
+		LOGI("Setting master bypass to {}", m_master_bypass);
+		rspproto.set_response_msg("Master bypass set OK");
+		rspproto.mutable_master_bypass_set_rsp()->set_bypass(m_master_bypass);
+		m_core->set_master_bypass(m_master_bypass);
+	}
+	else if(cmd.has_master_bypass_get()) {
+		LOGI("Getting master bypass...");
+		rspproto.mutable_master_bypass_get_rsp()->set_bypass(m_master_bypass);
+	}
+	else if(cmd.has_gain_set()) {
+
+	}
+	else if(cmd.has_gain_get()) {
+	}
+	else {
+		LOGW("Received unknown command from smoovcontrol.");
+		rsp = fmsmoov::ResponseCode::ERROR;
+		rspproto.set_response_msg("Unknown command.");
+	}
+
+
+	rspproto.set_response(rsp);
+	m_cmd_server->send_reply(rspproto);
+
 }
 
