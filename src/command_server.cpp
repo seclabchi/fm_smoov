@@ -93,6 +93,7 @@ void CommandServer::publish_live_data(const fmsmoov::ProcessorLiveData& pld) {
 	m_publisher->refresh_live_data(pld);
 }
 
+
 CommandServer::Publisher::Publisher(std::mutex& _mutex_startup, std::condition_variable& _cv_startup, bool& _publisher_started) :
 		mutex_startup(_mutex_startup), cv_startup(_cv_startup), m_publisher_started(_publisher_started)
 {
@@ -120,9 +121,6 @@ void CommandServer::Publisher::refresh_live_data(const fmsmoov::ProcessorLiveDat
 void CommandServer::Publisher::operator ()(string params) {
 	std::unique_lock lk(mutex_shutdown);
 
-
-	static float tmpval = 0.0;
-
 	{
 		std::lock_guard lkstartup(mutex_startup);
 		LOGD("Publisher thread starting up...");
@@ -137,9 +135,16 @@ void CommandServer::Publisher::operator ()(string params) {
 
 	LOGD("Publisher waiting for shutdown signal...");
 
+	/* Send startup msg to smoovcontrol */
+	fmsmoov::ProcessorLiveData pld;
+	pld.mutable_started()->set_started(true);
+	msg = new zmqpp::message_t(pld.SerializeAsString(), pld.ByteSizeLong());
+	m_socket_pub->send(*msg);
+	delete msg;
+
 	while(false == m_shutdown_signalled) {
-		auto now = std::chrono::system_clock::now();
-		if(cv_shutdown.wait_until(lk, now + 100ms, [&](){return m_shutdown_signalled;})) {
+		//auto now = std::chrono::system_clock::now();
+		/*if(cv_shutdown.wait_until(lk, now + 150ms, [&](){return m_shutdown_signalled;})) {
 			LOGD("Publisher got shutdown signal.  Shutting down...");
 		}
 		else {
@@ -148,6 +153,11 @@ void CommandServer::Publisher::operator ()(string params) {
 			m_socket_pub->send(*msg);
 			delete msg;
 		}
+		*/
+		usleep(50000);
+		msg = new zmqpp::message_t(m_pld.SerializeAsString(), m_pld.ByteSizeLong());
+		m_socket_pub->send(*msg);
+		delete msg;
 	}
 
 	LOGD("Publisher got shutdown signal.  Exiting Responder thread func");
@@ -176,8 +186,6 @@ CommandServer::Responder::~Responder() {
 void CommandServer::Responder::operator ()(string params) {
 	std::unique_lock lk(mutex_shutdown);
 	zmqpp::poller req_poller;
-
-	static float tmpval = 0.0;
 
 	{
 		std::lock_guard lkstartup(mutex_startup);

@@ -73,7 +73,7 @@
 									<listOptionValue builtIn="false" value="/opt/repos/rpi-cross/usr/local/lib"/>
 									<listOptionValue builtIn="false" value="/opt/repos/rpi-cross/usr/lib/arm-linux-gnueabihf"/>
 								</option>
-								<option id="gnu.cpp.link.option.flags.517186036" name="Linker flags" superClass="gnu.cpp.link.option.flags" useByScannerDiscovery="false" value="-pthread -static-libstdc++ --sysroot=/Volumes/xtool-build-env/x-tools/armv8-rpi4-linux-gnueabihf/armv8-rpi4-linux-gnueabihf/sysroot  " valueType="string"/>
+								<option id="gnu.cpp.link.option.flags.517186036" name="Linker flags" superClass="gnu.cpp.link.option.flags" useByScannerDiscovery="false" value="-pthread -static-libstdc++ -Wl,-rpath='$ORIGIN/lib' --sysroot=/Volumes/xtool-build-env/x-tools/armv8-rpi4-linux-gnueabihf/armv8-rpi4-linux-gnueabihf/sysroot  " valueType="string"/>
 								<option id="gnu.cpp.link.option.shared.146298210" name="Shared (-shared)" superClass="gnu.cpp.link.option.shared" useByScannerDiscovery="false" value="false" valueType="boolean"/>
 								<option id="gnu.cpp.link.option.soname.1886907502" name="Shared object name (-Wl,-soname=)" superClass="gnu.cpp.link.option.soname" useByScannerDiscovery="false" value="" valueType="string"/>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.2018595933" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
@@ -92,7 +92,7 @@
 					</folderInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="proto"/>
-						<entry excluding="websocket_server.cpp|protocol_lws_minimal.cpp|person.pb.cc|fft.cc|CommandHandler.cpp|command.pb.cc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="sine_wave_gen.cc|signal_generator.cpp|stereo_enhancer.cpp|phase_rotator.cpp|ncui.cpp|linlog.cpp|gate.cc|gain.cc|apf_200hz.cpp|agc.cc|agc_2_band.cc|hpf_30hz.cpp|crossover_6_band.cpp|limiter_6_band.cc|lpf_15khz.cpp|crossover_twoband.cpp|crossover.cpp|filter3sos.cc|filter_old.cc|filter.cc|websocket_server.cpp|protocol_lws_minimal.cpp|person.pb.cc|fft.cc|CommandHandler.cpp|command.pb.cc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -151,7 +151,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="websocket_server.cpp|protocol_lws_minimal.cpp|person.pb.cc|fft.cc|CommandHandler.cpp|command.pb.cc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry excluding="sine_wave_gen.cc|signal_generator.cpp|stereo_enhancer.cpp|phase_rotator.cpp|ncui.cpp|linlog.cpp|gate.cc|gain.cc|apf_200hz.cpp|agc.cc|agc_2_band.cc|hpf_30hz.cpp|crossover_6_band.cpp|limiter_6_band.cc|lpf_15khz.cpp|crossover_twoband.cpp|crossover.cpp|filter3sos.cc|filter_old.cc|filter.cc|websocket_server.cpp|protocol_lws_minimal.cpp|person.pb.cc|fft.cc|CommandHandler.cpp|command.pb.cc" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

@@ -11,13 +11,9 @@
 
 using namespace std;
 
-DelayLine::DelayLine(uint32_t _samp_rate, uint32_t _ms_delay, uint32_t _bufsize)
-{
-	samp_rate = _samp_rate;
-	ms_delay = _ms_delay;
-	bufsize = _bufsize;
+DelayLine::DelayLine(uint32_t _samp_rate, uint32_t _ms_delay, uint32_t _bufsize) : m_samprate(_samp_rate), m_delay_ms(_ms_delay), m_bufsize(_bufsize) {
 	this->quit();
-	this->init(samp_rate, ms_delay, bufsize);
+	this->init(m_samprate, m_delay_ms, m_bufsize);
 }
 
 DelayLine::~DelayLine()
@@ -25,9 +21,9 @@ DelayLine::~DelayLine()
 	this->quit();
 }
 
-void DelayLine::change_delay(double new_delay)
+void DelayLine::change_delay(uint32_t new_delay)
 {
-	this->init(this->samp_rate, (uint32_t)(new_delay * 1000), this->bufsize);
+	this->init(m_samprate, new_delay, m_bufsize);
 }
 
 
@@ -45,14 +41,21 @@ void DelayLine::quit()
     }
 }
 
+mutex mtx;
+
 
 void DelayLine::init(uint32_t sampfreq, uint32_t delay_ms, uint32_t bufsize)
 {
+	unique_lock<mutex> lck(mtx);
+
+
     //clean up the existing dynamic buffers if needed
-    quit();
+    //quit();
+	memset(delay_buf_l, 0, delay_buf_size * sizeof(float));
+	memset(delay_buf_r, 0, delay_buf_size * sizeof(float));
 
     //calculate the number of samples the delay line needs
-    uint32_t samp_delay = sampfreq * (double)(delay_ms / 1000.0);
+    samp_delay = m_samprate * (double)(delay_ms / 1000.0);
     cout << "Delay = " << samp_delay << " samples." << endl;
 
     delay_buf_size = samp_delay + bufsize;
@@ -70,11 +73,14 @@ void DelayLine::init(uint32_t sampfreq, uint32_t delay_ms, uint32_t bufsize)
 
     memset(delay_buf_l, 0, delay_buf_size * sizeof(float));
     memset(delay_buf_r, 0, delay_buf_size * sizeof(float));
+    mtx.unlock();
 }
 
-void DelayLine::process(float *inL, float *inR, float *outL, float *outR, uint32_t nsamp)
+void DelayLine::process(float *inL, float *inR, float *outL, float *outR)
 {
-    if(wPtrL + nsamp > eob_l)
+	unique_lock<mutex> lck(mtx);
+
+    if(wPtrL + m_bufsize > eob_l)
     {
         uint32_t spaceLeft = eob_l - wPtrL;
 
@@ -82,38 +88,40 @@ void DelayLine::process(float *inL, float *inR, float *outL, float *outR, uint32
         memcpy(wPtrR, inR, spaceLeft * sizeof(float));
         wPtrL = delay_buf_l;
         wPtrR = delay_buf_r;
-        memcpy(wPtrL, inL + spaceLeft, (nsamp - spaceLeft) * sizeof(float));
-        memcpy(wPtrR, inR + spaceLeft, (nsamp - spaceLeft) * sizeof(float));
-        wPtrL += nsamp - spaceLeft;
-        wPtrR += nsamp - spaceLeft;
+        memcpy(wPtrL, inL + spaceLeft, (m_bufsize - spaceLeft) * sizeof(float));
+        memcpy(wPtrR, inR + spaceLeft, (m_bufsize - spaceLeft) * sizeof(float));
+        wPtrL += m_bufsize - spaceLeft;
+        wPtrR += m_bufsize - spaceLeft;
     }
     else
     {
-        memcpy(wPtrL, inL, nsamp * sizeof(float));
-        memcpy(wPtrR, inR, nsamp * sizeof(float));
-        wPtrL += nsamp;
-        wPtrR += nsamp;
+        memcpy(wPtrL, inL, m_bufsize * sizeof(float));
+        memcpy(wPtrR, inR, m_bufsize * sizeof(float));
+        wPtrL += m_bufsize;
+        wPtrR += m_bufsize;
     }
 
-    if(rPtrL + nsamp > eob_l)
+    if(rPtrL + m_bufsize > eob_l)
     {
         uint32_t spaceLeft = eob_l - rPtrL;
         memcpy(outL, rPtrL, spaceLeft * sizeof(float));
         memcpy(outR, rPtrR, spaceLeft * sizeof(float));
         rPtrL = delay_buf_l;
         rPtrR = delay_buf_r;
-        memcpy(outL + spaceLeft, rPtrL, (nsamp - spaceLeft) * sizeof(float));
-        memcpy(outR + spaceLeft, rPtrR, (nsamp - spaceLeft) * sizeof(float));
-        rPtrL += nsamp - spaceLeft;
-        rPtrR += nsamp - spaceLeft;
+        memcpy(outL + spaceLeft, rPtrL, (m_bufsize - spaceLeft) * sizeof(float));
+        memcpy(outR + spaceLeft, rPtrR, (m_bufsize - spaceLeft) * sizeof(float));
+        rPtrL += m_bufsize - spaceLeft;
+        rPtrR += m_bufsize - spaceLeft;
     }
     else
     {
-        memcpy(outL, rPtrL, nsamp * sizeof(float));
-        memcpy(outR, rPtrR, nsamp * sizeof(float));
-        rPtrL += nsamp;
-        rPtrR += nsamp;
+        memcpy(outL, rPtrL, m_bufsize * sizeof(float));
+        memcpy(outR, rPtrR, m_bufsize * sizeof(float));
+        rPtrL += m_bufsize;
+        rPtrR += m_bufsize;
     }
+
+    mtx.unlock();
 }
 
 

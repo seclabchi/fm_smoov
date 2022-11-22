@@ -34,9 +34,6 @@ public:
 
 	void set_cmd_server(CommandServer* cmd_server);
 
-	void setMasterBypass(bool bypass);
-	bool getMasterBypass();
-
 	void get_audio_params(uint32_t& _sample_rate, uint32_t& bufsize);
 	void handle_command(const fmsmoov::ProcessorCommand& cmd);
 
@@ -67,8 +64,6 @@ private:
 	CommandServer* m_cmd_server;
 	fmsmoov::ProcessorLiveData m_pld;
 
-	bool m_master_bypass;
-
 	vector<AudioBuf*>* m_jackbufs_in;
 	vector<AudioBuf*>* m_jackbufs_out;
 	uint32_t m_requested_sample_rate;
@@ -95,6 +90,8 @@ private:
 	std::mutex& mutex_startup;
 	std::condition_variable& cv_startup;
 	bool& m_jack_started;
+
+	uint32_t m_proc_count;
 
 };
 

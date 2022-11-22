@@ -6,8 +6,10 @@
  */
 
 #include "parametric_biquad.h"
-
+#include <iostream>
 #include <math.h>
+
+using namespace std;
 
 ParametricBiquad::ParametricBiquad(double _fsamp, uint32_t _bufsize, double _fcut, double _Q,
 									double _peak_gain, std::string _type)
@@ -85,6 +87,9 @@ void ParametricBiquad::calculate_coeffs() {
 	y1 = 0;
 
 	a0 = 1.0;
+
+	cout << "parametric_biquad coeffs: " << b0 << "," << b1 << "," << b2 << "," << a0 << "," << a1 << "," << a2 << endl;
+
 }
 
 void ParametricBiquad::process(float* in, float* out) {

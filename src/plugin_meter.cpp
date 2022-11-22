@@ -8,10 +8,14 @@
 #include <plugin_meter.h>
 #include <exception>
 
-#define EPS 0.0000000001   //prevent log errors for zero samples
-
 PluginMeter::PluginMeter(const string& name, uint32_t samprate, uint32_t bufsize) : ProcessorPlugin(name.c_str(), samprate, bufsize) {
 	LOGT("PluginMeter CTOR");
+
+	m_tau = 0.010;  //10 ms integration time (PPM EBU standard)
+	m_alpha = expf(-logf(9.0)/(m_samprate * m_tau));
+	m_prevlev_L = EPS;
+	m_prevlev_R = EPS;
+
 	m_lintotL = 0.0;
 	m_lintotR = 0.0;
 	m_logtotL = 0.0;
@@ -23,7 +27,7 @@ PluginMeter::~PluginMeter() {
 	LOGT("PluginMeter DTOR");
 }
 
-bool PluginMeter::do_init(const std::map<std::string, PluginConfigVal>& config_vals) {
+bool PluginMeter::do_init(const fmsmoov::PluginConfig& cfg) {
 	AudioBuf* btmp;
 
 	btmp = new AudioBuf("METER_AMPLIN_L", AudioBuf::AUDIO_BUF_TYPE::ALLOCATED,
@@ -53,30 +57,52 @@ bool PluginMeter::do_init(const std::map<std::string, PluginConfigVal>& config_v
 	return true;
 }
 
-bool PluginMeter::do_change_cfg(const std::map<std::string, PluginConfigVal>& config_vals) {
+bool PluginMeter::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
 	//No runtime configurable options
 	LOGW("Configuration change not supported.");
 	return false;
 }
 
+void PluginMeter::do_set_aux_input_bufs(vector<AudioBuf*>* bufs) {
+
+}
+
+void PluginMeter::finalize_buffer_init() {
+
+}
+
+
+/* Measure peak values for now */
 int PluginMeter::do_process() {
-	m_bufinL = (*m_bufs_in)[0]->get();
-	m_bufinR = (*m_bufs_in)[1]->get();
+	m_lintotL = 0.0;
+	m_lintotR = 0.0;
 
+	/* Assume this is a PPM with 10ms integration time for now */
 	for(uint32_t i = 0; i < m_bufsize; i++) {
-		m_buf_linL[i] = fabs(*(m_bufinL + i));
-		m_buf_linR[i] = fabs(*(m_bufinR + i));
-		m_buf_logL[i] = 20*logf(m_buf_linL[i] + EPS);
-		m_buf_logR[i] = 20*logf(m_buf_linR[i] + EPS);
+		m_cursamp_L = fabs(in_L[i]);
+		m_cursamp_R = fabs(in_R[i]);
 
-		m_lintotL += m_buf_linL[i];
-		m_lintotR += m_buf_linR[i];
+		m_buf_linL[i] = m_alpha*m_prevlev_L + (1.0f-m_alpha)*m_cursamp_L;
+		m_buf_logL[i] = 20*log10(m_buf_linL[i]);
+		m_prevlev_L = m_buf_linL[i];
+		m_buf_linR[i] = m_alpha*m_prevlev_R + (1.0f-m_alpha)*m_cursamp_R;
+		m_buf_logR[i] = 20*log10(m_buf_linR[i]);
+		m_prevlev_R = m_buf_linR[i];
+
+		if(m_lintotL < m_buf_linL[i]) {
+			m_lintotL = m_buf_linL[i];
+		}
+
+		if(m_lintotR < m_buf_linR[i]) {
+			m_lintotR = m_buf_linR[i];
+		}
 	}
 
-	m_lintotL = m_lintotL / (float)m_bufsize;
-	m_lintotR = m_lintotR / (float)m_bufsize;
-	m_logtotL = 20 * log10(m_lintotL);
-	m_logtotR = 20 * log10(m_lintotR);
+	m_logtotL = 20 * log10f(m_lintotL);
+	m_logtotR = 20 * log10f(m_lintotR);
+
+	memcpy(out_L, in_L, m_bufsize * sizeof(float));
+	memcpy(out_R, in_R, m_bufsize * sizeof(float));
 
 	return 0;
 }
@@ -84,6 +110,11 @@ int PluginMeter::do_process() {
 void PluginMeter::get_total_levels(float& linL, float& linR, float& logL, float& logR) {
 	linL = m_lintotL;
 	linR = m_lintotR;
+	logL = m_logtotL;
+	logR = m_logtotR;
+}
+
+void PluginMeter::get_total_levels_log(float& logL, float& logR) {
 	logL = m_logtotL;
 	logR = m_logtotR;
 }

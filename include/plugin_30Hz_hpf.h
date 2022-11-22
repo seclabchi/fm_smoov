@@ -11,13 +11,17 @@
 #include <ProcessorPlugin.h>
 #include "parametric_filter.h"
 
+#include "fmsmoov.pb.h"
+
 class Plugin30HzHpf: public ProcessorPlugin {
 public:
-	Plugin30HzHpf(uint32_t samprate, uint32_t bufsize);
+	Plugin30HzHpf(const std::string& _name, uint32_t samprate, uint32_t bufsize);
 	virtual ~Plugin30HzHpf();
 	virtual int do_process();
-	virtual bool do_init(const std::map<std::string, PluginConfigVal>& config_vals);
-	virtual bool do_change_cfg(const std::map<std::string, PluginConfigVal>& config_vals);
+	virtual bool do_init(const fmsmoov::PluginConfig& cfg);
+	virtual bool do_change_cfg(const fmsmoov::PluginConfig& cfg);
+	virtual void do_set_aux_input_bufs(vector<AudioBuf*>* bufs);
+	virtual void finalize_buffer_init();
 private:
 	void setup_filters();
 	ParametricFilter* filtL;

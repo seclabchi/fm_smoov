@@ -12,28 +12,38 @@
 
 #include <stdint.h>
 #include <math.h>
+#include <string>
+#include "common_defs.h"
+#include "spdlog/spdlog.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+
+
+using namespace std;
 
 class Compressor
 {
 public:
-	Compressor(float _R, float _T, float _G, float _W, float _Tatt, float _Trel);
+	Compressor(float _R, float _T, float _G, float _W, float _Tatt, float _Trel, uint32_t _bufsize, uint32_t _samprate, string _name);
 	virtual ~Compressor();
 	void set(float _R, float _T, float _G, float _W, float _Tatt, float _Trel);
-	void process(float* inL, float* inR, float* outL, float* outR, uint32_t samps);
+	void process(float* inL, float* inR, float* inLevL, float* inLevR, float* agc_adj, float* outL, float* outR, float* comp);
 	void get_last_power(float* l, float* r);
-
+	void get_total_comp(float& _comp);
 
 private:
 	Compressor();
-	float timeconst_a; //attack time constant in seconds
-	float timeconst_r; //release time constant in seconds
+	std::shared_ptr<spdlog::logger> log;
+	float R; //compression ratio
+	float T; //threshold in dB
+	float G; //fixed gain in dB
+	float W; //soft knee width in dB
+	float Tatt; //attack time constant in seconds
+	float Trel; //release time constant in seconds
 	float alphaA; //attack time constant calc
 	float alphaR; //release time constant calc
-	float T; //threshold in dB
-	float R; //compression ratio
-	float W; //soft knee width in dB
 	float M; //makeup gain in dB
-	float G; //fixed gain in dB
+	uint32_t m_bufsize, m_samprate;
+	string m_name;
 
 	float detL, detR;
 
@@ -53,6 +63,8 @@ private:
 
 	float lastpow_l, lastpow_r;
 	float samp_abs_l, samp_abs_r;
+
+	float m_total_comp;
 
 	void recalculate();
 };

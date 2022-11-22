@@ -14,9 +14,6 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 #include "command_server.h"
 
-#include "plugin_meter_passthrough.h"
-
-
 ProcessorMain::ProcessorMain(std::mutex& _mutex_startup, std::condition_variable& _cv_startup, bool& _jack_started) :
 		mutex_startup(_mutex_startup), cv_startup(_cv_startup), m_jack_started(_jack_started)
 {
@@ -28,6 +25,9 @@ ProcessorMain::ProcessorMain(std::mutex& _mutex_startup, std::condition_variable
 	m_jack_shutdown_complete = false;
 	m_jackbufs_in = NULL;
 	m_jackbufs_out = NULL;
+	m_proc_count = 0;
+	m_cmd_server = nullptr;
+	m_core = nullptr;
 }
 
 ProcessorMain::~ProcessorMain() {
@@ -101,23 +101,11 @@ void ProcessorMain::operator ()(string params) {
 	return;
 }
 
-void ProcessorMain::setMasterBypass(bool bypass) {
-	m_master_bypass = bypass;
-}
-
-bool ProcessorMain::getMasterBypass() {
-	return m_master_bypass;
-}
-
 //for debug purposes, to see if the main buffers are all aligned
 void ProcessorMain::dump_buffer_addrs() {
 	std::vector<AudioBuf*> inbuf;
 	std::vector<AudioBuf*> outbuf;
-	uint32_t i = 0;
-
-
 }
-
 
 void ProcessorMain::start_jack() {
 	LOGI("Starting jack...");
@@ -300,24 +288,39 @@ int ProcessorMain::jack_process_callback(jack_nframes_t nframes, void *arg)
 	m_jackbufs_in->at(1)->setptr((jack_default_audio_sample_t*)jack_port_get_buffer (input_port_R, nframes), m_jack_buffer_size);
 	m_jackbufs_out->at(1)->setptr((jack_default_audio_sample_t*)jack_port_get_buffer (output_port_R, nframes), m_jack_buffer_size);
 
-
-
 	return process();
 }
 
 int ProcessorMain::process()
 {
-	m_core->set_jack_inbufs(m_jackbufs_in);
-	m_core->set_jack_outbufs(m_jackbufs_out);
-	m_core->process();
-	m_core->get_live_data(m_pld);
-	m_cmd_server->publish_live_data(m_pld);
+	int retval = 0;
+
+	if(nullptr != m_core) {
+		m_core->set_jack_inbufs(m_jackbufs_in);
+		m_core->set_jack_outbufs(m_jackbufs_out);
+		m_core->process();
+		m_core->get_live_data(m_pld);
+	}
+	else {
+		LOGE("m_core is NULL");
+		retval = -1;
+	}
+
+	if(nullptr != m_cmd_server) {
+		m_cmd_server->publish_live_data(m_pld);
+	}
+	else {
+		LOGE("m_cmd_server is NULL");
+		retval = -2;
+	}
+
+	m_proc_count++;
 
 #ifdef CAPTURE_TAP
 	fwrite(fftL, sizeof(float), samps/2, capture_tap);
 #endif
 
-	return 0;
+	return retval;
 }
 
 void ProcessorMain::jack_shutdown_wrapper(void* arg)
@@ -353,27 +356,70 @@ void ProcessorMain::handle_command(const fmsmoov::ProcessorCommand& cmd) {
 		rspproto.set_response_msg("Goodbye!");
 	}
 	else if(cmd.has_master_bypass_set()) {
-		m_master_bypass = cmd.master_bypass_set().bypass();
-		LOGI("Setting master bypass to {}", m_master_bypass);
-		rspproto.set_response_msg("Master bypass set OK");
-		rspproto.mutable_master_bypass_set_rsp()->set_bypass(m_master_bypass);
-		m_core->set_master_bypass(m_master_bypass);
+		fmsmoov::MasterBypassSetResponse rsp = m_core->set_master_bypass(cmd.master_bypass_set());
+		rspproto.mutable_master_bypass_set_rsp()->CopyFrom(rsp);
 	}
 	else if(cmd.has_master_bypass_get()) {
-		LOGI("Getting master bypass...");
-		rspproto.mutable_master_bypass_get_rsp()->set_bypass(m_master_bypass);
+		fmsmoov::MasterBypassGetResponse rsp = m_core->get_master_bypass(cmd.master_bypass_get());
+		rspproto.mutable_master_bypass_get_rsp()->CopyFrom(rsp);
 	}
 	else if(cmd.has_gain_set()) {
-
+		fmsmoov::GainSetResponse rsp = m_core->set_gain(cmd.gain_set());
+		rspproto.mutable_gain_set_rsp()->CopyFrom(rsp);
 	}
 	else if(cmd.has_gain_get()) {
+		fmsmoov::GainGetResponse rsp = m_core->get_gain(cmd.gain_get());
+		rspproto.mutable_gain_get_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_agc_set()) {
+		fmsmoov::AGCSetResponse rsp = m_core->set_agc(cmd.agc_set());
+		rspproto.mutable_agc_set_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_agc_get()) {
+		fmsmoov::AGCGetResponse rsp = m_core->get_agc(cmd.agc_get());
+		rspproto.mutable_agc_get_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_phase_rotator_set()) {
+		fmsmoov::PhaseRotatorSetResponse rsp = m_core->set_phase_rotator(cmd.phase_rotator_set());
+		rspproto.mutable_phase_rotator_set_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_phase_rotator_get()){
+		fmsmoov::PhaseRotatorGetResponse rsp = m_core->get_phase_rotator(cmd.phase_rotator_get());
+		rspproto.mutable_phase_rotator_get_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_stereo_enhance_set()) {
+		fmsmoov::StereoEnhanceSetResponse rsp = m_core->set_stereo_enhance(cmd.stereo_enhance_set());
+		rspproto.mutable_stereo_enhance_set_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_stereo_enhance_get()) {
+		fmsmoov::StereoEnhanceGetResponse rsp = m_core->get_stereo_enhance(cmd.stereo_enhance_get());
+		rspproto.mutable_stereo_enhance_get_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_bass_enhancer_set()) {
+		fmsmoov::BassEnhancerSetResponse rsp = m_core->set_bass_enhancer(cmd.bass_enhancer_set());
+		rspproto.mutable_bass_enhancer_set_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_bass_enhancer_get()) {
+		fmsmoov::BassEnhancerGetResponse rsp = m_core->get_bass_enhancer(cmd.bass_enhancer_get());
+		rspproto.mutable_bass_enhancer_get_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_complim_set()) {
+		fmsmoov::CompLimSetResponse rsp = m_core->set_compressor_limiter(cmd.complim_set());
+		rspproto.mutable_complim_set_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_complim_get()) {
+		fmsmoov::CompLimGetResponse rsp = m_core->get_compressor_limiter(cmd.complim_get());
+		rspproto.mutable_complim_get_rsp()->CopyFrom(rsp);
+	}
+	else if(cmd.has_delay_set()) {
+		fmsmoov::DelaySetResponse rsp = m_core->set_delay(cmd.delay_set());
+		rspproto.mutable_delay_set_rsp()->CopyFrom(rsp);
 	}
 	else {
 		LOGW("Received unknown command from smoovcontrol.");
 		rsp = fmsmoov::ResponseCode::ERROR;
 		rspproto.set_response_msg("Unknown command.");
 	}
-
 
 	rspproto.set_response(rsp);
 	m_cmd_server->send_reply(rspproto);

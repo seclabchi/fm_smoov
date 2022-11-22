@@ -23,13 +23,16 @@ public:
 	PluginGain(string name, uint32_t samprate, uint32_t bufsize);
 	virtual ~PluginGain();
 	virtual int do_process();
-	virtual bool do_init(const std::map<std::string, PluginConfigVal>& config_vals);
-	virtual bool do_change_cfg(const std::map<std::string, PluginConfigVal>& config_vals);
+	virtual bool do_init(const fmsmoov::PluginConfig& cfg);
+	virtual bool do_change_cfg(const fmsmoov::PluginConfig& cfg);
+	virtual void do_set_aux_input_bufs(vector<AudioBuf*>* bufs);
+	virtual void finalize_buffer_init();
+	void set_gain(double gain);
+	float get_gain();
 private:
-	float gain_lin_L;
-	float gain_lin_R;
-	float gain_db_L;
-	float gain_db_R;
+	float m_gain_L;
+	float m_gain_R;
+	float m_gainlog_L, m_gainlog_R;
 };
 
 #endif /* PLUGIN_GAIN_H_ */

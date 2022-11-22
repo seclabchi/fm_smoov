@@ -7,7 +7,7 @@
 
 #include <plugin_30Hz_hpf.h>
 
-Plugin30HzHpf::Plugin30HzHpf(uint32_t samprate, uint32_t bufsize) : ProcessorPlugin("30HZ_HPF", samprate, bufsize) {
+Plugin30HzHpf::Plugin30HzHpf(const std::string& _name, uint32_t samprate, uint32_t bufsize) : ProcessorPlugin(_name, samprate, bufsize) {
 	LOGT("Plugin30HzHpf CTOR");
 	setup_filters();
 }
@@ -23,51 +23,28 @@ void Plugin30HzHpf::setup_filters() {
 	filtR = new ParametricFilter(m_samprate, m_bufsize, 30.0, 1.0, 0.0, "highpass", "30HzHPF_R");
 }
 
-bool Plugin30HzHpf::do_init(const std::map<std::string, PluginConfigVal>& config_vals) {
-
-	//this plugin has two input buffers for now:  the left and right inputs.
-
-	AudioBuf* btmp = new AudioBuf("30HZ_HPF_IN_L", AudioBuf::AUDIO_BUF_TYPE::REFERENCE,
-									m_bufsize, NULL);
-
-	m_bufs_in->push_back(btmp);
-
-
-	btmp = new AudioBuf("30HZ_HPF_IN_R", AudioBuf::AUDIO_BUF_TYPE::REFERENCE,
-										m_bufsize, NULL);
-
-	m_bufs_in->push_back(btmp);
-	in_R = m_bufs_in->at(1)->get();
-
-	//this plugin has two output buffers for now:  the L and R filtered channels
-
-	btmp = new AudioBuf("30HZ_HPF_OUT_L", AudioBuf::AUDIO_BUF_TYPE::ALLOCATED,
-											m_bufsize, NULL);
-
-	m_bufs_out->push_back(btmp);
-	out_L = m_bufs_out->at(0)->get();
-
-	btmp = new AudioBuf("30HZ_HPF_OUT_R", AudioBuf::AUDIO_BUF_TYPE::ALLOCATED,
-											m_bufsize, NULL);
-
-	m_bufs_out->push_back(btmp);
-	out_R = m_bufs_out->at(1)->get();
+bool Plugin30HzHpf::do_init(const fmsmoov::PluginConfig& cfg) {
 
 	return true;
 }
 
-bool Plugin30HzHpf::do_change_cfg(const std::map<std::string, PluginConfigVal>& config_vals) {
+bool Plugin30HzHpf::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
 
 	return true;
+}
+
+void Plugin30HzHpf::do_set_aux_input_bufs(vector<AudioBuf*>* bufs) {
+
+}
+
+void Plugin30HzHpf::finalize_buffer_init() {
+
 }
 
 int Plugin30HzHpf::do_process() {
 
 	filtL->process(in_L, out_L);
 	filtR->process(in_R, out_R);
-
-	//memcpy(m_bufs_out->at(0)->get(), m_bufs_in->at(0)->get(), m_bufs_out->at(0)->size() * sizeof(float));
-	//memcpy(m_bufs_out->at(1)->get(), m_bufs_in->at(1)->get(), m_bufs_out->at(1)->size() * sizeof(float));
 
 	return 0;
 }

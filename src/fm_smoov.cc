@@ -65,30 +65,11 @@ FMSmoov::FMSmoov()
 	log->set_level(spdlog::level::trace);
 
 	LOGT("FMSMoov CTOR");
-
-	tempaL = new float[1024];
-	tempaR = new float[1024];
-	tempbL = new float[1024];
-	tempbR = new float[1024];
 }
 
 FMSmoov::~FMSmoov()
 {
 	LOGT("FMSmoov DTOR");
-
-	delete[] tempaL;
-	delete[] tempaR;
-	delete[] tempbL;
-	delete[] tempbR;
-
-	delete limiter_settings[0];
-    delete limiter_settings[1];
-	delete limiter_settings[2];
-	delete limiter_settings[3];
-	delete limiter_settings[4];
-	delete limiter_settings[5];
-	delete[] limiter_settings;
-
 }
 
 void FMSmoov::go()
@@ -116,9 +97,6 @@ void FMSmoov::go()
 
 	m_cmdserver->set_processor(m_audioproc);
 	m_audioproc->set_cmd_server(m_cmdserver);
-
-	//TODO: REMOVE THIS :-)
-	m_audioproc->setMasterBypass(true);
 
 	LOGI("All started. FMSmoov is on the air.");
 
@@ -260,34 +238,6 @@ int FMSmoov::command_handler_callback(char* msg)
 
 */
 
-float tmpbufLlo[1024];
-float tmpbufRlo[1024];
-float tmpbufLlo_out[1024];
-float tmpbufRlo_out[1024];
-float tmpbufLhi[1024];
-float tmpbufRhi[1024];
-float tmpbufLhi_out[1024];
-float tmpbufRhi_out[1024];
-
-float tmpbufCrossb1L[1024];
-float tmpbufCrossb1R[1024];
-float tmpbufCrossb2L[1024];
-float tmpbufCrossb2R[1024];
-float tmpbufCrossb3L[1024];
-float tmpbufCrossb3R[1024];
-float tmpbufCrossb4L[1024];
-float tmpbufCrossb4R[1024];
-
-float* tmpbufCrossb1[2];
-float* tmpbufCrossb2[2];
-float* tmpbufCrossb3[2];
-float* tmpbufCrossb4[2];
-
-
-
-float* fftL;
-float* fftR;
-
 void ouch(int sig)
 {
     printf("OUCH! - I got signal %d\n", sig);
@@ -320,12 +270,12 @@ int main (int argc, char *argv[])
 	act.sa_flags = 0;
 	sigaction(SIGSEGV, &act, 0);
 
-	int opt = 0;
+	//int opt = 0;
 	int c = 0;
 
 	int this_option_optind = 0;
 	int option_index = 0;
-	int digit_optind = 0;
+	//int digit_optind = 0;
 	bool gui_disabled = false;
 
 	int stdinchar;

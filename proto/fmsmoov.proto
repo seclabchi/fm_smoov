@@ -7,6 +7,11 @@ enum GainType {
 	LOG = 1;
 }
 
+enum GainControlType {
+	MAIN_IN = 0;
+	MAIN_OUT = 1;
+}
+
 enum ResponseCode {
 	OK = 0;
 	ERROR = 1;
@@ -17,19 +22,12 @@ message GainPair {
 	float r = 2;
 }
 
-message ProcessorLiveData {
-    optional float inL = 2;
-    optional float inR = 3;
-    optional float outL = 4;
-    optional float outR = 5;
-}
 
 message MasterBypassSetCommand {
 	bool bypass = 1;
 }
 
 message MasterBypassSetResponse {
-	bool bypass = 1;
 }
 
 message MasterBypassGetCommand {
@@ -41,9 +39,14 @@ message MasterBypassGetResponse {
 
 message InternalShutdownCommand {
 }
+message GainConfig {
+	float l = 1;
+	float r = 2;
+	bool enabled = 3; 
+}
 
 message GainSetCommand {
-	string which = 1;
+	GainControlType which = 1;
 	oneof gaintype_oneof {
 		GainPair gain_pair = 2;
 		float gain = 3;
@@ -51,17 +54,143 @@ message GainSetCommand {
 	GainType type = 4;
 } 
 
+message GainSetResponse {
+}
+
 message GainGetCommand {
-	string which = 1;
+	GainControlType which = 1;
 }
 
 message GainGetResponse {
-	string which = 1;
+	GainControlType which = 1;
 	oneof gaintype_oneof {
 		GainPair gain_pair = 2;
 		float gain = 3;
 	}
 	GainType type = 4;
+}
+
+message PhaseRotatorSetCommand {
+	bool enable = 1;
+}
+
+message PhaseRotatorSetResponse {
+}
+
+message PhaseRotatorGetCommand {
+}
+
+message PhaseRotatorGetResponse {
+	bool enabled = 1;
+}
+
+message StereoEnhanceSetCommand {
+	bool enable = 1;
+	float value = 2;
+}
+
+message StereoEnhanceSetResponse {
+}
+
+message StereoEnhanceGetCommand {
+}
+
+message StereoEnhanceGetResponse {
+	bool enabled = 1;
+	float value = 2;
+}
+
+message BassEnhancerSetCommand {
+	bool enable = 1;
+}
+
+message BassEnhancerSetResponse {
+}
+
+message BassEnhancerGetCommand {
+}
+
+message BassEnhancerGetResponse {
+	bool enabled = 1;
+}
+
+message CompLimSetCommand {
+	bool enable = 1;
+}
+
+message CompLimSetResponse {
+}
+
+message CompLimGetCommand {
+}
+
+message CompLimGetResponse {
+	bool enabled = 1;
+}
+
+message AgcConfig {
+	float TL = 1;
+	float GT = 2;
+	float Tatt = 3;
+	float Trel = 4;
+	bool enabled = 5;
+}
+
+message PhaseRotatorConfig {
+}
+
+message StereoEnhanceConfig {
+}
+
+message CrossoverConfig {
+	bool b0_enable = 1;
+	bool b1_enable = 2;
+	bool b2_enable = 3;
+	bool b3_enable = 4;
+	bool b4_enable = 5;
+	bool b5_enable = 6;
+}
+
+message CompLimConfig {
+	float ratio = 1;
+	float threshold = 2;
+	float makeup_gain = 3;
+	float knee_width = 4;
+	float attack_time_ms = 5;
+	float release_time_ms = 6;
+}
+
+message AGCSetCommand {
+	float TL = 1;
+	float GT = 2;
+	float Tatt = 3;
+	float Trel = 4;
+}
+
+message AGCSetResponse {
+}
+
+message AGCGetCommand {
+}
+
+message AGCGetResponse {
+	float TL = 1;
+	float GT = 2;
+	float Tatt = 3;
+	float Trel = 4;
+}
+
+message DelaySetCommand {
+	float delay_ms = 1;
+}
+
+message DelaySetResponse {
+}
+
+message DelayGetCommand {
+}
+
+message DelayGetResponse {
 }
 
 message ProcessorCommand {
@@ -71,6 +200,18 @@ message ProcessorCommand {
 		MasterBypassGetCommand master_bypass_get = 3;
 		GainSetCommand gain_set = 4;
 		GainGetCommand gain_get = 5;
+		PhaseRotatorSetCommand phase_rotator_set = 6;
+		PhaseRotatorGetCommand phase_rotator_get = 7;
+		StereoEnhanceSetCommand stereo_enhance_set = 8;
+		StereoEnhanceGetCommand stereo_enhance_get = 9;
+		BassEnhancerSetCommand bass_enhancer_set = 10;
+		BassEnhancerGetCommand bass_enhancer_get = 11;
+		AGCSetCommand agc_set = 12;
+		AGCGetCommand agc_get = 13;
+		CompLimSetCommand complim_set = 14;
+		CompLimGetCommand complim_get = 15;
+		DelaySetCommand delay_set = 16;
+		DelayGetCommand delay_get = 17;
 	}
 }
 
@@ -79,5 +220,87 @@ message ProcessorResponse {
 	string response_msg = 2;
 	optional MasterBypassSetResponse master_bypass_set_rsp = 3;
 	optional MasterBypassGetResponse master_bypass_get_rsp = 4;
-	optional GainGetResponse gain_get_rsp = 5;
+	optional GainSetResponse gain_set_rsp = 5;
+	optional GainGetResponse gain_get_rsp = 6;
+	optional PhaseRotatorSetResponse phase_rotator_set_rsp = 7;
+	optional PhaseRotatorGetResponse phase_rotator_get_rsp = 8;
+	optional StereoEnhanceSetResponse stereo_enhance_set_rsp = 9;
+	optional StereoEnhanceGetResponse stereo_enhance_get_rsp = 10;
+	optional BassEnhancerSetResponse bass_enhancer_set_rsp = 11;
+	optional BassEnhancerGetResponse bass_enhancer_get_rsp = 12;
+	optional AGCSetResponse agc_set_rsp = 13;
+	optional AGCGetResponse agc_get_rsp = 14;
+	optional CompLimSetResponse complim_set_rsp = 15;
+	optional CompLimGetResponse complim_get_rsp = 16;
+	optional DelaySetResponse delay_set_rsp = 17;
+	optional DelayGetResponse delay_get_rsp = 18;
+}
+
+message PluginConfig {
+	oneof cfg_type {
+		GainConfig gain = 1;
+		AgcConfig agc = 2;
+		
+		CrossoverConfig crossover = 3;
+		CompLimConfig complim = 4;
+	}
+}
+
+message ProcessorStarted {
+	bool started = 1;
+	bool master_bypass_en = 2;
+	bool phase_rotator_en = 3;
+	bool stereo_enhance_en = 4;
+	bool complim_en = 5;
+	float input_gain = 6;
+	
+}
+
+message ProcessorStopping {
+}
+
+message ProcessorLiveData {
+	optional ProcessorStarted started = 1;
+    optional float inL = 2;
+    optional float inR = 3;
+    optional float outL = 4;
+    optional float outR = 5;
+    optional float agc_adj = 6;
+    optional bool agc_gate_active = 7;
+    optional float delay_ms = 8;
+    optional float lev_precomp_b0L = 9;
+    optional float lev_precomp_b0R = 10;
+    optional float lev_precomp_b1L = 11;
+    optional float lev_precomp_b1R = 12;
+    optional float lev_precomp_b2L = 13;
+    optional float lev_precomp_b2R = 14;
+    optional float lev_precomp_b3L = 15;
+    optional float lev_precomp_b3R = 16;
+    optional float lev_precomp_b4L = 17;
+    optional float lev_precomp_b4R = 18;
+    optional float lev_precomp_b5L = 19;
+    optional float lev_precomp_b5R = 20;
+    optional float lev_comp_b0 = 21;
+    optional float lev_comp_b1 = 22;
+    optional float lev_comp_b2 = 23;
+    optional float lev_comp_b3 = 24;
+    optional float lev_comp_b4 = 25;
+    optional float lev_comp_b5 = 26;
+    optional float lev_postcomp_b0L = 27;
+    optional float lev_postcomp_b0R = 28;
+    optional float lev_postcomp_b1L = 29;
+    optional float lev_postcomp_b1R = 30;
+    optional float lev_postcomp_b2L = 31;
+    optional float lev_postcomp_b2R = 32;
+    optional float lev_postcomp_b3L = 33;
+    optional float lev_postcomp_b3R = 34;
+    optional float lev_postcomp_b4L = 35;
+    optional float lev_postcomp_b4R = 36;
+    optional float lev_postcomp_b5L = 37;
+    optional float lev_postcomp_b5R = 38;
+}
+
+message ProcessorBroadcast {
+	optional ProcessorBroadcast pbr = 1;
+	optional ProcessorLiveData pld = 2;
 }
