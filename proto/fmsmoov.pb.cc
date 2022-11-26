@@ -398,14 +398,31 @@ struct CrossoverConfigDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT CrossoverConfigDefaultTypeInternal _CrossoverConfig_default_instance_;
-constexpr CompLimConfig::CompLimConfig(
+constexpr CompLimBandConfig::CompLimBandConfig(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : ratio_(0)
   , threshold_(0)
-  , makeup_gain_(0)
+  , fixed_gain_(0)
   , knee_width_(0)
   , attack_time_ms_(0)
   , release_time_ms_(0){}
+struct CompLimBandConfigDefaultTypeInternal {
+  constexpr CompLimBandConfigDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~CompLimBandConfigDefaultTypeInternal() {}
+  union {
+    CompLimBandConfig _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT CompLimBandConfigDefaultTypeInternal _CompLimBandConfig_default_instance_;
+constexpr CompLimConfig::CompLimConfig(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : b0cfg_(nullptr)
+  , b1cfg_(nullptr)
+  , b2cfg_(nullptr)
+  , b3cfg_(nullptr)
+  , b4cfg_(nullptr)
+  , b5cfg_(nullptr){}
 struct CompLimConfigDefaultTypeInternal {
   constexpr CompLimConfigDefaultTypeInternal()
     : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
@@ -566,6 +583,19 @@ struct PluginConfigDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PluginConfigDefaultTypeInternal _PluginConfig_default_instance_;
+constexpr PluginConfigResponse::PluginConfigResponse(
+  ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
+  : result_msg_(&::PROTOBUF_NAMESPACE_ID::internal::fixed_address_empty_string)
+  , result_code_(0u){}
+struct PluginConfigResponseDefaultTypeInternal {
+  constexpr PluginConfigResponseDefaultTypeInternal()
+    : _instance(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized{}) {}
+  ~PluginConfigResponseDefaultTypeInternal() {}
+  union {
+    PluginConfigResponse _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PluginConfigResponseDefaultTypeInternal _PluginConfigResponse_default_instance_;
 constexpr ProcessorStarted::ProcessorStarted(
   ::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized)
   : started_(false)
@@ -657,7 +687,7 @@ struct ProcessorBroadcastDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT ProcessorBroadcastDefaultTypeInternal _ProcessorBroadcast_default_instance_;
 }  // namespace fmsmoov
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_fmsmoov_2eproto[47];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_fmsmoov_2eproto[49];
 static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_fmsmoov_2eproto[3];
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_fmsmoov_2eproto = nullptr;
 
@@ -857,16 +887,27 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_fmsmoov_2eproto::offsets[] PRO
   PROTOBUF_FIELD_OFFSET(::fmsmoov::CrossoverConfig, b4_enable_),
   PROTOBUF_FIELD_OFFSET(::fmsmoov::CrossoverConfig, b5_enable_),
   ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimBandConfig, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimBandConfig, ratio_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimBandConfig, threshold_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimBandConfig, fixed_gain_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimBandConfig, knee_width_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimBandConfig, attack_time_ms_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimBandConfig, release_time_ms_),
+  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, ratio_),
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, threshold_),
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, makeup_gain_),
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, knee_width_),
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, attack_time_ms_),
-  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, release_time_ms_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, b0cfg_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, b1cfg_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, b2cfg_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, b3cfg_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, b4cfg_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::CompLimConfig, b5cfg_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::fmsmoov::AGCSetCommand, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -990,6 +1031,15 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_fmsmoov_2eproto::offsets[] PRO
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   ::PROTOBUF_NAMESPACE_ID::internal::kInvalidFieldOffsetTag,
   PROTOBUF_FIELD_OFFSET(::fmsmoov::PluginConfig, cfg_type_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::PluginConfigResponse, _has_bits_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::PluginConfigResponse, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::PluginConfigResponse, result_code_),
+  PROTOBUF_FIELD_OFFSET(::fmsmoov::PluginConfigResponse, result_msg_),
+  ~0u,
+  0,
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::fmsmoov::ProcessorStarted, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -1129,22 +1179,24 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 173, -1, sizeof(::fmsmoov::PhaseRotatorConfig)},
   { 178, -1, sizeof(::fmsmoov::StereoEnhanceConfig)},
   { 183, -1, sizeof(::fmsmoov::CrossoverConfig)},
-  { 194, -1, sizeof(::fmsmoov::CompLimConfig)},
-  { 205, -1, sizeof(::fmsmoov::AGCSetCommand)},
-  { 214, -1, sizeof(::fmsmoov::AGCSetResponse)},
-  { 219, -1, sizeof(::fmsmoov::AGCGetCommand)},
-  { 224, -1, sizeof(::fmsmoov::AGCGetResponse)},
-  { 233, -1, sizeof(::fmsmoov::DelaySetCommand)},
-  { 239, -1, sizeof(::fmsmoov::DelaySetResponse)},
-  { 244, -1, sizeof(::fmsmoov::DelayGetCommand)},
-  { 249, -1, sizeof(::fmsmoov::DelayGetResponse)},
-  { 254, -1, sizeof(::fmsmoov::ProcessorCommand)},
-  { 277, 300, sizeof(::fmsmoov::ProcessorResponse)},
-  { 318, -1, sizeof(::fmsmoov::PluginConfig)},
-  { 328, -1, sizeof(::fmsmoov::ProcessorStarted)},
-  { 339, -1, sizeof(::fmsmoov::ProcessorStopping)},
-  { 344, 387, sizeof(::fmsmoov::ProcessorLiveData)},
-  { 425, 432, sizeof(::fmsmoov::ProcessorBroadcast)},
+  { 194, -1, sizeof(::fmsmoov::CompLimBandConfig)},
+  { 205, -1, sizeof(::fmsmoov::CompLimConfig)},
+  { 216, -1, sizeof(::fmsmoov::AGCSetCommand)},
+  { 225, -1, sizeof(::fmsmoov::AGCSetResponse)},
+  { 230, -1, sizeof(::fmsmoov::AGCGetCommand)},
+  { 235, -1, sizeof(::fmsmoov::AGCGetResponse)},
+  { 244, -1, sizeof(::fmsmoov::DelaySetCommand)},
+  { 250, -1, sizeof(::fmsmoov::DelaySetResponse)},
+  { 255, -1, sizeof(::fmsmoov::DelayGetCommand)},
+  { 260, -1, sizeof(::fmsmoov::DelayGetResponse)},
+  { 265, -1, sizeof(::fmsmoov::ProcessorCommand)},
+  { 288, 311, sizeof(::fmsmoov::ProcessorResponse)},
+  { 329, -1, sizeof(::fmsmoov::PluginConfig)},
+  { 339, 346, sizeof(::fmsmoov::PluginConfigResponse)},
+  { 348, -1, sizeof(::fmsmoov::ProcessorStarted)},
+  { 359, -1, sizeof(::fmsmoov::ProcessorStopping)},
+  { 364, 407, sizeof(::fmsmoov::ProcessorLiveData)},
+  { 445, 452, sizeof(::fmsmoov::ProcessorBroadcast)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -1179,6 +1231,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_PhaseRotatorConfig_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_StereoEnhanceConfig_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_CrossoverConfig_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_CompLimBandConfig_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_CompLimConfig_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_AGCSetCommand_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_AGCSetResponse_default_instance_),
@@ -1191,6 +1244,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_ProcessorCommand_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_ProcessorResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_PluginConfig_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_PluginConfigResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_ProcessorStarted_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_ProcessorStopping_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::fmsmoov::_ProcessorLiveData_default_instance_),
@@ -1236,142 +1290,151 @@ const char descriptor_table_protodef_fmsmoov_2eproto[] PROTOBUF_SECTION_VARIABLE
   "Config\022\021\n\tb0_enable\030\001 \001(\010\022\021\n\tb1_enable\030\002"
   " \001(\010\022\021\n\tb2_enable\030\003 \001(\010\022\021\n\tb3_enable\030\004 \001"
   "(\010\022\021\n\tb4_enable\030\005 \001(\010\022\021\n\tb5_enable\030\006 \001(\010"
-  "\"\213\001\n\rCompLimConfig\022\r\n\005ratio\030\001 \001(\002\022\021\n\tthr"
-  "eshold\030\002 \001(\002\022\023\n\013makeup_gain\030\003 \001(\002\022\022\n\nkne"
-  "e_width\030\004 \001(\002\022\026\n\016attack_time_ms\030\005 \001(\002\022\027\n"
-  "\017release_time_ms\030\006 \001(\002\"C\n\rAGCSetCommand\022"
-  "\n\n\002TL\030\001 \001(\002\022\n\n\002GT\030\002 \001(\002\022\014\n\004Tatt\030\003 \001(\002\022\014\n"
-  "\004Trel\030\004 \001(\002\"\020\n\016AGCSetResponse\"\017\n\rAGCGetC"
-  "ommand\"D\n\016AGCGetResponse\022\n\n\002TL\030\001 \001(\002\022\n\n\002"
-  "GT\030\002 \001(\002\022\014\n\004Tatt\030\003 \001(\002\022\014\n\004Trel\030\004 \001(\002\"#\n\017"
-  "DelaySetCommand\022\020\n\010delay_ms\030\001 \001(\002\"\022\n\020Del"
-  "aySetResponse\"\021\n\017DelayGetCommand\"\022\n\020Dela"
-  "yGetResponse\"\312\007\n\020ProcessorCommand\022A\n\025int"
-  "ernal_shutdown_cmd\030\001 \001(\0132 .fmsmoov.Inter"
-  "nalShutdownCommandH\000\022<\n\021master_bypass_se"
-  "t\030\002 \001(\0132\037.fmsmoov.MasterBypassSetCommand"
-  "H\000\022<\n\021master_bypass_get\030\003 \001(\0132\037.fmsmoov."
-  "MasterBypassGetCommandH\000\022+\n\010gain_set\030\004 \001"
-  "(\0132\027.fmsmoov.GainSetCommandH\000\022+\n\010gain_ge"
-  "t\030\005 \001(\0132\027.fmsmoov.GainGetCommandH\000\022<\n\021ph"
-  "ase_rotator_set\030\006 \001(\0132\037.fmsmoov.PhaseRot"
-  "atorSetCommandH\000\022<\n\021phase_rotator_get\030\007 "
-  "\001(\0132\037.fmsmoov.PhaseRotatorGetCommandH\000\022>"
-  "\n\022stereo_enhance_set\030\010 \001(\0132 .fmsmoov.Ste"
-  "reoEnhanceSetCommandH\000\022>\n\022stereo_enhance"
-  "_get\030\t \001(\0132 .fmsmoov.StereoEnhanceGetCom"
-  "mandH\000\022<\n\021bass_enhancer_set\030\n \001(\0132\037.fmsm"
-  "oov.BassEnhancerSetCommandH\000\022<\n\021bass_enh"
-  "ancer_get\030\013 \001(\0132\037.fmsmoov.BassEnhancerGe"
-  "tCommandH\000\022)\n\007agc_set\030\014 \001(\0132\026.fmsmoov.AG"
-  "CSetCommandH\000\022)\n\007agc_get\030\r \001(\0132\026.fmsmoov"
-  ".AGCGetCommandH\000\0221\n\013complim_set\030\016 \001(\0132\032."
-  "fmsmoov.CompLimSetCommandH\000\0221\n\013complim_g"
-  "et\030\017 \001(\0132\032.fmsmoov.CompLimGetCommandH\000\022-"
-  "\n\tdelay_set\030\020 \001(\0132\030.fmsmoov.DelaySetComm"
-  "andH\000\022-\n\tdelay_get\030\021 \001(\0132\030.fmsmoov.Delay"
-  "GetCommandH\000B\013\n\tcmd_oneof\"\232\013\n\021ProcessorR"
-  "esponse\022\'\n\010response\030\001 \001(\0162\025.fmsmoov.Resp"
-  "onseCode\022\024\n\014response_msg\030\002 \001(\t\022D\n\025master"
-  "_bypass_set_rsp\030\003 \001(\0132 .fmsmoov.MasterBy"
-  "passSetResponseH\000\210\001\001\022D\n\025master_bypass_ge"
-  "t_rsp\030\004 \001(\0132 .fmsmoov.MasterBypassGetRes"
-  "ponseH\001\210\001\001\0223\n\014gain_set_rsp\030\005 \001(\0132\030.fmsmo"
-  "ov.GainSetResponseH\002\210\001\001\0223\n\014gain_get_rsp\030"
-  "\006 \001(\0132\030.fmsmoov.GainGetResponseH\003\210\001\001\022D\n\025"
-  "phase_rotator_set_rsp\030\007 \001(\0132 .fmsmoov.Ph"
-  "aseRotatorSetResponseH\004\210\001\001\022D\n\025phase_rota"
-  "tor_get_rsp\030\010 \001(\0132 .fmsmoov.PhaseRotator"
-  "GetResponseH\005\210\001\001\022F\n\026stereo_enhance_set_r"
-  "sp\030\t \001(\0132!.fmsmoov.StereoEnhanceSetRespo"
-  "nseH\006\210\001\001\022F\n\026stereo_enhance_get_rsp\030\n \001(\013"
-  "2!.fmsmoov.StereoEnhanceGetResponseH\007\210\001\001"
-  "\022D\n\025bass_enhancer_set_rsp\030\013 \001(\0132 .fmsmoo"
-  "v.BassEnhancerSetResponseH\010\210\001\001\022D\n\025bass_e"
-  "nhancer_get_rsp\030\014 \001(\0132 .fmsmoov.BassEnha"
-  "ncerGetResponseH\t\210\001\001\0221\n\013agc_set_rsp\030\r \001("
-  "\0132\027.fmsmoov.AGCSetResponseH\n\210\001\001\0221\n\013agc_g"
-  "et_rsp\030\016 \001(\0132\027.fmsmoov.AGCGetResponseH\013\210"
-  "\001\001\0229\n\017complim_set_rsp\030\017 \001(\0132\033.fmsmoov.Co"
-  "mpLimSetResponseH\014\210\001\001\0229\n\017complim_get_rsp"
-  "\030\020 \001(\0132\033.fmsmoov.CompLimGetResponseH\r\210\001\001"
-  "\0225\n\rdelay_set_rsp\030\021 \001(\0132\031.fmsmoov.DelayS"
-  "etResponseH\016\210\001\001\0225\n\rdelay_get_rsp\030\022 \001(\0132\031"
-  ".fmsmoov.DelayGetResponseH\017\210\001\001B\030\n\026_maste"
-  "r_bypass_set_rspB\030\n\026_master_bypass_get_r"
-  "spB\017\n\r_gain_set_rspB\017\n\r_gain_get_rspB\030\n\026"
-  "_phase_rotator_set_rspB\030\n\026_phase_rotator"
-  "_get_rspB\031\n\027_stereo_enhance_set_rspB\031\n\027_"
-  "stereo_enhance_get_rspB\030\n\026_bass_enhancer"
-  "_set_rspB\030\n\026_bass_enhancer_get_rspB\016\n\014_a"
-  "gc_set_rspB\016\n\014_agc_get_rspB\022\n\020_complim_s"
-  "et_rspB\022\n\020_complim_get_rspB\020\n\016_delay_set"
-  "_rspB\020\n\016_delay_get_rsp\"\274\001\n\014PluginConfig\022"
-  "#\n\004gain\030\001 \001(\0132\023.fmsmoov.GainConfigH\000\022!\n\003"
-  "agc\030\002 \001(\0132\022.fmsmoov.AgcConfigH\000\022-\n\tcross"
-  "over\030\003 \001(\0132\030.fmsmoov.CrossoverConfigH\000\022)"
-  "\n\007complim\030\004 \001(\0132\026.fmsmoov.CompLimConfigH"
-  "\000B\n\n\010cfg_type\"\232\001\n\020ProcessorStarted\022\017\n\007st"
-  "arted\030\001 \001(\010\022\030\n\020master_bypass_en\030\002 \001(\010\022\030\n"
-  "\020phase_rotator_en\030\003 \001(\010\022\031\n\021stereo_enhanc"
-  "e_en\030\004 \001(\010\022\022\n\ncomplim_en\030\005 \001(\010\022\022\n\ninput_"
-  "gain\030\006 \001(\002\"\023\n\021ProcessorStopping\"\370\r\n\021Proc"
-  "essorLiveData\022/\n\007started\030\001 \001(\0132\031.fmsmoov"
-  ".ProcessorStartedH\000\210\001\001\022\020\n\003inL\030\002 \001(\002H\001\210\001\001"
-  "\022\020\n\003inR\030\003 \001(\002H\002\210\001\001\022\021\n\004outL\030\004 \001(\002H\003\210\001\001\022\021\n"
-  "\004outR\030\005 \001(\002H\004\210\001\001\022\024\n\007agc_adj\030\006 \001(\002H\005\210\001\001\022\034"
-  "\n\017agc_gate_active\030\007 \001(\010H\006\210\001\001\022\025\n\010delay_ms"
-  "\030\010 \001(\002H\007\210\001\001\022\034\n\017lev_precomp_b0L\030\t \001(\002H\010\210\001"
-  "\001\022\034\n\017lev_precomp_b0R\030\n \001(\002H\t\210\001\001\022\034\n\017lev_p"
-  "recomp_b1L\030\013 \001(\002H\n\210\001\001\022\034\n\017lev_precomp_b1R"
-  "\030\014 \001(\002H\013\210\001\001\022\034\n\017lev_precomp_b2L\030\r \001(\002H\014\210\001"
-  "\001\022\034\n\017lev_precomp_b2R\030\016 \001(\002H\r\210\001\001\022\034\n\017lev_p"
-  "recomp_b3L\030\017 \001(\002H\016\210\001\001\022\034\n\017lev_precomp_b3R"
-  "\030\020 \001(\002H\017\210\001\001\022\034\n\017lev_precomp_b4L\030\021 \001(\002H\020\210\001"
-  "\001\022\034\n\017lev_precomp_b4R\030\022 \001(\002H\021\210\001\001\022\034\n\017lev_p"
-  "recomp_b5L\030\023 \001(\002H\022\210\001\001\022\034\n\017lev_precomp_b5R"
-  "\030\024 \001(\002H\023\210\001\001\022\030\n\013lev_comp_b0\030\025 \001(\002H\024\210\001\001\022\030\n"
-  "\013lev_comp_b1\030\026 \001(\002H\025\210\001\001\022\030\n\013lev_comp_b2\030\027"
-  " \001(\002H\026\210\001\001\022\030\n\013lev_comp_b3\030\030 \001(\002H\027\210\001\001\022\030\n\013l"
-  "ev_comp_b4\030\031 \001(\002H\030\210\001\001\022\030\n\013lev_comp_b5\030\032 \001"
-  "(\002H\031\210\001\001\022\035\n\020lev_postcomp_b0L\030\033 \001(\002H\032\210\001\001\022\035"
-  "\n\020lev_postcomp_b0R\030\034 \001(\002H\033\210\001\001\022\035\n\020lev_pos"
-  "tcomp_b1L\030\035 \001(\002H\034\210\001\001\022\035\n\020lev_postcomp_b1R"
-  "\030\036 \001(\002H\035\210\001\001\022\035\n\020lev_postcomp_b2L\030\037 \001(\002H\036\210"
-  "\001\001\022\035\n\020lev_postcomp_b2R\030  \001(\002H\037\210\001\001\022\035\n\020lev"
-  "_postcomp_b3L\030! \001(\002H \210\001\001\022\035\n\020lev_postcomp"
-  "_b3R\030\" \001(\002H!\210\001\001\022\035\n\020lev_postcomp_b4L\030# \001("
-  "\002H\"\210\001\001\022\035\n\020lev_postcomp_b4R\030$ \001(\002H#\210\001\001\022\035\n"
-  "\020lev_postcomp_b5L\030% \001(\002H$\210\001\001\022\035\n\020lev_post"
-  "comp_b5R\030& \001(\002H%\210\001\001B\n\n\010_startedB\006\n\004_inLB"
-  "\006\n\004_inRB\007\n\005_outLB\007\n\005_outRB\n\n\010_agc_adjB\022\n"
-  "\020_agc_gate_activeB\013\n\t_delay_msB\022\n\020_lev_p"
-  "recomp_b0LB\022\n\020_lev_precomp_b0RB\022\n\020_lev_p"
-  "recomp_b1LB\022\n\020_lev_precomp_b1RB\022\n\020_lev_p"
-  "recomp_b2LB\022\n\020_lev_precomp_b2RB\022\n\020_lev_p"
-  "recomp_b3LB\022\n\020_lev_precomp_b3RB\022\n\020_lev_p"
-  "recomp_b4LB\022\n\020_lev_precomp_b4RB\022\n\020_lev_p"
-  "recomp_b5LB\022\n\020_lev_precomp_b5RB\016\n\014_lev_c"
-  "omp_b0B\016\n\014_lev_comp_b1B\016\n\014_lev_comp_b2B\016"
-  "\n\014_lev_comp_b3B\016\n\014_lev_comp_b4B\016\n\014_lev_c"
-  "omp_b5B\023\n\021_lev_postcomp_b0LB\023\n\021_lev_post"
-  "comp_b0RB\023\n\021_lev_postcomp_b1LB\023\n\021_lev_po"
-  "stcomp_b1RB\023\n\021_lev_postcomp_b2LB\023\n\021_lev_"
-  "postcomp_b2RB\023\n\021_lev_postcomp_b3LB\023\n\021_le"
-  "v_postcomp_b3RB\023\n\021_lev_postcomp_b4LB\023\n\021_"
-  "lev_postcomp_b4RB\023\n\021_lev_postcomp_b5LB\023\n"
-  "\021_lev_postcomp_b5R\"\201\001\n\022ProcessorBroadcas"
-  "t\022-\n\003pbr\030\001 \001(\0132\033.fmsmoov.ProcessorBroadc"
-  "astH\000\210\001\001\022,\n\003pld\030\002 \001(\0132\032.fmsmoov.Processo"
-  "rLiveDataH\001\210\001\001B\006\n\004_pbrB\006\n\004_pld*\037\n\010GainTy"
-  "pe\022\n\n\006LINEAR\020\000\022\007\n\003LOG\020\001*,\n\017GainControlTy"
-  "pe\022\013\n\007MAIN_IN\020\000\022\014\n\010MAIN_OUT\020\001*!\n\014Respons"
-  "eCode\022\006\n\002OK\020\000\022\t\n\005ERROR\020\001b\006proto3"
+  "\"\216\001\n\021CompLimBandConfig\022\r\n\005ratio\030\001 \001(\002\022\021\n"
+  "\tthreshold\030\002 \001(\002\022\022\n\nfixed_gain\030\003 \001(\002\022\022\n\n"
+  "knee_width\030\004 \001(\002\022\026\n\016attack_time_ms\030\005 \001(\002"
+  "\022\027\n\017release_time_ms\030\006 \001(\002\"\221\002\n\rCompLimCon"
+  "fig\022)\n\005b0cfg\030\001 \001(\0132\032.fmsmoov.CompLimBand"
+  "Config\022)\n\005b1cfg\030\002 \001(\0132\032.fmsmoov.CompLimB"
+  "andConfig\022)\n\005b2cfg\030\003 \001(\0132\032.fmsmoov.CompL"
+  "imBandConfig\022)\n\005b3cfg\030\004 \001(\0132\032.fmsmoov.Co"
+  "mpLimBandConfig\022)\n\005b4cfg\030\005 \001(\0132\032.fmsmoov"
+  ".CompLimBandConfig\022)\n\005b5cfg\030\006 \001(\0132\032.fmsm"
+  "oov.CompLimBandConfig\"C\n\rAGCSetCommand\022\n"
+  "\n\002TL\030\001 \001(\002\022\n\n\002GT\030\002 \001(\002\022\014\n\004Tatt\030\003 \001(\002\022\014\n\004"
+  "Trel\030\004 \001(\002\"\020\n\016AGCSetResponse\"\017\n\rAGCGetCo"
+  "mmand\"D\n\016AGCGetResponse\022\n\n\002TL\030\001 \001(\002\022\n\n\002G"
+  "T\030\002 \001(\002\022\014\n\004Tatt\030\003 \001(\002\022\014\n\004Trel\030\004 \001(\002\"#\n\017D"
+  "elaySetCommand\022\020\n\010delay_ms\030\001 \001(\002\"\022\n\020Dela"
+  "ySetResponse\"\021\n\017DelayGetCommand\"\022\n\020Delay"
+  "GetResponse\"\312\007\n\020ProcessorCommand\022A\n\025inte"
+  "rnal_shutdown_cmd\030\001 \001(\0132 .fmsmoov.Intern"
+  "alShutdownCommandH\000\022<\n\021master_bypass_set"
+  "\030\002 \001(\0132\037.fmsmoov.MasterBypassSetCommandH"
+  "\000\022<\n\021master_bypass_get\030\003 \001(\0132\037.fmsmoov.M"
+  "asterBypassGetCommandH\000\022+\n\010gain_set\030\004 \001("
+  "\0132\027.fmsmoov.GainSetCommandH\000\022+\n\010gain_get"
+  "\030\005 \001(\0132\027.fmsmoov.GainGetCommandH\000\022<\n\021pha"
+  "se_rotator_set\030\006 \001(\0132\037.fmsmoov.PhaseRota"
+  "torSetCommandH\000\022<\n\021phase_rotator_get\030\007 \001"
+  "(\0132\037.fmsmoov.PhaseRotatorGetCommandH\000\022>\n"
+  "\022stereo_enhance_set\030\010 \001(\0132 .fmsmoov.Ster"
+  "eoEnhanceSetCommandH\000\022>\n\022stereo_enhance_"
+  "get\030\t \001(\0132 .fmsmoov.StereoEnhanceGetComm"
+  "andH\000\022<\n\021bass_enhancer_set\030\n \001(\0132\037.fmsmo"
+  "ov.BassEnhancerSetCommandH\000\022<\n\021bass_enha"
+  "ncer_get\030\013 \001(\0132\037.fmsmoov.BassEnhancerGet"
+  "CommandH\000\022)\n\007agc_set\030\014 \001(\0132\026.fmsmoov.AGC"
+  "SetCommandH\000\022)\n\007agc_get\030\r \001(\0132\026.fmsmoov."
+  "AGCGetCommandH\000\0221\n\013complim_set\030\016 \001(\0132\032.f"
+  "msmoov.CompLimSetCommandH\000\0221\n\013complim_ge"
+  "t\030\017 \001(\0132\032.fmsmoov.CompLimGetCommandH\000\022-\n"
+  "\tdelay_set\030\020 \001(\0132\030.fmsmoov.DelaySetComma"
+  "ndH\000\022-\n\tdelay_get\030\021 \001(\0132\030.fmsmoov.DelayG"
+  "etCommandH\000B\013\n\tcmd_oneof\"\232\013\n\021ProcessorRe"
+  "sponse\022\'\n\010response\030\001 \001(\0162\025.fmsmoov.Respo"
+  "nseCode\022\024\n\014response_msg\030\002 \001(\t\022D\n\025master_"
+  "bypass_set_rsp\030\003 \001(\0132 .fmsmoov.MasterByp"
+  "assSetResponseH\000\210\001\001\022D\n\025master_bypass_get"
+  "_rsp\030\004 \001(\0132 .fmsmoov.MasterBypassGetResp"
+  "onseH\001\210\001\001\0223\n\014gain_set_rsp\030\005 \001(\0132\030.fmsmoo"
+  "v.GainSetResponseH\002\210\001\001\0223\n\014gain_get_rsp\030\006"
+  " \001(\0132\030.fmsmoov.GainGetResponseH\003\210\001\001\022D\n\025p"
+  "hase_rotator_set_rsp\030\007 \001(\0132 .fmsmoov.Pha"
+  "seRotatorSetResponseH\004\210\001\001\022D\n\025phase_rotat"
+  "or_get_rsp\030\010 \001(\0132 .fmsmoov.PhaseRotatorG"
+  "etResponseH\005\210\001\001\022F\n\026stereo_enhance_set_rs"
+  "p\030\t \001(\0132!.fmsmoov.StereoEnhanceSetRespon"
+  "seH\006\210\001\001\022F\n\026stereo_enhance_get_rsp\030\n \001(\0132"
+  "!.fmsmoov.StereoEnhanceGetResponseH\007\210\001\001\022"
+  "D\n\025bass_enhancer_set_rsp\030\013 \001(\0132 .fmsmoov"
+  ".BassEnhancerSetResponseH\010\210\001\001\022D\n\025bass_en"
+  "hancer_get_rsp\030\014 \001(\0132 .fmsmoov.BassEnhan"
+  "cerGetResponseH\t\210\001\001\0221\n\013agc_set_rsp\030\r \001(\013"
+  "2\027.fmsmoov.AGCSetResponseH\n\210\001\001\0221\n\013agc_ge"
+  "t_rsp\030\016 \001(\0132\027.fmsmoov.AGCGetResponseH\013\210\001"
+  "\001\0229\n\017complim_set_rsp\030\017 \001(\0132\033.fmsmoov.Com"
+  "pLimSetResponseH\014\210\001\001\0229\n\017complim_get_rsp\030"
+  "\020 \001(\0132\033.fmsmoov.CompLimGetResponseH\r\210\001\001\022"
+  "5\n\rdelay_set_rsp\030\021 \001(\0132\031.fmsmoov.DelaySe"
+  "tResponseH\016\210\001\001\0225\n\rdelay_get_rsp\030\022 \001(\0132\031."
+  "fmsmoov.DelayGetResponseH\017\210\001\001B\030\n\026_master"
+  "_bypass_set_rspB\030\n\026_master_bypass_get_rs"
+  "pB\017\n\r_gain_set_rspB\017\n\r_gain_get_rspB\030\n\026_"
+  "phase_rotator_set_rspB\030\n\026_phase_rotator_"
+  "get_rspB\031\n\027_stereo_enhance_set_rspB\031\n\027_s"
+  "tereo_enhance_get_rspB\030\n\026_bass_enhancer_"
+  "set_rspB\030\n\026_bass_enhancer_get_rspB\016\n\014_ag"
+  "c_set_rspB\016\n\014_agc_get_rspB\022\n\020_complim_se"
+  "t_rspB\022\n\020_complim_get_rspB\020\n\016_delay_set_"
+  "rspB\020\n\016_delay_get_rsp\"\274\001\n\014PluginConfig\022#"
+  "\n\004gain\030\001 \001(\0132\023.fmsmoov.GainConfigH\000\022!\n\003a"
+  "gc\030\002 \001(\0132\022.fmsmoov.AgcConfigH\000\022-\n\tcrosso"
+  "ver\030\003 \001(\0132\030.fmsmoov.CrossoverConfigH\000\022)\n"
+  "\007complim\030\004 \001(\0132\026.fmsmoov.CompLimConfigH\000"
+  "B\n\n\010cfg_type\"S\n\024PluginConfigResponse\022\023\n\013"
+  "result_code\030\001 \001(\r\022\027\n\nresult_msg\030\002 \001(\tH\000\210"
+  "\001\001B\r\n\013_result_msg\"\232\001\n\020ProcessorStarted\022\017"
+  "\n\007started\030\001 \001(\010\022\030\n\020master_bypass_en\030\002 \001("
+  "\010\022\030\n\020phase_rotator_en\030\003 \001(\010\022\031\n\021stereo_en"
+  "hance_en\030\004 \001(\010\022\022\n\ncomplim_en\030\005 \001(\010\022\022\n\nin"
+  "put_gain\030\006 \001(\002\"\023\n\021ProcessorStopping\"\370\r\n\021"
+  "ProcessorLiveData\022/\n\007started\030\001 \001(\0132\031.fms"
+  "moov.ProcessorStartedH\000\210\001\001\022\020\n\003inL\030\002 \001(\002H"
+  "\001\210\001\001\022\020\n\003inR\030\003 \001(\002H\002\210\001\001\022\021\n\004outL\030\004 \001(\002H\003\210\001"
+  "\001\022\021\n\004outR\030\005 \001(\002H\004\210\001\001\022\024\n\007agc_adj\030\006 \001(\002H\005\210"
+  "\001\001\022\034\n\017agc_gate_active\030\007 \001(\010H\006\210\001\001\022\025\n\010dela"
+  "y_ms\030\010 \001(\002H\007\210\001\001\022\034\n\017lev_precomp_b0L\030\t \001(\002"
+  "H\010\210\001\001\022\034\n\017lev_precomp_b0R\030\n \001(\002H\t\210\001\001\022\034\n\017l"
+  "ev_precomp_b1L\030\013 \001(\002H\n\210\001\001\022\034\n\017lev_precomp"
+  "_b1R\030\014 \001(\002H\013\210\001\001\022\034\n\017lev_precomp_b2L\030\r \001(\002"
+  "H\014\210\001\001\022\034\n\017lev_precomp_b2R\030\016 \001(\002H\r\210\001\001\022\034\n\017l"
+  "ev_precomp_b3L\030\017 \001(\002H\016\210\001\001\022\034\n\017lev_precomp"
+  "_b3R\030\020 \001(\002H\017\210\001\001\022\034\n\017lev_precomp_b4L\030\021 \001(\002"
+  "H\020\210\001\001\022\034\n\017lev_precomp_b4R\030\022 \001(\002H\021\210\001\001\022\034\n\017l"
+  "ev_precomp_b5L\030\023 \001(\002H\022\210\001\001\022\034\n\017lev_precomp"
+  "_b5R\030\024 \001(\002H\023\210\001\001\022\030\n\013lev_comp_b0\030\025 \001(\002H\024\210\001"
+  "\001\022\030\n\013lev_comp_b1\030\026 \001(\002H\025\210\001\001\022\030\n\013lev_comp_"
+  "b2\030\027 \001(\002H\026\210\001\001\022\030\n\013lev_comp_b3\030\030 \001(\002H\027\210\001\001\022"
+  "\030\n\013lev_comp_b4\030\031 \001(\002H\030\210\001\001\022\030\n\013lev_comp_b5"
+  "\030\032 \001(\002H\031\210\001\001\022\035\n\020lev_postcomp_b0L\030\033 \001(\002H\032\210"
+  "\001\001\022\035\n\020lev_postcomp_b0R\030\034 \001(\002H\033\210\001\001\022\035\n\020lev"
+  "_postcomp_b1L\030\035 \001(\002H\034\210\001\001\022\035\n\020lev_postcomp"
+  "_b1R\030\036 \001(\002H\035\210\001\001\022\035\n\020lev_postcomp_b2L\030\037 \001("
+  "\002H\036\210\001\001\022\035\n\020lev_postcomp_b2R\030  \001(\002H\037\210\001\001\022\035\n"
+  "\020lev_postcomp_b3L\030! \001(\002H \210\001\001\022\035\n\020lev_post"
+  "comp_b3R\030\" \001(\002H!\210\001\001\022\035\n\020lev_postcomp_b4L\030"
+  "# \001(\002H\"\210\001\001\022\035\n\020lev_postcomp_b4R\030$ \001(\002H#\210\001"
+  "\001\022\035\n\020lev_postcomp_b5L\030% \001(\002H$\210\001\001\022\035\n\020lev_"
+  "postcomp_b5R\030& \001(\002H%\210\001\001B\n\n\010_startedB\006\n\004_"
+  "inLB\006\n\004_inRB\007\n\005_outLB\007\n\005_outRB\n\n\010_agc_ad"
+  "jB\022\n\020_agc_gate_activeB\013\n\t_delay_msB\022\n\020_l"
+  "ev_precomp_b0LB\022\n\020_lev_precomp_b0RB\022\n\020_l"
+  "ev_precomp_b1LB\022\n\020_lev_precomp_b1RB\022\n\020_l"
+  "ev_precomp_b2LB\022\n\020_lev_precomp_b2RB\022\n\020_l"
+  "ev_precomp_b3LB\022\n\020_lev_precomp_b3RB\022\n\020_l"
+  "ev_precomp_b4LB\022\n\020_lev_precomp_b4RB\022\n\020_l"
+  "ev_precomp_b5LB\022\n\020_lev_precomp_b5RB\016\n\014_l"
+  "ev_comp_b0B\016\n\014_lev_comp_b1B\016\n\014_lev_comp_"
+  "b2B\016\n\014_lev_comp_b3B\016\n\014_lev_comp_b4B\016\n\014_l"
+  "ev_comp_b5B\023\n\021_lev_postcomp_b0LB\023\n\021_lev_"
+  "postcomp_b0RB\023\n\021_lev_postcomp_b1LB\023\n\021_le"
+  "v_postcomp_b1RB\023\n\021_lev_postcomp_b2LB\023\n\021_"
+  "lev_postcomp_b2RB\023\n\021_lev_postcomp_b3LB\023\n"
+  "\021_lev_postcomp_b3RB\023\n\021_lev_postcomp_b4LB"
+  "\023\n\021_lev_postcomp_b4RB\023\n\021_lev_postcomp_b5"
+  "LB\023\n\021_lev_postcomp_b5R\"\201\001\n\022ProcessorBroa"
+  "dcast\022-\n\003pbr\030\001 \001(\0132\033.fmsmoov.ProcessorBr"
+  "oadcastH\000\210\001\001\022,\n\003pld\030\002 \001(\0132\032.fmsmoov.Proc"
+  "essorLiveDataH\001\210\001\001B\006\n\004_pbrB\006\n\004_pld*\037\n\010Ga"
+  "inType\022\n\n\006LINEAR\020\000\022\007\n\003LOG\020\001*,\n\017GainContr"
+  "olType\022\013\n\007MAIN_IN\020\000\022\014\n\010MAIN_OUT\020\001*!\n\014Res"
+  "ponseCode\022\006\n\002OK\020\000\022\t\n\005ERROR\020\001b\006proto3"
   ;
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_fmsmoov_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_fmsmoov_2eproto = {
-  false, false, 6752, descriptor_table_protodef_fmsmoov_2eproto, "fmsmoov.proto", 
-  &descriptor_table_fmsmoov_2eproto_once, nullptr, 0, 47,
+  false, false, 7116, descriptor_table_protodef_fmsmoov_2eproto, "fmsmoov.proto", 
+  &descriptor_table_fmsmoov_2eproto_once, nullptr, 0, 49,
   schemas, file_default_instances, TableStruct_fmsmoov_2eproto::offsets,
   file_level_metadata_fmsmoov_2eproto, file_level_enum_descriptors_fmsmoov_2eproto, file_level_service_descriptors_fmsmoov_2eproto,
 };
@@ -7367,58 +7430,58 @@ void CrossoverConfig::InternalSwap(CrossoverConfig* other) {
 
 // ===================================================================
 
-class CompLimConfig::_Internal {
+class CompLimBandConfig::_Internal {
  public:
 };
 
-CompLimConfig::CompLimConfig(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+CompLimBandConfig::CompLimBandConfig(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
   if (!is_message_owned) {
     RegisterArenaDtor(arena);
   }
-  // @@protoc_insertion_point(arena_constructor:fmsmoov.CompLimConfig)
+  // @@protoc_insertion_point(arena_constructor:fmsmoov.CompLimBandConfig)
 }
-CompLimConfig::CompLimConfig(const CompLimConfig& from)
+CompLimBandConfig::CompLimBandConfig(const CompLimBandConfig& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&ratio_, &from.ratio_,
     static_cast<size_t>(reinterpret_cast<char*>(&release_time_ms_) -
     reinterpret_cast<char*>(&ratio_)) + sizeof(release_time_ms_));
-  // @@protoc_insertion_point(copy_constructor:fmsmoov.CompLimConfig)
+  // @@protoc_insertion_point(copy_constructor:fmsmoov.CompLimBandConfig)
 }
 
-inline void CompLimConfig::SharedCtor() {
+inline void CompLimBandConfig::SharedCtor() {
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&ratio_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&release_time_ms_) -
     reinterpret_cast<char*>(&ratio_)) + sizeof(release_time_ms_));
 }
 
-CompLimConfig::~CompLimConfig() {
-  // @@protoc_insertion_point(destructor:fmsmoov.CompLimConfig)
+CompLimBandConfig::~CompLimBandConfig() {
+  // @@protoc_insertion_point(destructor:fmsmoov.CompLimBandConfig)
   if (GetArenaForAllocation() != nullptr) return;
   SharedDtor();
   _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-inline void CompLimConfig::SharedDtor() {
+inline void CompLimBandConfig::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
 }
 
-void CompLimConfig::ArenaDtor(void* object) {
-  CompLimConfig* _this = reinterpret_cast< CompLimConfig* >(object);
+void CompLimBandConfig::ArenaDtor(void* object) {
+  CompLimBandConfig* _this = reinterpret_cast< CompLimBandConfig* >(object);
   (void)_this;
 }
-void CompLimConfig::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+void CompLimBandConfig::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
 }
-void CompLimConfig::SetCachedSize(int size) const {
+void CompLimBandConfig::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
 
-void CompLimConfig::Clear() {
-// @@protoc_insertion_point(message_clear_start:fmsmoov.CompLimConfig)
+void CompLimBandConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:fmsmoov.CompLimBandConfig)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
@@ -7429,7 +7492,7 @@ void CompLimConfig::Clear() {
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* CompLimConfig::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+const char* CompLimBandConfig::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
@@ -7449,10 +7512,10 @@ const char* CompLimConfig::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
           ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
-      // float makeup_gain = 3;
+      // float fixed_gain = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 29)) {
-          makeup_gain_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
+          fixed_gain_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<float>(ptr);
           ptr += sizeof(float);
         } else goto handle_unusual;
         continue;
@@ -7500,9 +7563,9 @@ failure:
 #undef CHK_
 }
 
-::PROTOBUF_NAMESPACE_ID::uint8* CompLimConfig::_InternalSerialize(
+::PROTOBUF_NAMESPACE_ID::uint8* CompLimBandConfig::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.CompLimConfig)
+  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.CompLimBandConfig)
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -7518,10 +7581,10 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(2, this->_internal_threshold(), target);
   }
 
-  // float makeup_gain = 3;
-  if (!(this->_internal_makeup_gain() <= 0 && this->_internal_makeup_gain() >= 0)) {
+  // float fixed_gain = 3;
+  if (!(this->_internal_fixed_gain() <= 0 && this->_internal_fixed_gain() >= 0)) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(3, this->_internal_makeup_gain(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteFloatToArray(3, this->_internal_fixed_gain(), target);
   }
 
   // float knee_width = 4;
@@ -7546,12 +7609,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.CompLimConfig)
+  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.CompLimBandConfig)
   return target;
 }
 
-size_t CompLimConfig::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:fmsmoov.CompLimConfig)
+size_t CompLimBandConfig::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:fmsmoov.CompLimBandConfig)
   size_t total_size = 0;
 
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
@@ -7568,8 +7631,8 @@ size_t CompLimConfig::ByteSizeLong() const {
     total_size += 1 + 4;
   }
 
-  // float makeup_gain = 3;
-  if (!(this->_internal_makeup_gain() <= 0 && this->_internal_makeup_gain() >= 0)) {
+  // float fixed_gain = 3;
+  if (!(this->_internal_fixed_gain() <= 0 && this->_internal_fixed_gain() >= 0)) {
     total_size += 1 + 4;
   }
 
@@ -7586,6 +7649,414 @@ size_t CompLimConfig::ByteSizeLong() const {
   // float release_time_ms = 6;
   if (!(this->_internal_release_time_ms() <= 0 && this->_internal_release_time_ms() >= 0)) {
     total_size += 1 + 4;
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData CompLimBandConfig::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    CompLimBandConfig::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*CompLimBandConfig::GetClassData() const { return &_class_data_; }
+
+void CompLimBandConfig::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message&from) {
+  static_cast<CompLimBandConfig *>(to)->MergeFrom(
+      static_cast<const CompLimBandConfig &>(from));
+}
+
+
+void CompLimBandConfig::MergeFrom(const CompLimBandConfig& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.CompLimBandConfig)
+  GOOGLE_DCHECK_NE(&from, this);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!(from._internal_ratio() <= 0 && from._internal_ratio() >= 0)) {
+    _internal_set_ratio(from._internal_ratio());
+  }
+  if (!(from._internal_threshold() <= 0 && from._internal_threshold() >= 0)) {
+    _internal_set_threshold(from._internal_threshold());
+  }
+  if (!(from._internal_fixed_gain() <= 0 && from._internal_fixed_gain() >= 0)) {
+    _internal_set_fixed_gain(from._internal_fixed_gain());
+  }
+  if (!(from._internal_knee_width() <= 0 && from._internal_knee_width() >= 0)) {
+    _internal_set_knee_width(from._internal_knee_width());
+  }
+  if (!(from._internal_attack_time_ms() <= 0 && from._internal_attack_time_ms() >= 0)) {
+    _internal_set_attack_time_ms(from._internal_attack_time_ms());
+  }
+  if (!(from._internal_release_time_ms() <= 0 && from._internal_release_time_ms() >= 0)) {
+    _internal_set_release_time_ms(from._internal_release_time_ms());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void CompLimBandConfig::CopyFrom(const CompLimBandConfig& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.CompLimBandConfig)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CompLimBandConfig::IsInitialized() const {
+  return true;
+}
+
+void CompLimBandConfig::InternalSwap(CompLimBandConfig* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(CompLimBandConfig, release_time_ms_)
+      + sizeof(CompLimBandConfig::release_time_ms_)
+      - PROTOBUF_FIELD_OFFSET(CompLimBandConfig, ratio_)>(
+          reinterpret_cast<char*>(&ratio_),
+          reinterpret_cast<char*>(&other->ratio_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata CompLimBandConfig::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
+      file_level_metadata_fmsmoov_2eproto[31]);
+}
+
+// ===================================================================
+
+class CompLimConfig::_Internal {
+ public:
+  static const ::fmsmoov::CompLimBandConfig& b0cfg(const CompLimConfig* msg);
+  static const ::fmsmoov::CompLimBandConfig& b1cfg(const CompLimConfig* msg);
+  static const ::fmsmoov::CompLimBandConfig& b2cfg(const CompLimConfig* msg);
+  static const ::fmsmoov::CompLimBandConfig& b3cfg(const CompLimConfig* msg);
+  static const ::fmsmoov::CompLimBandConfig& b4cfg(const CompLimConfig* msg);
+  static const ::fmsmoov::CompLimBandConfig& b5cfg(const CompLimConfig* msg);
+};
+
+const ::fmsmoov::CompLimBandConfig&
+CompLimConfig::_Internal::b0cfg(const CompLimConfig* msg) {
+  return *msg->b0cfg_;
+}
+const ::fmsmoov::CompLimBandConfig&
+CompLimConfig::_Internal::b1cfg(const CompLimConfig* msg) {
+  return *msg->b1cfg_;
+}
+const ::fmsmoov::CompLimBandConfig&
+CompLimConfig::_Internal::b2cfg(const CompLimConfig* msg) {
+  return *msg->b2cfg_;
+}
+const ::fmsmoov::CompLimBandConfig&
+CompLimConfig::_Internal::b3cfg(const CompLimConfig* msg) {
+  return *msg->b3cfg_;
+}
+const ::fmsmoov::CompLimBandConfig&
+CompLimConfig::_Internal::b4cfg(const CompLimConfig* msg) {
+  return *msg->b4cfg_;
+}
+const ::fmsmoov::CompLimBandConfig&
+CompLimConfig::_Internal::b5cfg(const CompLimConfig* msg) {
+  return *msg->b5cfg_;
+}
+CompLimConfig::CompLimConfig(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:fmsmoov.CompLimConfig)
+}
+CompLimConfig::CompLimConfig(const CompLimConfig& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  if (from._internal_has_b0cfg()) {
+    b0cfg_ = new ::fmsmoov::CompLimBandConfig(*from.b0cfg_);
+  } else {
+    b0cfg_ = nullptr;
+  }
+  if (from._internal_has_b1cfg()) {
+    b1cfg_ = new ::fmsmoov::CompLimBandConfig(*from.b1cfg_);
+  } else {
+    b1cfg_ = nullptr;
+  }
+  if (from._internal_has_b2cfg()) {
+    b2cfg_ = new ::fmsmoov::CompLimBandConfig(*from.b2cfg_);
+  } else {
+    b2cfg_ = nullptr;
+  }
+  if (from._internal_has_b3cfg()) {
+    b3cfg_ = new ::fmsmoov::CompLimBandConfig(*from.b3cfg_);
+  } else {
+    b3cfg_ = nullptr;
+  }
+  if (from._internal_has_b4cfg()) {
+    b4cfg_ = new ::fmsmoov::CompLimBandConfig(*from.b4cfg_);
+  } else {
+    b4cfg_ = nullptr;
+  }
+  if (from._internal_has_b5cfg()) {
+    b5cfg_ = new ::fmsmoov::CompLimBandConfig(*from.b5cfg_);
+  } else {
+    b5cfg_ = nullptr;
+  }
+  // @@protoc_insertion_point(copy_constructor:fmsmoov.CompLimConfig)
+}
+
+inline void CompLimConfig::SharedCtor() {
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&b0cfg_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&b5cfg_) -
+    reinterpret_cast<char*>(&b0cfg_)) + sizeof(b5cfg_));
+}
+
+CompLimConfig::~CompLimConfig() {
+  // @@protoc_insertion_point(destructor:fmsmoov.CompLimConfig)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void CompLimConfig::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  if (this != internal_default_instance()) delete b0cfg_;
+  if (this != internal_default_instance()) delete b1cfg_;
+  if (this != internal_default_instance()) delete b2cfg_;
+  if (this != internal_default_instance()) delete b3cfg_;
+  if (this != internal_default_instance()) delete b4cfg_;
+  if (this != internal_default_instance()) delete b5cfg_;
+}
+
+void CompLimConfig::ArenaDtor(void* object) {
+  CompLimConfig* _this = reinterpret_cast< CompLimConfig* >(object);
+  (void)_this;
+}
+void CompLimConfig::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void CompLimConfig::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void CompLimConfig::Clear() {
+// @@protoc_insertion_point(message_clear_start:fmsmoov.CompLimConfig)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  if (GetArenaForAllocation() == nullptr && b0cfg_ != nullptr) {
+    delete b0cfg_;
+  }
+  b0cfg_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && b1cfg_ != nullptr) {
+    delete b1cfg_;
+  }
+  b1cfg_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && b2cfg_ != nullptr) {
+    delete b2cfg_;
+  }
+  b2cfg_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && b3cfg_ != nullptr) {
+    delete b3cfg_;
+  }
+  b3cfg_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && b4cfg_ != nullptr) {
+    delete b4cfg_;
+  }
+  b4cfg_ = nullptr;
+  if (GetArenaForAllocation() == nullptr && b5cfg_ != nullptr) {
+    delete b5cfg_;
+  }
+  b5cfg_ = nullptr;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* CompLimConfig::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // .fmsmoov.CompLimBandConfig b0cfg = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          ptr = ctx->ParseMessage(_internal_mutable_b0cfg(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .fmsmoov.CompLimBandConfig b1cfg = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          ptr = ctx->ParseMessage(_internal_mutable_b1cfg(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .fmsmoov.CompLimBandConfig b2cfg = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 26)) {
+          ptr = ctx->ParseMessage(_internal_mutable_b2cfg(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .fmsmoov.CompLimBandConfig b3cfg = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 34)) {
+          ptr = ctx->ParseMessage(_internal_mutable_b3cfg(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .fmsmoov.CompLimBandConfig b4cfg = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 42)) {
+          ptr = ctx->ParseMessage(_internal_mutable_b4cfg(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // .fmsmoov.CompLimBandConfig b5cfg = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 50)) {
+          ptr = ctx->ParseMessage(_internal_mutable_b5cfg(), ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag == 0) || ((tag & 7) == 4)) {
+          CHK_(ptr);
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* CompLimConfig::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.CompLimConfig)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // .fmsmoov.CompLimBandConfig b0cfg = 1;
+  if (this->_internal_has_b0cfg()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        1, _Internal::b0cfg(this), target, stream);
+  }
+
+  // .fmsmoov.CompLimBandConfig b1cfg = 2;
+  if (this->_internal_has_b1cfg()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        2, _Internal::b1cfg(this), target, stream);
+  }
+
+  // .fmsmoov.CompLimBandConfig b2cfg = 3;
+  if (this->_internal_has_b2cfg()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        3, _Internal::b2cfg(this), target, stream);
+  }
+
+  // .fmsmoov.CompLimBandConfig b3cfg = 4;
+  if (this->_internal_has_b3cfg()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        4, _Internal::b3cfg(this), target, stream);
+  }
+
+  // .fmsmoov.CompLimBandConfig b4cfg = 5;
+  if (this->_internal_has_b4cfg()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        5, _Internal::b4cfg(this), target, stream);
+  }
+
+  // .fmsmoov.CompLimBandConfig b5cfg = 6;
+  if (this->_internal_has_b5cfg()) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+      InternalWriteMessage(
+        6, _Internal::b5cfg(this), target, stream);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.CompLimConfig)
+  return target;
+}
+
+size_t CompLimConfig::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:fmsmoov.CompLimConfig)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // .fmsmoov.CompLimBandConfig b0cfg = 1;
+  if (this->_internal_has_b0cfg()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *b0cfg_);
+  }
+
+  // .fmsmoov.CompLimBandConfig b1cfg = 2;
+  if (this->_internal_has_b1cfg()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *b1cfg_);
+  }
+
+  // .fmsmoov.CompLimBandConfig b2cfg = 3;
+  if (this->_internal_has_b2cfg()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *b2cfg_);
+  }
+
+  // .fmsmoov.CompLimBandConfig b3cfg = 4;
+  if (this->_internal_has_b3cfg()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *b3cfg_);
+  }
+
+  // .fmsmoov.CompLimBandConfig b4cfg = 5;
+  if (this->_internal_has_b4cfg()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *b4cfg_);
+  }
+
+  // .fmsmoov.CompLimBandConfig b5cfg = 6;
+  if (this->_internal_has_b5cfg()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *b5cfg_);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -7616,23 +8087,23 @@ void CompLimConfig::MergeFrom(const CompLimConfig& from) {
   ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (!(from._internal_ratio() <= 0 && from._internal_ratio() >= 0)) {
-    _internal_set_ratio(from._internal_ratio());
+  if (from._internal_has_b0cfg()) {
+    _internal_mutable_b0cfg()->::fmsmoov::CompLimBandConfig::MergeFrom(from._internal_b0cfg());
   }
-  if (!(from._internal_threshold() <= 0 && from._internal_threshold() >= 0)) {
-    _internal_set_threshold(from._internal_threshold());
+  if (from._internal_has_b1cfg()) {
+    _internal_mutable_b1cfg()->::fmsmoov::CompLimBandConfig::MergeFrom(from._internal_b1cfg());
   }
-  if (!(from._internal_makeup_gain() <= 0 && from._internal_makeup_gain() >= 0)) {
-    _internal_set_makeup_gain(from._internal_makeup_gain());
+  if (from._internal_has_b2cfg()) {
+    _internal_mutable_b2cfg()->::fmsmoov::CompLimBandConfig::MergeFrom(from._internal_b2cfg());
   }
-  if (!(from._internal_knee_width() <= 0 && from._internal_knee_width() >= 0)) {
-    _internal_set_knee_width(from._internal_knee_width());
+  if (from._internal_has_b3cfg()) {
+    _internal_mutable_b3cfg()->::fmsmoov::CompLimBandConfig::MergeFrom(from._internal_b3cfg());
   }
-  if (!(from._internal_attack_time_ms() <= 0 && from._internal_attack_time_ms() >= 0)) {
-    _internal_set_attack_time_ms(from._internal_attack_time_ms());
+  if (from._internal_has_b4cfg()) {
+    _internal_mutable_b4cfg()->::fmsmoov::CompLimBandConfig::MergeFrom(from._internal_b4cfg());
   }
-  if (!(from._internal_release_time_ms() <= 0 && from._internal_release_time_ms() >= 0)) {
-    _internal_set_release_time_ms(from._internal_release_time_ms());
+  if (from._internal_has_b5cfg()) {
+    _internal_mutable_b5cfg()->::fmsmoov::CompLimBandConfig::MergeFrom(from._internal_b5cfg());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -7652,17 +8123,17 @@ void CompLimConfig::InternalSwap(CompLimConfig* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(CompLimConfig, release_time_ms_)
-      + sizeof(CompLimConfig::release_time_ms_)
-      - PROTOBUF_FIELD_OFFSET(CompLimConfig, ratio_)>(
-          reinterpret_cast<char*>(&ratio_),
-          reinterpret_cast<char*>(&other->ratio_));
+      PROTOBUF_FIELD_OFFSET(CompLimConfig, b5cfg_)
+      + sizeof(CompLimConfig::b5cfg_)
+      - PROTOBUF_FIELD_OFFSET(CompLimConfig, b0cfg_)>(
+          reinterpret_cast<char*>(&b0cfg_),
+          reinterpret_cast<char*>(&other->b0cfg_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata CompLimConfig::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[31]);
+      file_level_metadata_fmsmoov_2eproto[32]);
 }
 
 // ===================================================================
@@ -7920,7 +8391,7 @@ void AGCSetCommand::InternalSwap(AGCSetCommand* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata AGCSetCommand::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[32]);
+      file_level_metadata_fmsmoov_2eproto[33]);
 }
 
 // ===================================================================
@@ -8073,7 +8544,7 @@ void AGCSetResponse::InternalSwap(AGCSetResponse* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata AGCSetResponse::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[33]);
+      file_level_metadata_fmsmoov_2eproto[34]);
 }
 
 // ===================================================================
@@ -8226,7 +8697,7 @@ void AGCGetCommand::InternalSwap(AGCGetCommand* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata AGCGetCommand::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[34]);
+      file_level_metadata_fmsmoov_2eproto[35]);
 }
 
 // ===================================================================
@@ -8484,7 +8955,7 @@ void AGCGetResponse::InternalSwap(AGCGetResponse* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata AGCGetResponse::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[35]);
+      file_level_metadata_fmsmoov_2eproto[36]);
 }
 
 // ===================================================================
@@ -8667,7 +9138,7 @@ void DelaySetCommand::InternalSwap(DelaySetCommand* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata DelaySetCommand::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[36]);
+      file_level_metadata_fmsmoov_2eproto[37]);
 }
 
 // ===================================================================
@@ -8820,7 +9291,7 @@ void DelaySetResponse::InternalSwap(DelaySetResponse* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata DelaySetResponse::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[37]);
+      file_level_metadata_fmsmoov_2eproto[38]);
 }
 
 // ===================================================================
@@ -8973,7 +9444,7 @@ void DelayGetCommand::InternalSwap(DelayGetCommand* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata DelayGetCommand::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[38]);
+      file_level_metadata_fmsmoov_2eproto[39]);
 }
 
 // ===================================================================
@@ -9126,7 +9597,7 @@ void DelayGetResponse::InternalSwap(DelayGetResponse* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata DelayGetResponse::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[39]);
+      file_level_metadata_fmsmoov_2eproto[40]);
 }
 
 // ===================================================================
@@ -10270,7 +10741,7 @@ void ProcessorCommand::InternalSwap(ProcessorCommand* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ProcessorCommand::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[40]);
+      file_level_metadata_fmsmoov_2eproto[41]);
 }
 
 // ===================================================================
@@ -11215,7 +11686,7 @@ void ProcessorResponse::InternalSwap(ProcessorResponse* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ProcessorResponse::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[41]);
+      file_level_metadata_fmsmoov_2eproto[42]);
 }
 
 // ===================================================================
@@ -11631,7 +12102,247 @@ void PluginConfig::InternalSwap(PluginConfig* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata PluginConfig::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[42]);
+      file_level_metadata_fmsmoov_2eproto[43]);
+}
+
+// ===================================================================
+
+class PluginConfigResponse::_Internal {
+ public:
+  using HasBits = decltype(std::declval<PluginConfigResponse>()._has_bits_);
+  static void set_has_result_msg(HasBits* has_bits) {
+    (*has_bits)[0] |= 1u;
+  }
+};
+
+PluginConfigResponse::PluginConfigResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  if (!is_message_owned) {
+    RegisterArenaDtor(arena);
+  }
+  // @@protoc_insertion_point(arena_constructor:fmsmoov.PluginConfigResponse)
+}
+PluginConfigResponse::PluginConfigResponse(const PluginConfigResponse& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message(),
+      _has_bits_(from._has_bits_) {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  result_msg_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (from._internal_has_result_msg()) {
+    result_msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_result_msg(), 
+      GetArenaForAllocation());
+  }
+  result_code_ = from.result_code_;
+  // @@protoc_insertion_point(copy_constructor:fmsmoov.PluginConfigResponse)
+}
+
+inline void PluginConfigResponse::SharedCtor() {
+result_msg_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+result_code_ = 0u;
+}
+
+PluginConfigResponse::~PluginConfigResponse() {
+  // @@protoc_insertion_point(destructor:fmsmoov.PluginConfigResponse)
+  if (GetArenaForAllocation() != nullptr) return;
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+inline void PluginConfigResponse::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  result_msg_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+
+void PluginConfigResponse::ArenaDtor(void* object) {
+  PluginConfigResponse* _this = reinterpret_cast< PluginConfigResponse* >(object);
+  (void)_this;
+}
+void PluginConfigResponse::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void PluginConfigResponse::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void PluginConfigResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:fmsmoov.PluginConfigResponse)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    result_msg_.ClearNonDefaultToEmpty();
+  }
+  result_code_ = 0u;
+  _has_bits_.Clear();
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* PluginConfigResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  _Internal::HasBits has_bits{};
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // uint32 result_code = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          result_code_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // optional string result_msg = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 18)) {
+          auto str = _internal_mutable_result_msg();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "fmsmoov.PluginConfigResponse.result_msg"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag == 0) || ((tag & 7) == 4)) {
+          CHK_(ptr);
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  _has_bits_.Or(has_bits);
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* PluginConfigResponse::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:fmsmoov.PluginConfigResponse)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // uint32 result_code = 1;
+  if (this->_internal_result_code() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteUInt32ToArray(1, this->_internal_result_code(), target);
+  }
+
+  // optional string result_msg = 2;
+  if (_internal_has_result_msg()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_result_msg().data(), static_cast<int>(this->_internal_result_msg().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "fmsmoov.PluginConfigResponse.result_msg");
+    target = stream->WriteStringMaybeAliased(
+        2, this->_internal_result_msg(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:fmsmoov.PluginConfigResponse)
+  return target;
+}
+
+size_t PluginConfigResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:fmsmoov.PluginConfigResponse)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // optional string result_msg = 2;
+  cached_has_bits = _has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_result_msg());
+  }
+
+  // uint32 result_code = 1;
+  if (this->_internal_result_code() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::UInt32Size(
+        this->_internal_result_code());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData PluginConfigResponse::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    PluginConfigResponse::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*PluginConfigResponse::GetClassData() const { return &_class_data_; }
+
+void PluginConfigResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message&from) {
+  static_cast<PluginConfigResponse *>(to)->MergeFrom(
+      static_cast<const PluginConfigResponse &>(from));
+}
+
+
+void PluginConfigResponse::MergeFrom(const PluginConfigResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:fmsmoov.PluginConfigResponse)
+  GOOGLE_DCHECK_NE(&from, this);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_has_result_msg()) {
+    _internal_set_result_msg(from._internal_result_msg());
+  }
+  if (from._internal_result_code() != 0) {
+    _internal_set_result_code(from._internal_result_code());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void PluginConfigResponse::CopyFrom(const PluginConfigResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:fmsmoov.PluginConfigResponse)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool PluginConfigResponse::IsInitialized() const {
+  return true;
+}
+
+void PluginConfigResponse::InternalSwap(PluginConfigResponse* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_has_bits_[0], other->_has_bits_[0]);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      &result_msg_, GetArenaForAllocation(),
+      &other->result_msg_, other->GetArenaForAllocation()
+  );
+  swap(result_code_, other->result_code_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata PluginConfigResponse::GetMetadata() const {
+  return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
+      &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
+      file_level_metadata_fmsmoov_2eproto[44]);
 }
 
 // ===================================================================
@@ -11931,7 +12642,7 @@ void ProcessorStarted::InternalSwap(ProcessorStarted* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ProcessorStarted::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[43]);
+      file_level_metadata_fmsmoov_2eproto[45]);
 }
 
 // ===================================================================
@@ -12084,7 +12795,7 @@ void ProcessorStopping::InternalSwap(ProcessorStopping* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ProcessorStopping::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[44]);
+      file_level_metadata_fmsmoov_2eproto[46]);
 }
 
 // ===================================================================
@@ -13284,7 +13995,7 @@ void ProcessorLiveData::InternalSwap(ProcessorLiveData* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ProcessorLiveData::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[45]);
+      file_level_metadata_fmsmoov_2eproto[47]);
 }
 
 // ===================================================================
@@ -13553,7 +14264,7 @@ void ProcessorBroadcast::InternalSwap(ProcessorBroadcast* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata ProcessorBroadcast::GetMetadata() const {
   return ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
       &descriptor_table_fmsmoov_2eproto_getter, &descriptor_table_fmsmoov_2eproto_once,
-      file_level_metadata_fmsmoov_2eproto[46]);
+      file_level_metadata_fmsmoov_2eproto[48]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -13652,6 +14363,9 @@ template<> PROTOBUF_NOINLINE ::fmsmoov::StereoEnhanceConfig* Arena::CreateMaybeM
 template<> PROTOBUF_NOINLINE ::fmsmoov::CrossoverConfig* Arena::CreateMaybeMessage< ::fmsmoov::CrossoverConfig >(Arena* arena) {
   return Arena::CreateMessageInternal< ::fmsmoov::CrossoverConfig >(arena);
 }
+template<> PROTOBUF_NOINLINE ::fmsmoov::CompLimBandConfig* Arena::CreateMaybeMessage< ::fmsmoov::CompLimBandConfig >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::fmsmoov::CompLimBandConfig >(arena);
+}
 template<> PROTOBUF_NOINLINE ::fmsmoov::CompLimConfig* Arena::CreateMaybeMessage< ::fmsmoov::CompLimConfig >(Arena* arena) {
   return Arena::CreateMessageInternal< ::fmsmoov::CompLimConfig >(arena);
 }
@@ -13687,6 +14401,9 @@ template<> PROTOBUF_NOINLINE ::fmsmoov::ProcessorResponse* Arena::CreateMaybeMes
 }
 template<> PROTOBUF_NOINLINE ::fmsmoov::PluginConfig* Arena::CreateMaybeMessage< ::fmsmoov::PluginConfig >(Arena* arena) {
   return Arena::CreateMessageInternal< ::fmsmoov::PluginConfig >(arena);
+}
+template<> PROTOBUF_NOINLINE ::fmsmoov::PluginConfigResponse* Arena::CreateMaybeMessage< ::fmsmoov::PluginConfigResponse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::fmsmoov::PluginConfigResponse >(arena);
 }
 template<> PROTOBUF_NOINLINE ::fmsmoov::ProcessorStarted* Arena::CreateMaybeMessage< ::fmsmoov::ProcessorStarted >(Arena* arena) {
   return Arena::CreateMessageInternal< ::fmsmoov::ProcessorStarted >(arena);

@@ -40,8 +40,8 @@ void Compressor::set(float _R, float _T, float _G, float _W, float _Tatt, float 
 	W = _W;
 	G = _G;
 
-	alphaA = expf(-logf(9.0)/(48000.0 * Tatt));
-	alphaR = expf(-logf(9.0)/(48000.0 * Trel));
+	alphaA = expf(-logf(9.0)/(m_samprate * Tatt));
+	alphaR = expf(-logf(9.0)/(m_samprate * Trel));
 
 	//previous gain smoothing values
 	gsLprev = 0.0;

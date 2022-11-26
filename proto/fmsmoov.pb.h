@@ -47,7 +47,7 @@ struct TableStruct_fmsmoov_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[47]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[49]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -82,6 +82,9 @@ extern BassEnhancerSetCommandDefaultTypeInternal _BassEnhancerSetCommand_default
 class BassEnhancerSetResponse;
 struct BassEnhancerSetResponseDefaultTypeInternal;
 extern BassEnhancerSetResponseDefaultTypeInternal _BassEnhancerSetResponse_default_instance_;
+class CompLimBandConfig;
+struct CompLimBandConfigDefaultTypeInternal;
+extern CompLimBandConfigDefaultTypeInternal _CompLimBandConfig_default_instance_;
 class CompLimConfig;
 struct CompLimConfigDefaultTypeInternal;
 extern CompLimConfigDefaultTypeInternal _CompLimConfig_default_instance_;
@@ -163,6 +166,9 @@ extern PhaseRotatorSetResponseDefaultTypeInternal _PhaseRotatorSetResponse_defau
 class PluginConfig;
 struct PluginConfigDefaultTypeInternal;
 extern PluginConfigDefaultTypeInternal _PluginConfig_default_instance_;
+class PluginConfigResponse;
+struct PluginConfigResponseDefaultTypeInternal;
+extern PluginConfigResponseDefaultTypeInternal _PluginConfigResponse_default_instance_;
 class ProcessorBroadcast;
 struct ProcessorBroadcastDefaultTypeInternal;
 extern ProcessorBroadcastDefaultTypeInternal _ProcessorBroadcast_default_instance_;
@@ -207,6 +213,7 @@ template<> ::fmsmoov::BassEnhancerGetCommand* Arena::CreateMaybeMessage<::fmsmoo
 template<> ::fmsmoov::BassEnhancerGetResponse* Arena::CreateMaybeMessage<::fmsmoov::BassEnhancerGetResponse>(Arena*);
 template<> ::fmsmoov::BassEnhancerSetCommand* Arena::CreateMaybeMessage<::fmsmoov::BassEnhancerSetCommand>(Arena*);
 template<> ::fmsmoov::BassEnhancerSetResponse* Arena::CreateMaybeMessage<::fmsmoov::BassEnhancerSetResponse>(Arena*);
+template<> ::fmsmoov::CompLimBandConfig* Arena::CreateMaybeMessage<::fmsmoov::CompLimBandConfig>(Arena*);
 template<> ::fmsmoov::CompLimConfig* Arena::CreateMaybeMessage<::fmsmoov::CompLimConfig>(Arena*);
 template<> ::fmsmoov::CompLimGetCommand* Arena::CreateMaybeMessage<::fmsmoov::CompLimGetCommand>(Arena*);
 template<> ::fmsmoov::CompLimGetResponse* Arena::CreateMaybeMessage<::fmsmoov::CompLimGetResponse>(Arena*);
@@ -234,6 +241,7 @@ template<> ::fmsmoov::PhaseRotatorGetResponse* Arena::CreateMaybeMessage<::fmsmo
 template<> ::fmsmoov::PhaseRotatorSetCommand* Arena::CreateMaybeMessage<::fmsmoov::PhaseRotatorSetCommand>(Arena*);
 template<> ::fmsmoov::PhaseRotatorSetResponse* Arena::CreateMaybeMessage<::fmsmoov::PhaseRotatorSetResponse>(Arena*);
 template<> ::fmsmoov::PluginConfig* Arena::CreateMaybeMessage<::fmsmoov::PluginConfig>(Arena*);
+template<> ::fmsmoov::PluginConfigResponse* Arena::CreateMaybeMessage<::fmsmoov::PluginConfigResponse>(Arena*);
 template<> ::fmsmoov::ProcessorBroadcast* Arena::CreateMaybeMessage<::fmsmoov::ProcessorBroadcast>(Arena*);
 template<> ::fmsmoov::ProcessorCommand* Arena::CreateMaybeMessage<::fmsmoov::ProcessorCommand>(Arena*);
 template<> ::fmsmoov::ProcessorLiveData* Arena::CreateMaybeMessage<::fmsmoov::ProcessorLiveData>(Arena*);
@@ -4736,6 +4744,200 @@ class CrossoverConfig final :
 };
 // -------------------------------------------------------------------
 
+class CompLimBandConfig final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.CompLimBandConfig) */ {
+ public:
+  inline CompLimBandConfig() : CompLimBandConfig(nullptr) {}
+  ~CompLimBandConfig() override;
+  explicit constexpr CompLimBandConfig(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  CompLimBandConfig(const CompLimBandConfig& from);
+  CompLimBandConfig(CompLimBandConfig&& from) noexcept
+    : CompLimBandConfig() {
+    *this = ::std::move(from);
+  }
+
+  inline CompLimBandConfig& operator=(const CompLimBandConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline CompLimBandConfig& operator=(CompLimBandConfig&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const CompLimBandConfig& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const CompLimBandConfig* internal_default_instance() {
+    return reinterpret_cast<const CompLimBandConfig*>(
+               &_CompLimBandConfig_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    31;
+
+  friend void swap(CompLimBandConfig& a, CompLimBandConfig& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(CompLimBandConfig* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(CompLimBandConfig* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline CompLimBandConfig* New() const final {
+    return new CompLimBandConfig();
+  }
+
+  CompLimBandConfig* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<CompLimBandConfig>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const CompLimBandConfig& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const CompLimBandConfig& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(CompLimBandConfig* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "fmsmoov.CompLimBandConfig";
+  }
+  protected:
+  explicit CompLimBandConfig(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kRatioFieldNumber = 1,
+    kThresholdFieldNumber = 2,
+    kFixedGainFieldNumber = 3,
+    kKneeWidthFieldNumber = 4,
+    kAttackTimeMsFieldNumber = 5,
+    kReleaseTimeMsFieldNumber = 6,
+  };
+  // float ratio = 1;
+  void clear_ratio();
+  float ratio() const;
+  void set_ratio(float value);
+  private:
+  float _internal_ratio() const;
+  void _internal_set_ratio(float value);
+  public:
+
+  // float threshold = 2;
+  void clear_threshold();
+  float threshold() const;
+  void set_threshold(float value);
+  private:
+  float _internal_threshold() const;
+  void _internal_set_threshold(float value);
+  public:
+
+  // float fixed_gain = 3;
+  void clear_fixed_gain();
+  float fixed_gain() const;
+  void set_fixed_gain(float value);
+  private:
+  float _internal_fixed_gain() const;
+  void _internal_set_fixed_gain(float value);
+  public:
+
+  // float knee_width = 4;
+  void clear_knee_width();
+  float knee_width() const;
+  void set_knee_width(float value);
+  private:
+  float _internal_knee_width() const;
+  void _internal_set_knee_width(float value);
+  public:
+
+  // float attack_time_ms = 5;
+  void clear_attack_time_ms();
+  float attack_time_ms() const;
+  void set_attack_time_ms(float value);
+  private:
+  float _internal_attack_time_ms() const;
+  void _internal_set_attack_time_ms(float value);
+  public:
+
+  // float release_time_ms = 6;
+  void clear_release_time_ms();
+  float release_time_ms() const;
+  void set_release_time_ms(float value);
+  private:
+  float _internal_release_time_ms() const;
+  void _internal_set_release_time_ms(float value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:fmsmoov.CompLimBandConfig)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  float ratio_;
+  float threshold_;
+  float fixed_gain_;
+  float knee_width_;
+  float attack_time_ms_;
+  float release_time_ms_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_fmsmoov_2eproto;
+};
+// -------------------------------------------------------------------
+
 class CompLimConfig final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.CompLimConfig) */ {
  public:
@@ -4780,7 +4982,7 @@ class CompLimConfig final :
                &_CompLimConfig_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    31;
+    32;
 
   friend void swap(CompLimConfig& a, CompLimConfig& b) {
     a.Swap(&b);
@@ -4851,66 +5053,120 @@ class CompLimConfig final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kRatioFieldNumber = 1,
-    kThresholdFieldNumber = 2,
-    kMakeupGainFieldNumber = 3,
-    kKneeWidthFieldNumber = 4,
-    kAttackTimeMsFieldNumber = 5,
-    kReleaseTimeMsFieldNumber = 6,
+    kB0CfgFieldNumber = 1,
+    kB1CfgFieldNumber = 2,
+    kB2CfgFieldNumber = 3,
+    kB3CfgFieldNumber = 4,
+    kB4CfgFieldNumber = 5,
+    kB5CfgFieldNumber = 6,
   };
-  // float ratio = 1;
-  void clear_ratio();
-  float ratio() const;
-  void set_ratio(float value);
+  // .fmsmoov.CompLimBandConfig b0cfg = 1;
+  bool has_b0cfg() const;
   private:
-  float _internal_ratio() const;
-  void _internal_set_ratio(float value);
+  bool _internal_has_b0cfg() const;
   public:
+  void clear_b0cfg();
+  const ::fmsmoov::CompLimBandConfig& b0cfg() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::CompLimBandConfig* release_b0cfg();
+  ::fmsmoov::CompLimBandConfig* mutable_b0cfg();
+  void set_allocated_b0cfg(::fmsmoov::CompLimBandConfig* b0cfg);
+  private:
+  const ::fmsmoov::CompLimBandConfig& _internal_b0cfg() const;
+  ::fmsmoov::CompLimBandConfig* _internal_mutable_b0cfg();
+  public:
+  void unsafe_arena_set_allocated_b0cfg(
+      ::fmsmoov::CompLimBandConfig* b0cfg);
+  ::fmsmoov::CompLimBandConfig* unsafe_arena_release_b0cfg();
 
-  // float threshold = 2;
-  void clear_threshold();
-  float threshold() const;
-  void set_threshold(float value);
+  // .fmsmoov.CompLimBandConfig b1cfg = 2;
+  bool has_b1cfg() const;
   private:
-  float _internal_threshold() const;
-  void _internal_set_threshold(float value);
+  bool _internal_has_b1cfg() const;
   public:
+  void clear_b1cfg();
+  const ::fmsmoov::CompLimBandConfig& b1cfg() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::CompLimBandConfig* release_b1cfg();
+  ::fmsmoov::CompLimBandConfig* mutable_b1cfg();
+  void set_allocated_b1cfg(::fmsmoov::CompLimBandConfig* b1cfg);
+  private:
+  const ::fmsmoov::CompLimBandConfig& _internal_b1cfg() const;
+  ::fmsmoov::CompLimBandConfig* _internal_mutable_b1cfg();
+  public:
+  void unsafe_arena_set_allocated_b1cfg(
+      ::fmsmoov::CompLimBandConfig* b1cfg);
+  ::fmsmoov::CompLimBandConfig* unsafe_arena_release_b1cfg();
 
-  // float makeup_gain = 3;
-  void clear_makeup_gain();
-  float makeup_gain() const;
-  void set_makeup_gain(float value);
+  // .fmsmoov.CompLimBandConfig b2cfg = 3;
+  bool has_b2cfg() const;
   private:
-  float _internal_makeup_gain() const;
-  void _internal_set_makeup_gain(float value);
+  bool _internal_has_b2cfg() const;
   public:
+  void clear_b2cfg();
+  const ::fmsmoov::CompLimBandConfig& b2cfg() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::CompLimBandConfig* release_b2cfg();
+  ::fmsmoov::CompLimBandConfig* mutable_b2cfg();
+  void set_allocated_b2cfg(::fmsmoov::CompLimBandConfig* b2cfg);
+  private:
+  const ::fmsmoov::CompLimBandConfig& _internal_b2cfg() const;
+  ::fmsmoov::CompLimBandConfig* _internal_mutable_b2cfg();
+  public:
+  void unsafe_arena_set_allocated_b2cfg(
+      ::fmsmoov::CompLimBandConfig* b2cfg);
+  ::fmsmoov::CompLimBandConfig* unsafe_arena_release_b2cfg();
 
-  // float knee_width = 4;
-  void clear_knee_width();
-  float knee_width() const;
-  void set_knee_width(float value);
+  // .fmsmoov.CompLimBandConfig b3cfg = 4;
+  bool has_b3cfg() const;
   private:
-  float _internal_knee_width() const;
-  void _internal_set_knee_width(float value);
+  bool _internal_has_b3cfg() const;
   public:
+  void clear_b3cfg();
+  const ::fmsmoov::CompLimBandConfig& b3cfg() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::CompLimBandConfig* release_b3cfg();
+  ::fmsmoov::CompLimBandConfig* mutable_b3cfg();
+  void set_allocated_b3cfg(::fmsmoov::CompLimBandConfig* b3cfg);
+  private:
+  const ::fmsmoov::CompLimBandConfig& _internal_b3cfg() const;
+  ::fmsmoov::CompLimBandConfig* _internal_mutable_b3cfg();
+  public:
+  void unsafe_arena_set_allocated_b3cfg(
+      ::fmsmoov::CompLimBandConfig* b3cfg);
+  ::fmsmoov::CompLimBandConfig* unsafe_arena_release_b3cfg();
 
-  // float attack_time_ms = 5;
-  void clear_attack_time_ms();
-  float attack_time_ms() const;
-  void set_attack_time_ms(float value);
+  // .fmsmoov.CompLimBandConfig b4cfg = 5;
+  bool has_b4cfg() const;
   private:
-  float _internal_attack_time_ms() const;
-  void _internal_set_attack_time_ms(float value);
+  bool _internal_has_b4cfg() const;
   public:
+  void clear_b4cfg();
+  const ::fmsmoov::CompLimBandConfig& b4cfg() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::CompLimBandConfig* release_b4cfg();
+  ::fmsmoov::CompLimBandConfig* mutable_b4cfg();
+  void set_allocated_b4cfg(::fmsmoov::CompLimBandConfig* b4cfg);
+  private:
+  const ::fmsmoov::CompLimBandConfig& _internal_b4cfg() const;
+  ::fmsmoov::CompLimBandConfig* _internal_mutable_b4cfg();
+  public:
+  void unsafe_arena_set_allocated_b4cfg(
+      ::fmsmoov::CompLimBandConfig* b4cfg);
+  ::fmsmoov::CompLimBandConfig* unsafe_arena_release_b4cfg();
 
-  // float release_time_ms = 6;
-  void clear_release_time_ms();
-  float release_time_ms() const;
-  void set_release_time_ms(float value);
+  // .fmsmoov.CompLimBandConfig b5cfg = 6;
+  bool has_b5cfg() const;
   private:
-  float _internal_release_time_ms() const;
-  void _internal_set_release_time_ms(float value);
+  bool _internal_has_b5cfg() const;
   public:
+  void clear_b5cfg();
+  const ::fmsmoov::CompLimBandConfig& b5cfg() const;
+  PROTOBUF_MUST_USE_RESULT ::fmsmoov::CompLimBandConfig* release_b5cfg();
+  ::fmsmoov::CompLimBandConfig* mutable_b5cfg();
+  void set_allocated_b5cfg(::fmsmoov::CompLimBandConfig* b5cfg);
+  private:
+  const ::fmsmoov::CompLimBandConfig& _internal_b5cfg() const;
+  ::fmsmoov::CompLimBandConfig* _internal_mutable_b5cfg();
+  public:
+  void unsafe_arena_set_allocated_b5cfg(
+      ::fmsmoov::CompLimBandConfig* b5cfg);
+  ::fmsmoov::CompLimBandConfig* unsafe_arena_release_b5cfg();
 
   // @@protoc_insertion_point(class_scope:fmsmoov.CompLimConfig)
  private:
@@ -4919,12 +5175,12 @@ class CompLimConfig final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  float ratio_;
-  float threshold_;
-  float makeup_gain_;
-  float knee_width_;
-  float attack_time_ms_;
-  float release_time_ms_;
+  ::fmsmoov::CompLimBandConfig* b0cfg_;
+  ::fmsmoov::CompLimBandConfig* b1cfg_;
+  ::fmsmoov::CompLimBandConfig* b2cfg_;
+  ::fmsmoov::CompLimBandConfig* b3cfg_;
+  ::fmsmoov::CompLimBandConfig* b4cfg_;
+  ::fmsmoov::CompLimBandConfig* b5cfg_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_fmsmoov_2eproto;
 };
@@ -4974,7 +5230,7 @@ class AGCSetCommand final :
                &_AGCSetCommand_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    32;
+    33;
 
   friend void swap(AGCSetCommand& a, AGCSetCommand& b) {
     a.Swap(&b);
@@ -5146,7 +5402,7 @@ class AGCSetResponse final :
                &_AGCSetResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    33;
+    34;
 
   friend void swap(AGCSetResponse& a, AGCSetResponse& b) {
     a.Swap(&b);
@@ -5272,7 +5528,7 @@ class AGCGetCommand final :
                &_AGCGetCommand_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    34;
+    35;
 
   friend void swap(AGCGetCommand& a, AGCGetCommand& b) {
     a.Swap(&b);
@@ -5398,7 +5654,7 @@ class AGCGetResponse final :
                &_AGCGetResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    35;
+    36;
 
   friend void swap(AGCGetResponse& a, AGCGetResponse& b) {
     a.Swap(&b);
@@ -5570,7 +5826,7 @@ class DelaySetCommand final :
                &_DelaySetCommand_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    36;
+    37;
 
   friend void swap(DelaySetCommand& a, DelaySetCommand& b) {
     a.Swap(&b);
@@ -5709,7 +5965,7 @@ class DelaySetResponse final :
                &_DelaySetResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    37;
+    38;
 
   friend void swap(DelaySetResponse& a, DelaySetResponse& b) {
     a.Swap(&b);
@@ -5835,7 +6091,7 @@ class DelayGetCommand final :
                &_DelayGetCommand_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    38;
+    39;
 
   friend void swap(DelayGetCommand& a, DelayGetCommand& b) {
     a.Swap(&b);
@@ -5961,7 +6217,7 @@ class DelayGetResponse final :
                &_DelayGetResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    39;
+    40;
 
   friend void swap(DelayGetResponse& a, DelayGetResponse& b) {
     a.Swap(&b);
@@ -6108,7 +6364,7 @@ class ProcessorCommand final :
                &_ProcessorCommand_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    40;
+    41;
 
   friend void swap(ProcessorCommand& a, ProcessorCommand& b) {
     a.Swap(&b);
@@ -6604,7 +6860,7 @@ class ProcessorResponse final :
                &_ProcessorResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    41;
+    42;
 
   friend void swap(ProcessorResponse& a, ProcessorResponse& b) {
     a.Swap(&b);
@@ -7088,7 +7344,7 @@ class PluginConfig final :
                &_PluginConfig_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    42;
+    43;
 
   friend void swap(PluginConfig& a, PluginConfig& b) {
     a.Swap(&b);
@@ -7267,6 +7523,166 @@ class PluginConfig final :
 };
 // -------------------------------------------------------------------
 
+class PluginConfigResponse final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.PluginConfigResponse) */ {
+ public:
+  inline PluginConfigResponse() : PluginConfigResponse(nullptr) {}
+  ~PluginConfigResponse() override;
+  explicit constexpr PluginConfigResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  PluginConfigResponse(const PluginConfigResponse& from);
+  PluginConfigResponse(PluginConfigResponse&& from) noexcept
+    : PluginConfigResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline PluginConfigResponse& operator=(const PluginConfigResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline PluginConfigResponse& operator=(PluginConfigResponse&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const PluginConfigResponse& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const PluginConfigResponse* internal_default_instance() {
+    return reinterpret_cast<const PluginConfigResponse*>(
+               &_PluginConfigResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    44;
+
+  friend void swap(PluginConfigResponse& a, PluginConfigResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(PluginConfigResponse* other) {
+    if (other == this) return;
+    if (GetOwningArena() == other->GetOwningArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(PluginConfigResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline PluginConfigResponse* New() const final {
+    return new PluginConfigResponse();
+  }
+
+  PluginConfigResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<PluginConfigResponse>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const PluginConfigResponse& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const PluginConfigResponse& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message*to, const ::PROTOBUF_NAMESPACE_ID::Message&from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(PluginConfigResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "fmsmoov.PluginConfigResponse";
+  }
+  protected:
+  explicit PluginConfigResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kResultMsgFieldNumber = 2,
+    kResultCodeFieldNumber = 1,
+  };
+  // optional string result_msg = 2;
+  bool has_result_msg() const;
+  private:
+  bool _internal_has_result_msg() const;
+  public:
+  void clear_result_msg();
+  const std::string& result_msg() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_result_msg(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_result_msg();
+  PROTOBUF_MUST_USE_RESULT std::string* release_result_msg();
+  void set_allocated_result_msg(std::string* result_msg);
+  private:
+  const std::string& _internal_result_msg() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_result_msg(const std::string& value);
+  std::string* _internal_mutable_result_msg();
+  public:
+
+  // uint32 result_code = 1;
+  void clear_result_code();
+  ::PROTOBUF_NAMESPACE_ID::uint32 result_code() const;
+  void set_result_code(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_result_code() const;
+  void _internal_set_result_code(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:fmsmoov.PluginConfigResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::HasBits<1> _has_bits_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr result_msg_;
+  ::PROTOBUF_NAMESPACE_ID::uint32 result_code_;
+  friend struct ::TableStruct_fmsmoov_2eproto;
+};
+// -------------------------------------------------------------------
+
 class ProcessorStarted final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:fmsmoov.ProcessorStarted) */ {
  public:
@@ -7311,7 +7727,7 @@ class ProcessorStarted final :
                &_ProcessorStarted_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    43;
+    45;
 
   friend void swap(ProcessorStarted& a, ProcessorStarted& b) {
     a.Swap(&b);
@@ -7505,7 +7921,7 @@ class ProcessorStopping final :
                &_ProcessorStopping_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    44;
+    46;
 
   friend void swap(ProcessorStopping& a, ProcessorStopping& b) {
     a.Swap(&b);
@@ -7631,7 +8047,7 @@ class ProcessorLiveData final :
                &_ProcessorLiveData_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    45;
+    47;
 
   friend void swap(ProcessorLiveData& a, ProcessorLiveData& b) {
     a.Swap(&b);
@@ -8335,7 +8751,7 @@ class ProcessorBroadcast final :
                &_ProcessorBroadcast_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    46;
+    48;
 
   friend void swap(ProcessorBroadcast& a, ProcessorBroadcast& b) {
     a.Swap(&b);
@@ -9493,126 +9909,670 @@ inline void CrossoverConfig::set_b5_enable(bool value) {
 
 // -------------------------------------------------------------------
 
-// CompLimConfig
+// CompLimBandConfig
 
 // float ratio = 1;
-inline void CompLimConfig::clear_ratio() {
+inline void CompLimBandConfig::clear_ratio() {
   ratio_ = 0;
 }
-inline float CompLimConfig::_internal_ratio() const {
+inline float CompLimBandConfig::_internal_ratio() const {
   return ratio_;
 }
-inline float CompLimConfig::ratio() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.ratio)
+inline float CompLimBandConfig::ratio() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimBandConfig.ratio)
   return _internal_ratio();
 }
-inline void CompLimConfig::_internal_set_ratio(float value) {
+inline void CompLimBandConfig::_internal_set_ratio(float value) {
   
   ratio_ = value;
 }
-inline void CompLimConfig::set_ratio(float value) {
+inline void CompLimBandConfig::set_ratio(float value) {
   _internal_set_ratio(value);
-  // @@protoc_insertion_point(field_set:fmsmoov.CompLimConfig.ratio)
+  // @@protoc_insertion_point(field_set:fmsmoov.CompLimBandConfig.ratio)
 }
 
 // float threshold = 2;
-inline void CompLimConfig::clear_threshold() {
+inline void CompLimBandConfig::clear_threshold() {
   threshold_ = 0;
 }
-inline float CompLimConfig::_internal_threshold() const {
+inline float CompLimBandConfig::_internal_threshold() const {
   return threshold_;
 }
-inline float CompLimConfig::threshold() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.threshold)
+inline float CompLimBandConfig::threshold() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimBandConfig.threshold)
   return _internal_threshold();
 }
-inline void CompLimConfig::_internal_set_threshold(float value) {
+inline void CompLimBandConfig::_internal_set_threshold(float value) {
   
   threshold_ = value;
 }
-inline void CompLimConfig::set_threshold(float value) {
+inline void CompLimBandConfig::set_threshold(float value) {
   _internal_set_threshold(value);
-  // @@protoc_insertion_point(field_set:fmsmoov.CompLimConfig.threshold)
+  // @@protoc_insertion_point(field_set:fmsmoov.CompLimBandConfig.threshold)
 }
 
-// float makeup_gain = 3;
-inline void CompLimConfig::clear_makeup_gain() {
-  makeup_gain_ = 0;
+// float fixed_gain = 3;
+inline void CompLimBandConfig::clear_fixed_gain() {
+  fixed_gain_ = 0;
 }
-inline float CompLimConfig::_internal_makeup_gain() const {
-  return makeup_gain_;
+inline float CompLimBandConfig::_internal_fixed_gain() const {
+  return fixed_gain_;
 }
-inline float CompLimConfig::makeup_gain() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.makeup_gain)
-  return _internal_makeup_gain();
+inline float CompLimBandConfig::fixed_gain() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimBandConfig.fixed_gain)
+  return _internal_fixed_gain();
 }
-inline void CompLimConfig::_internal_set_makeup_gain(float value) {
+inline void CompLimBandConfig::_internal_set_fixed_gain(float value) {
   
-  makeup_gain_ = value;
+  fixed_gain_ = value;
 }
-inline void CompLimConfig::set_makeup_gain(float value) {
-  _internal_set_makeup_gain(value);
-  // @@protoc_insertion_point(field_set:fmsmoov.CompLimConfig.makeup_gain)
+inline void CompLimBandConfig::set_fixed_gain(float value) {
+  _internal_set_fixed_gain(value);
+  // @@protoc_insertion_point(field_set:fmsmoov.CompLimBandConfig.fixed_gain)
 }
 
 // float knee_width = 4;
-inline void CompLimConfig::clear_knee_width() {
+inline void CompLimBandConfig::clear_knee_width() {
   knee_width_ = 0;
 }
-inline float CompLimConfig::_internal_knee_width() const {
+inline float CompLimBandConfig::_internal_knee_width() const {
   return knee_width_;
 }
-inline float CompLimConfig::knee_width() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.knee_width)
+inline float CompLimBandConfig::knee_width() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimBandConfig.knee_width)
   return _internal_knee_width();
 }
-inline void CompLimConfig::_internal_set_knee_width(float value) {
+inline void CompLimBandConfig::_internal_set_knee_width(float value) {
   
   knee_width_ = value;
 }
-inline void CompLimConfig::set_knee_width(float value) {
+inline void CompLimBandConfig::set_knee_width(float value) {
   _internal_set_knee_width(value);
-  // @@protoc_insertion_point(field_set:fmsmoov.CompLimConfig.knee_width)
+  // @@protoc_insertion_point(field_set:fmsmoov.CompLimBandConfig.knee_width)
 }
 
 // float attack_time_ms = 5;
-inline void CompLimConfig::clear_attack_time_ms() {
+inline void CompLimBandConfig::clear_attack_time_ms() {
   attack_time_ms_ = 0;
 }
-inline float CompLimConfig::_internal_attack_time_ms() const {
+inline float CompLimBandConfig::_internal_attack_time_ms() const {
   return attack_time_ms_;
 }
-inline float CompLimConfig::attack_time_ms() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.attack_time_ms)
+inline float CompLimBandConfig::attack_time_ms() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimBandConfig.attack_time_ms)
   return _internal_attack_time_ms();
 }
-inline void CompLimConfig::_internal_set_attack_time_ms(float value) {
+inline void CompLimBandConfig::_internal_set_attack_time_ms(float value) {
   
   attack_time_ms_ = value;
 }
-inline void CompLimConfig::set_attack_time_ms(float value) {
+inline void CompLimBandConfig::set_attack_time_ms(float value) {
   _internal_set_attack_time_ms(value);
-  // @@protoc_insertion_point(field_set:fmsmoov.CompLimConfig.attack_time_ms)
+  // @@protoc_insertion_point(field_set:fmsmoov.CompLimBandConfig.attack_time_ms)
 }
 
 // float release_time_ms = 6;
-inline void CompLimConfig::clear_release_time_ms() {
+inline void CompLimBandConfig::clear_release_time_ms() {
   release_time_ms_ = 0;
 }
-inline float CompLimConfig::_internal_release_time_ms() const {
+inline float CompLimBandConfig::_internal_release_time_ms() const {
   return release_time_ms_;
 }
-inline float CompLimConfig::release_time_ms() const {
-  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.release_time_ms)
+inline float CompLimBandConfig::release_time_ms() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimBandConfig.release_time_ms)
   return _internal_release_time_ms();
 }
-inline void CompLimConfig::_internal_set_release_time_ms(float value) {
+inline void CompLimBandConfig::_internal_set_release_time_ms(float value) {
   
   release_time_ms_ = value;
 }
-inline void CompLimConfig::set_release_time_ms(float value) {
+inline void CompLimBandConfig::set_release_time_ms(float value) {
   _internal_set_release_time_ms(value);
-  // @@protoc_insertion_point(field_set:fmsmoov.CompLimConfig.release_time_ms)
+  // @@protoc_insertion_point(field_set:fmsmoov.CompLimBandConfig.release_time_ms)
+}
+
+// -------------------------------------------------------------------
+
+// CompLimConfig
+
+// .fmsmoov.CompLimBandConfig b0cfg = 1;
+inline bool CompLimConfig::_internal_has_b0cfg() const {
+  return this != internal_default_instance() && b0cfg_ != nullptr;
+}
+inline bool CompLimConfig::has_b0cfg() const {
+  return _internal_has_b0cfg();
+}
+inline void CompLimConfig::clear_b0cfg() {
+  if (GetArenaForAllocation() == nullptr && b0cfg_ != nullptr) {
+    delete b0cfg_;
+  }
+  b0cfg_ = nullptr;
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::_internal_b0cfg() const {
+  const ::fmsmoov::CompLimBandConfig* p = b0cfg_;
+  return p != nullptr ? *p : reinterpret_cast<const ::fmsmoov::CompLimBandConfig&>(
+      ::fmsmoov::_CompLimBandConfig_default_instance_);
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::b0cfg() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.b0cfg)
+  return _internal_b0cfg();
+}
+inline void CompLimConfig::unsafe_arena_set_allocated_b0cfg(
+    ::fmsmoov::CompLimBandConfig* b0cfg) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(b0cfg_);
+  }
+  b0cfg_ = b0cfg;
+  if (b0cfg) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.CompLimConfig.b0cfg)
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::release_b0cfg() {
+  
+  ::fmsmoov::CompLimBandConfig* temp = b0cfg_;
+  b0cfg_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::unsafe_arena_release_b0cfg() {
+  // @@protoc_insertion_point(field_release:fmsmoov.CompLimConfig.b0cfg)
+  
+  ::fmsmoov::CompLimBandConfig* temp = b0cfg_;
+  b0cfg_ = nullptr;
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::_internal_mutable_b0cfg() {
+  
+  if (b0cfg_ == nullptr) {
+    auto* p = CreateMaybeMessage<::fmsmoov::CompLimBandConfig>(GetArenaForAllocation());
+    b0cfg_ = p;
+  }
+  return b0cfg_;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::mutable_b0cfg() {
+  ::fmsmoov::CompLimBandConfig* _msg = _internal_mutable_b0cfg();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.CompLimConfig.b0cfg)
+  return _msg;
+}
+inline void CompLimConfig::set_allocated_b0cfg(::fmsmoov::CompLimBandConfig* b0cfg) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete b0cfg_;
+  }
+  if (b0cfg) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::CompLimBandConfig>::GetOwningArena(b0cfg);
+    if (message_arena != submessage_arena) {
+      b0cfg = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, b0cfg, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  b0cfg_ = b0cfg;
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.CompLimConfig.b0cfg)
+}
+
+// .fmsmoov.CompLimBandConfig b1cfg = 2;
+inline bool CompLimConfig::_internal_has_b1cfg() const {
+  return this != internal_default_instance() && b1cfg_ != nullptr;
+}
+inline bool CompLimConfig::has_b1cfg() const {
+  return _internal_has_b1cfg();
+}
+inline void CompLimConfig::clear_b1cfg() {
+  if (GetArenaForAllocation() == nullptr && b1cfg_ != nullptr) {
+    delete b1cfg_;
+  }
+  b1cfg_ = nullptr;
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::_internal_b1cfg() const {
+  const ::fmsmoov::CompLimBandConfig* p = b1cfg_;
+  return p != nullptr ? *p : reinterpret_cast<const ::fmsmoov::CompLimBandConfig&>(
+      ::fmsmoov::_CompLimBandConfig_default_instance_);
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::b1cfg() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.b1cfg)
+  return _internal_b1cfg();
+}
+inline void CompLimConfig::unsafe_arena_set_allocated_b1cfg(
+    ::fmsmoov::CompLimBandConfig* b1cfg) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(b1cfg_);
+  }
+  b1cfg_ = b1cfg;
+  if (b1cfg) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.CompLimConfig.b1cfg)
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::release_b1cfg() {
+  
+  ::fmsmoov::CompLimBandConfig* temp = b1cfg_;
+  b1cfg_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::unsafe_arena_release_b1cfg() {
+  // @@protoc_insertion_point(field_release:fmsmoov.CompLimConfig.b1cfg)
+  
+  ::fmsmoov::CompLimBandConfig* temp = b1cfg_;
+  b1cfg_ = nullptr;
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::_internal_mutable_b1cfg() {
+  
+  if (b1cfg_ == nullptr) {
+    auto* p = CreateMaybeMessage<::fmsmoov::CompLimBandConfig>(GetArenaForAllocation());
+    b1cfg_ = p;
+  }
+  return b1cfg_;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::mutable_b1cfg() {
+  ::fmsmoov::CompLimBandConfig* _msg = _internal_mutable_b1cfg();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.CompLimConfig.b1cfg)
+  return _msg;
+}
+inline void CompLimConfig::set_allocated_b1cfg(::fmsmoov::CompLimBandConfig* b1cfg) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete b1cfg_;
+  }
+  if (b1cfg) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::CompLimBandConfig>::GetOwningArena(b1cfg);
+    if (message_arena != submessage_arena) {
+      b1cfg = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, b1cfg, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  b1cfg_ = b1cfg;
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.CompLimConfig.b1cfg)
+}
+
+// .fmsmoov.CompLimBandConfig b2cfg = 3;
+inline bool CompLimConfig::_internal_has_b2cfg() const {
+  return this != internal_default_instance() && b2cfg_ != nullptr;
+}
+inline bool CompLimConfig::has_b2cfg() const {
+  return _internal_has_b2cfg();
+}
+inline void CompLimConfig::clear_b2cfg() {
+  if (GetArenaForAllocation() == nullptr && b2cfg_ != nullptr) {
+    delete b2cfg_;
+  }
+  b2cfg_ = nullptr;
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::_internal_b2cfg() const {
+  const ::fmsmoov::CompLimBandConfig* p = b2cfg_;
+  return p != nullptr ? *p : reinterpret_cast<const ::fmsmoov::CompLimBandConfig&>(
+      ::fmsmoov::_CompLimBandConfig_default_instance_);
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::b2cfg() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.b2cfg)
+  return _internal_b2cfg();
+}
+inline void CompLimConfig::unsafe_arena_set_allocated_b2cfg(
+    ::fmsmoov::CompLimBandConfig* b2cfg) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(b2cfg_);
+  }
+  b2cfg_ = b2cfg;
+  if (b2cfg) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.CompLimConfig.b2cfg)
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::release_b2cfg() {
+  
+  ::fmsmoov::CompLimBandConfig* temp = b2cfg_;
+  b2cfg_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::unsafe_arena_release_b2cfg() {
+  // @@protoc_insertion_point(field_release:fmsmoov.CompLimConfig.b2cfg)
+  
+  ::fmsmoov::CompLimBandConfig* temp = b2cfg_;
+  b2cfg_ = nullptr;
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::_internal_mutable_b2cfg() {
+  
+  if (b2cfg_ == nullptr) {
+    auto* p = CreateMaybeMessage<::fmsmoov::CompLimBandConfig>(GetArenaForAllocation());
+    b2cfg_ = p;
+  }
+  return b2cfg_;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::mutable_b2cfg() {
+  ::fmsmoov::CompLimBandConfig* _msg = _internal_mutable_b2cfg();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.CompLimConfig.b2cfg)
+  return _msg;
+}
+inline void CompLimConfig::set_allocated_b2cfg(::fmsmoov::CompLimBandConfig* b2cfg) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete b2cfg_;
+  }
+  if (b2cfg) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::CompLimBandConfig>::GetOwningArena(b2cfg);
+    if (message_arena != submessage_arena) {
+      b2cfg = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, b2cfg, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  b2cfg_ = b2cfg;
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.CompLimConfig.b2cfg)
+}
+
+// .fmsmoov.CompLimBandConfig b3cfg = 4;
+inline bool CompLimConfig::_internal_has_b3cfg() const {
+  return this != internal_default_instance() && b3cfg_ != nullptr;
+}
+inline bool CompLimConfig::has_b3cfg() const {
+  return _internal_has_b3cfg();
+}
+inline void CompLimConfig::clear_b3cfg() {
+  if (GetArenaForAllocation() == nullptr && b3cfg_ != nullptr) {
+    delete b3cfg_;
+  }
+  b3cfg_ = nullptr;
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::_internal_b3cfg() const {
+  const ::fmsmoov::CompLimBandConfig* p = b3cfg_;
+  return p != nullptr ? *p : reinterpret_cast<const ::fmsmoov::CompLimBandConfig&>(
+      ::fmsmoov::_CompLimBandConfig_default_instance_);
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::b3cfg() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.b3cfg)
+  return _internal_b3cfg();
+}
+inline void CompLimConfig::unsafe_arena_set_allocated_b3cfg(
+    ::fmsmoov::CompLimBandConfig* b3cfg) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(b3cfg_);
+  }
+  b3cfg_ = b3cfg;
+  if (b3cfg) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.CompLimConfig.b3cfg)
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::release_b3cfg() {
+  
+  ::fmsmoov::CompLimBandConfig* temp = b3cfg_;
+  b3cfg_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::unsafe_arena_release_b3cfg() {
+  // @@protoc_insertion_point(field_release:fmsmoov.CompLimConfig.b3cfg)
+  
+  ::fmsmoov::CompLimBandConfig* temp = b3cfg_;
+  b3cfg_ = nullptr;
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::_internal_mutable_b3cfg() {
+  
+  if (b3cfg_ == nullptr) {
+    auto* p = CreateMaybeMessage<::fmsmoov::CompLimBandConfig>(GetArenaForAllocation());
+    b3cfg_ = p;
+  }
+  return b3cfg_;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::mutable_b3cfg() {
+  ::fmsmoov::CompLimBandConfig* _msg = _internal_mutable_b3cfg();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.CompLimConfig.b3cfg)
+  return _msg;
+}
+inline void CompLimConfig::set_allocated_b3cfg(::fmsmoov::CompLimBandConfig* b3cfg) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete b3cfg_;
+  }
+  if (b3cfg) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::CompLimBandConfig>::GetOwningArena(b3cfg);
+    if (message_arena != submessage_arena) {
+      b3cfg = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, b3cfg, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  b3cfg_ = b3cfg;
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.CompLimConfig.b3cfg)
+}
+
+// .fmsmoov.CompLimBandConfig b4cfg = 5;
+inline bool CompLimConfig::_internal_has_b4cfg() const {
+  return this != internal_default_instance() && b4cfg_ != nullptr;
+}
+inline bool CompLimConfig::has_b4cfg() const {
+  return _internal_has_b4cfg();
+}
+inline void CompLimConfig::clear_b4cfg() {
+  if (GetArenaForAllocation() == nullptr && b4cfg_ != nullptr) {
+    delete b4cfg_;
+  }
+  b4cfg_ = nullptr;
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::_internal_b4cfg() const {
+  const ::fmsmoov::CompLimBandConfig* p = b4cfg_;
+  return p != nullptr ? *p : reinterpret_cast<const ::fmsmoov::CompLimBandConfig&>(
+      ::fmsmoov::_CompLimBandConfig_default_instance_);
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::b4cfg() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.b4cfg)
+  return _internal_b4cfg();
+}
+inline void CompLimConfig::unsafe_arena_set_allocated_b4cfg(
+    ::fmsmoov::CompLimBandConfig* b4cfg) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(b4cfg_);
+  }
+  b4cfg_ = b4cfg;
+  if (b4cfg) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.CompLimConfig.b4cfg)
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::release_b4cfg() {
+  
+  ::fmsmoov::CompLimBandConfig* temp = b4cfg_;
+  b4cfg_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::unsafe_arena_release_b4cfg() {
+  // @@protoc_insertion_point(field_release:fmsmoov.CompLimConfig.b4cfg)
+  
+  ::fmsmoov::CompLimBandConfig* temp = b4cfg_;
+  b4cfg_ = nullptr;
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::_internal_mutable_b4cfg() {
+  
+  if (b4cfg_ == nullptr) {
+    auto* p = CreateMaybeMessage<::fmsmoov::CompLimBandConfig>(GetArenaForAllocation());
+    b4cfg_ = p;
+  }
+  return b4cfg_;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::mutable_b4cfg() {
+  ::fmsmoov::CompLimBandConfig* _msg = _internal_mutable_b4cfg();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.CompLimConfig.b4cfg)
+  return _msg;
+}
+inline void CompLimConfig::set_allocated_b4cfg(::fmsmoov::CompLimBandConfig* b4cfg) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete b4cfg_;
+  }
+  if (b4cfg) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::CompLimBandConfig>::GetOwningArena(b4cfg);
+    if (message_arena != submessage_arena) {
+      b4cfg = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, b4cfg, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  b4cfg_ = b4cfg;
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.CompLimConfig.b4cfg)
+}
+
+// .fmsmoov.CompLimBandConfig b5cfg = 6;
+inline bool CompLimConfig::_internal_has_b5cfg() const {
+  return this != internal_default_instance() && b5cfg_ != nullptr;
+}
+inline bool CompLimConfig::has_b5cfg() const {
+  return _internal_has_b5cfg();
+}
+inline void CompLimConfig::clear_b5cfg() {
+  if (GetArenaForAllocation() == nullptr && b5cfg_ != nullptr) {
+    delete b5cfg_;
+  }
+  b5cfg_ = nullptr;
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::_internal_b5cfg() const {
+  const ::fmsmoov::CompLimBandConfig* p = b5cfg_;
+  return p != nullptr ? *p : reinterpret_cast<const ::fmsmoov::CompLimBandConfig&>(
+      ::fmsmoov::_CompLimBandConfig_default_instance_);
+}
+inline const ::fmsmoov::CompLimBandConfig& CompLimConfig::b5cfg() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.CompLimConfig.b5cfg)
+  return _internal_b5cfg();
+}
+inline void CompLimConfig::unsafe_arena_set_allocated_b5cfg(
+    ::fmsmoov::CompLimBandConfig* b5cfg) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(b5cfg_);
+  }
+  b5cfg_ = b5cfg;
+  if (b5cfg) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:fmsmoov.CompLimConfig.b5cfg)
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::release_b5cfg() {
+  
+  ::fmsmoov::CompLimBandConfig* temp = b5cfg_;
+  b5cfg_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::unsafe_arena_release_b5cfg() {
+  // @@protoc_insertion_point(field_release:fmsmoov.CompLimConfig.b5cfg)
+  
+  ::fmsmoov::CompLimBandConfig* temp = b5cfg_;
+  b5cfg_ = nullptr;
+  return temp;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::_internal_mutable_b5cfg() {
+  
+  if (b5cfg_ == nullptr) {
+    auto* p = CreateMaybeMessage<::fmsmoov::CompLimBandConfig>(GetArenaForAllocation());
+    b5cfg_ = p;
+  }
+  return b5cfg_;
+}
+inline ::fmsmoov::CompLimBandConfig* CompLimConfig::mutable_b5cfg() {
+  ::fmsmoov::CompLimBandConfig* _msg = _internal_mutable_b5cfg();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.CompLimConfig.b5cfg)
+  return _msg;
+}
+inline void CompLimConfig::set_allocated_b5cfg(::fmsmoov::CompLimBandConfig* b5cfg) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete b5cfg_;
+  }
+  if (b5cfg) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper<::fmsmoov::CompLimBandConfig>::GetOwningArena(b5cfg);
+    if (message_arena != submessage_arena) {
+      b5cfg = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, b5cfg, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  b5cfg_ = b5cfg;
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.CompLimConfig.b5cfg)
 }
 
 // -------------------------------------------------------------------
@@ -12919,6 +13879,88 @@ inline PluginConfig::CfgTypeCase PluginConfig::cfg_type_case() const {
 }
 // -------------------------------------------------------------------
 
+// PluginConfigResponse
+
+// uint32 result_code = 1;
+inline void PluginConfigResponse::clear_result_code() {
+  result_code_ = 0u;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 PluginConfigResponse::_internal_result_code() const {
+  return result_code_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::uint32 PluginConfigResponse::result_code() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.PluginConfigResponse.result_code)
+  return _internal_result_code();
+}
+inline void PluginConfigResponse::_internal_set_result_code(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  
+  result_code_ = value;
+}
+inline void PluginConfigResponse::set_result_code(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+  _internal_set_result_code(value);
+  // @@protoc_insertion_point(field_set:fmsmoov.PluginConfigResponse.result_code)
+}
+
+// optional string result_msg = 2;
+inline bool PluginConfigResponse::_internal_has_result_msg() const {
+  bool value = (_has_bits_[0] & 0x00000001u) != 0;
+  return value;
+}
+inline bool PluginConfigResponse::has_result_msg() const {
+  return _internal_has_result_msg();
+}
+inline void PluginConfigResponse::clear_result_msg() {
+  result_msg_.ClearToEmpty();
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline const std::string& PluginConfigResponse::result_msg() const {
+  // @@protoc_insertion_point(field_get:fmsmoov.PluginConfigResponse.result_msg)
+  return _internal_result_msg();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void PluginConfigResponse::set_result_msg(ArgT0&& arg0, ArgT... args) {
+ _has_bits_[0] |= 0x00000001u;
+ result_msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:fmsmoov.PluginConfigResponse.result_msg)
+}
+inline std::string* PluginConfigResponse::mutable_result_msg() {
+  std::string* _s = _internal_mutable_result_msg();
+  // @@protoc_insertion_point(field_mutable:fmsmoov.PluginConfigResponse.result_msg)
+  return _s;
+}
+inline const std::string& PluginConfigResponse::_internal_result_msg() const {
+  return result_msg_.Get();
+}
+inline void PluginConfigResponse::_internal_set_result_msg(const std::string& value) {
+  _has_bits_[0] |= 0x00000001u;
+  result_msg_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, value, GetArenaForAllocation());
+}
+inline std::string* PluginConfigResponse::_internal_mutable_result_msg() {
+  _has_bits_[0] |= 0x00000001u;
+  return result_msg_.Mutable(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, GetArenaForAllocation());
+}
+inline std::string* PluginConfigResponse::release_result_msg() {
+  // @@protoc_insertion_point(field_release:fmsmoov.PluginConfigResponse.result_msg)
+  if (!_internal_has_result_msg()) {
+    return nullptr;
+  }
+  _has_bits_[0] &= ~0x00000001u;
+  return result_msg_.ReleaseNonDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArenaForAllocation());
+}
+inline void PluginConfigResponse::set_allocated_result_msg(std::string* result_msg) {
+  if (result_msg != nullptr) {
+    _has_bits_[0] |= 0x00000001u;
+  } else {
+    _has_bits_[0] &= ~0x00000001u;
+  }
+  result_msg_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), result_msg,
+      GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set_allocated:fmsmoov.PluginConfigResponse.result_msg)
+}
+
+// -------------------------------------------------------------------
+
 // ProcessorStarted
 
 // bool started = 1;
@@ -14362,6 +15404,10 @@ inline void ProcessorBroadcast::set_allocated_pld(::fmsmoov::ProcessorLiveData* 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

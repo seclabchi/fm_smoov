@@ -101,7 +101,7 @@ bool ProcessorPlugin::init(const fmsmoov::PluginConfig& cfg) {
 	return m_has_been_inited;
 }
 
-bool ProcessorPlugin::change_cfg(const fmsmoov::PluginConfig& cfg) {
+fmsmoov::PluginConfigResponse ProcessorPlugin::change_cfg(const fmsmoov::PluginConfig& cfg) {
 	return this->do_change_cfg(cfg);
 }
 
@@ -115,8 +115,8 @@ void ProcessorPlugin::set_enable(bool _enable) {
 
 int ProcessorPlugin::process() {
 	if(false == m_has_been_inited) {
-		LOGE("Plugin {} has not been intialized.", m_name);
-		return -1;
+		LOGC("Plugin {} has not been intialized.", m_name);
+		exit(-1);
 	}
 	else {
 		return this->do_process();

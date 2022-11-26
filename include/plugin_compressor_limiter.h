@@ -16,7 +16,7 @@ public:
 	PluginCompressorLimiter(const std::string& _name, uint32_t samprate, uint32_t bufsize);
 	virtual ~PluginCompressorLimiter();
 	virtual int do_process();
-	virtual bool do_change_cfg(const fmsmoov::PluginConfig& cfg);
+	virtual fmsmoov::PluginConfigResponse do_change_cfg(const fmsmoov::PluginConfig& cfg);
 	virtual bool do_init(const fmsmoov::PluginConfig& cfg);
 	virtual void do_set_aux_input_bufs(vector<AudioBuf*>* bufs);
 	virtual void finalize_buffer_init();
@@ -31,6 +31,13 @@ private:
 	float* b0_comp, *b1_comp, *b2_comp, *b3_comp, *b4_comp, *b5_comp;
 
 	float* front_agcL, *front_agcR;
+
+	float b0R, b1R, b2R, b3R, b4R, b5R;
+	float b0T, b1T, b2T, b3T, b4T, b5T;
+	float b0G, b1G, b2G, b3G, b4G, b5G;
+	float b0W, b1W, b2W, b3W, b4W, b5W;
+	float b0att, b1att, b2att, b3att, b4att, b5att;
+	float b0rel, b1rel, b2rel, b3rel, b4rel, b5rel;
 };
 
 #endif /* PLUGIN_COMPRESSOR_LIMITER_H_ */

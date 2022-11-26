@@ -30,8 +30,8 @@ public:
 	int process();
 	virtual int do_process() = 0;
 	bool init(const fmsmoov::PluginConfig& cfg);
-	bool change_cfg(const fmsmoov::PluginConfig& cfg);
-	virtual bool do_change_cfg(const fmsmoov::PluginConfig& cfg) = 0;
+	fmsmoov::PluginConfigResponse change_cfg(const fmsmoov::PluginConfig& cfg);
+	virtual fmsmoov::PluginConfigResponse do_change_cfg(const fmsmoov::PluginConfig& cfg) = 0;
 	virtual bool do_init(const fmsmoov::PluginConfig& cfg) = 0;
 	virtual bool add(ProcessorPlugin* plugin);
 	virtual bool remove(ProcessorPlugin* plugin);

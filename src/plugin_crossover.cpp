@@ -257,8 +257,9 @@ int PluginCrossover::do_process() {
 	return 0;
 }
 
-bool PluginCrossover::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
-	return true;
+fmsmoov::PluginConfigResponse PluginCrossover::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+	return pcr;
 }
 
 bool PluginCrossover::do_init(const fmsmoov::PluginConfig& cfg) {

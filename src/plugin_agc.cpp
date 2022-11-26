@@ -63,7 +63,9 @@ bool PluginAGC::do_init(const fmsmoov::PluginConfig& cfg) {
 	return true;
 }
 
-bool PluginAGC::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+fmsmoov::PluginConfigResponse PluginAGC::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+
 	if(cfg.has_agc()) {
 		m_GT = cfg.agc().gt();
 		m_TL = cfg.agc().tl();
@@ -76,7 +78,7 @@ bool PluginAGC::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
 		LOGE("PluginAGC init missing AGC config");
 	}
 
-	return true;
+	return pcr;
 }
 
 void PluginAGC::do_set_aux_input_bufs(vector<AudioBuf*>* bufs) {

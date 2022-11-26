@@ -21,24 +21,7 @@
 PluginCompressorLimiter::PluginCompressorLimiter(const std::string& _name, uint32_t samprate, uint32_t bufsize) : ProcessorPlugin(_name.c_str(), samprate, bufsize) {
 	/* Compressor CTOR:  R T G W att rel */
 
-	float R = 1.6;
-	float T = -40.0;
 
-	/*
-	comp_b0 = new Compressor(R, T, -16.0, 0.0, 0.080, 0.1200, m_bufsize, m_samprate, "b0");
-	comp_b1 = new Compressor(R, T, -10.0, 0.0, 0.030, 0.0500, m_bufsize, m_samprate, "b1");
-	comp_b2 = new Compressor(R, T, -10.0, 0.0, 0.001, 0.0025, m_bufsize, m_samprate, "b2");
-	comp_b3 = new Compressor(R, T, -9.0, 0.0, 0.00075, 0.00105, m_bufsize, m_samprate, "b3");
-	comp_b4 = new Compressor(R, T, -8.0, 0.0, 0.00030, 0.00050, m_bufsize, m_samprate, "b4");
-	comp_b5 = new Compressor(R, T, -7.0, 0.0, 0.00004, 0.00009, m_bufsize, m_samprate, "b5");
-	*/
-
-	comp_b0 = new Compressor(R, T, -3.0, 0.0, 0.045, 0.070, m_bufsize, m_samprate, "b0");
-	comp_b1 = new Compressor(R, T, -3.0, 0.0, 0.005, 0.0015, m_bufsize, m_samprate, "b1");
-	comp_b2 = new Compressor(R, T, -2.0, 0.0, 0.001, 0.0003, m_bufsize, m_samprate, "b2");
-	comp_b3 = new Compressor(R, T-6, -2.0, 0.0, 0.0001, 0.0003, m_bufsize, m_samprate, "b3");
-	comp_b4 = new Compressor(R, T-9, -2.0, 0.0, 0.00001, 0.00003, m_bufsize, m_samprate, "b4");
-	comp_b5 = new Compressor(R, T-15, 1.0, 0.0, 0.000001, 0.000003, m_bufsize, m_samprate, "b5");
 }
 
 PluginCompressorLimiter::~PluginCompressorLimiter() {
@@ -77,8 +60,30 @@ void PluginCompressorLimiter::get_comp_levels(float& complev_b0, float& complev_
 	comp_b5->get_total_comp(complev_b5);
 }
 
-bool PluginCompressorLimiter::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
-	return true;
+fmsmoov::PluginConfigResponse PluginCompressorLimiter::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+
+	if(cfg.has_complim()) {
+		fmsmoov::CompLimConfig clc = cfg.complim();
+		fmsmoov::CompLimBandConfig b0cfg = clc.b0cfg();
+		fmsmoov::CompLimBandConfig b1cfg = clc.b1cfg();
+		fmsmoov::CompLimBandConfig b2cfg = clc.b2cfg();
+		fmsmoov::CompLimBandConfig b3cfg = clc.b3cfg();
+		fmsmoov::CompLimBandConfig b4cfg = clc.b4cfg();
+		fmsmoov::CompLimBandConfig b5cfg = clc.b5cfg();
+
+		comp_b0->set(b0cfg.ratio(), b0cfg.threshold(), b0cfg.fixed_gain(), b0cfg.knee_width(), b0cfg.attack_time_ms(), b0cfg.release_time_ms());
+		comp_b1->set(b1cfg.ratio(), b1cfg.threshold(), b1cfg.fixed_gain(), b1cfg.knee_width(), b1cfg.attack_time_ms(), b1cfg.release_time_ms());
+		comp_b2->set(b2cfg.ratio(), b2cfg.threshold(), b2cfg.fixed_gain(), b2cfg.knee_width(), b2cfg.attack_time_ms(), b2cfg.release_time_ms());
+		comp_b3->set(b3cfg.ratio(), b3cfg.threshold(), b3cfg.fixed_gain(), b3cfg.knee_width(), b3cfg.attack_time_ms(), b3cfg.release_time_ms());
+		comp_b4->set(b4cfg.ratio(), b4cfg.threshold(), b4cfg.fixed_gain(), b4cfg.knee_width(), b4cfg.attack_time_ms(), b4cfg.release_time_ms());
+		comp_b5->set(b5cfg.ratio(), b5cfg.threshold(), b5cfg.fixed_gain(), b5cfg.knee_width(), b5cfg.attack_time_ms(), b5cfg.release_time_ms());
+	}
+	else {
+		LOGE("Config sent to CompressorLimiter with no complim field.");
+	}
+
+	return pcr;
 }
 
 bool PluginCompressorLimiter::do_init(const fmsmoov::PluginConfig& cfg) {
@@ -195,6 +200,26 @@ bool PluginCompressorLimiter::do_init(const fmsmoov::PluginConfig& cfg) {
 
 	m_bufs_out->push_back(btmp);
 	b5_comp = btmp->get();
+
+	if(cfg.has_complim()) {
+		fmsmoov::CompLimConfig clc = cfg.complim();
+		fmsmoov::CompLimBandConfig b0cfg = clc.b0cfg();
+		fmsmoov::CompLimBandConfig b1cfg = clc.b1cfg();
+		fmsmoov::CompLimBandConfig b2cfg = clc.b2cfg();
+		fmsmoov::CompLimBandConfig b3cfg = clc.b3cfg();
+		fmsmoov::CompLimBandConfig b4cfg = clc.b4cfg();
+		fmsmoov::CompLimBandConfig b5cfg = clc.b5cfg();
+		comp_b0 = new Compressor(b0cfg.ratio(), b0cfg.threshold(), b0cfg.fixed_gain(), b0cfg.knee_width(), b0cfg.attack_time_ms(), b0cfg.release_time_ms(), m_bufsize, m_samprate, "b0");
+		comp_b1 = new Compressor(b1cfg.ratio(), b1cfg.threshold(), b1cfg.fixed_gain(), b1cfg.knee_width(), b1cfg.attack_time_ms(), b1cfg.release_time_ms(), m_bufsize, m_samprate, "b1");
+		comp_b2 = new Compressor(b2cfg.ratio(), b2cfg.threshold(), b2cfg.fixed_gain(), b2cfg.knee_width(), b2cfg.attack_time_ms(), b2cfg.release_time_ms(), m_bufsize, m_samprate, "b2");
+		comp_b3 = new Compressor(b3cfg.ratio(), b3cfg.threshold(), b3cfg.fixed_gain(), b3cfg.knee_width(), b3cfg.attack_time_ms(), b3cfg.release_time_ms(), m_bufsize, m_samprate, "b3");
+		comp_b4 = new Compressor(b4cfg.ratio(), b4cfg.threshold(), b4cfg.fixed_gain(), b4cfg.knee_width(), b4cfg.attack_time_ms(), b4cfg.release_time_ms(), m_bufsize, m_samprate, "b4");
+		comp_b5 = new Compressor(b5cfg.ratio(), b5cfg.threshold(), b5cfg.fixed_gain(), b5cfg.knee_width(), b5cfg.attack_time_ms(), b5cfg.release_time_ms(), m_bufsize, m_samprate, "b5");
+	}
+	else {
+		LOGE("CompressorLimiter init doesn't have a complim member.");
+		return false;
+	}
 
 	return true;
 }

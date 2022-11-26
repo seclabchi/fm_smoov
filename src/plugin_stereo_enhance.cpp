@@ -36,8 +36,9 @@ int PluginStereoEnhance::do_process() {
 	}
 }
 
-bool PluginStereoEnhance::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
-
+fmsmoov::PluginConfigResponse PluginStereoEnhance::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+	return pcr;
 }
 
 bool PluginStereoEnhance::do_init(const fmsmoov::PluginConfig& cfg) {

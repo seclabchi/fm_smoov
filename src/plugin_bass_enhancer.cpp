@@ -77,8 +77,9 @@ int PluginBassEnhancer::do_process() {
 	}
 }
 
-bool PluginBassEnhancer::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
-
+fmsmoov::PluginConfigResponse PluginBassEnhancer::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+	return pcr;
 }
 
 bool PluginBassEnhancer::do_init(const fmsmoov::PluginConfig& cfg) {

@@ -114,19 +114,7 @@ message BassEnhancerGetResponse {
 	bool enabled = 1;
 }
 
-message CompLimSetCommand {
-	bool enable = 1;
-}
 
-message CompLimSetResponse {
-}
-
-message CompLimGetCommand {
-}
-
-message CompLimGetResponse {
-	bool enabled = 1;
-}
 
 message AgcConfig {
 	float TL = 1;
@@ -151,13 +139,41 @@ message CrossoverConfig {
 	bool b5_enable = 6;
 }
 
-message CompLimConfig {
+message CompLimBandConfig {
 	float ratio = 1;
 	float threshold = 2;
-	float makeup_gain = 3;
+	float fixed_gain = 3;
 	float knee_width = 4;
 	float attack_time_ms = 5;
 	float release_time_ms = 6;
+	bool mute = 7;
+}
+
+message CompLimConfig {
+	CompLimBandConfig b0cfg = 1;
+	CompLimBandConfig b1cfg = 2;
+	CompLimBandConfig b2cfg = 3;
+	CompLimBandConfig b3cfg = 4;
+	CompLimBandConfig b4cfg = 5;
+	CompLimBandConfig b5cfg = 6;
+}
+
+message CompLimSetCommand {
+	bool enable = 1;
+	CompLimConfig cfg = 2;
+}
+
+message CompLimSetResponse {
+	bool success = 1;
+	uint32 error_code = 2;
+	string error_msg = 3;
+}
+
+message CompLimGetCommand {
+}
+
+message CompLimGetResponse {
+	bool enabled = 1;
 }
 
 message AGCSetCommand {
@@ -244,6 +260,11 @@ message PluginConfig {
 		CrossoverConfig crossover = 3;
 		CompLimConfig complim = 4;
 	}
+}
+
+message PluginConfigResponse {
+	uint32 result_code = 1;
+	optional string result_msg = 2;
 }
 
 message ProcessorStarted {

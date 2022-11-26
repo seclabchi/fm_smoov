@@ -33,8 +33,9 @@ int PluginPhaseRotator::do_process() {
 	}
 }
 
-bool PluginPhaseRotator::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
-
+fmsmoov::PluginConfigResponse PluginPhaseRotator::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+	return pcr;
 }
 
 bool PluginPhaseRotator::do_init(const fmsmoov::PluginConfig& cfg) {

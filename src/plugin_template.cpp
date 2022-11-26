@@ -20,8 +20,9 @@ int PluginTemplate::do_process() {
 
 }
 
-bool PluginTemplate::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
-
+fmsmoov::PluginConfigResponse PluginTemplate::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+	return pcr;
 }
 
 bool PluginTemplate::do_init(const fmsmoov::PluginConfig& cfg) {

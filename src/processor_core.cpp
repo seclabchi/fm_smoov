@@ -8,6 +8,7 @@
 #include <processor_core.h>
 
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "Prefs.h"
 
 ProcessorCore::ProcessorCore(uint32_t sample_rate, uint32_t buffer_size) :
 					m_sample_rate(sample_rate), m_buffer_size(buffer_size) {
@@ -19,6 +20,9 @@ ProcessorCore::ProcessorCore(uint32_t sample_rate, uint32_t buffer_size) :
 	m_master_bypass = false;
 
 	fmsmoov::PluginConfig cfgdummy;
+	fmsmoov::PluginConfig cfg;
+
+	Prefs* prefs = Prefs::get_instance();
 
 	AudioBuf* b;
 	m_jack_inbufs = new vector<AudioBuf*>();
@@ -44,7 +48,11 @@ ProcessorCore::ProcessorCore(uint32_t sample_rate, uint32_t buffer_size) :
 	m_phase_rotator->init(cfgdummy);
 
 	m_gain_input = new PluginGain("GAIN_INPUT", m_sample_rate, m_buffer_size);
-	m_gain_input->init(cfgdummy);
+	double gain_input = prefs->get_gain_input();
+	cfg.mutable_gain()->set_l(gain_input);
+	cfg.mutable_gain()->set_r(gain_input);
+	cfg.mutable_gain()->set_enabled(true);
+	m_gain_input->init(cfg);
 
 	m_meter_post_input_gain = new PluginMeter("METER_POST_INPUT", m_sample_rate, m_buffer_size);
 	m_meter_post_input_gain->init(cfgdummy);
@@ -75,7 +83,70 @@ ProcessorCore::ProcessorCore(uint32_t sample_rate, uint32_t buffer_size) :
 	m_meter_post_crossover_b5->init(cfgdummy);
 
 	m_complim = new PluginCompressorLimiter("COMPRESSOR_LIMITER", m_sample_rate, m_buffer_size);
-	m_complim->init(cfgdummy);
+	fmsmoov::CompLimConfig* clc = cfg.mutable_complim();
+	fmsmoov::CompLimBandConfig* b0cfg = clc->mutable_b0cfg();
+	fmsmoov::CompLimBandConfig* b1cfg = clc->mutable_b1cfg();
+	fmsmoov::CompLimBandConfig* b2cfg = clc->mutable_b2cfg();
+	fmsmoov::CompLimBandConfig* b3cfg = clc->mutable_b3cfg();
+	fmsmoov::CompLimBandConfig* b4cfg = clc->mutable_b4cfg();
+	fmsmoov::CompLimBandConfig* b5cfg = clc->mutable_b5cfg();
+
+	/* CompLim defaults */
+	//R = 1.6;
+	//T = -40;
+	//comp_b0 = new Compressor(R, T, -3.0, 0.0, 0.045, 0.070, m_bufsize, m_samprate, "b0");
+	//comp_b1 = new Compressor(R, T, -3.0, 0.0, 0.005, 0.0015, m_bufsize, m_samprate, "b1");
+	//comp_b2 = new Compressor(R, T, -2.0, 0.0, 0.001, 0.0003, m_bufsize, m_samprate, "b2");
+	//comp_b3 = new Compressor(R, T-6, -2.0, 0.0, 0.0001, 0.0003, m_bufsize, m_samprate, "b3");
+	//comp_b4 = new Compressor(R, T-9, -2.0, 0.0, 0.00001, 0.00003, m_bufsize, m_samprate, "b4");
+	//comp_b5 = new Compressor(R, T-15, 1.0, 0.0, 0.000001, 0.000003, m_bufsize, m_samprate, "b5");
+
+	float R = 1.8;
+	float T = -32.0;
+
+	b0cfg->set_ratio(R);
+	b0cfg->set_threshold(T);
+	b0cfg->set_fixed_gain(-3.0);
+	b0cfg->set_knee_width(0.0);
+	b0cfg->set_attack_time_ms(0.045);
+	b0cfg->set_release_time_ms(0.070);
+
+	b1cfg->set_ratio(R);
+	b1cfg->set_threshold(T-2.0);
+	b1cfg->set_fixed_gain(-2.0);
+	b1cfg->set_knee_width(0.0);
+	b1cfg->set_attack_time_ms(0.005);
+	b1cfg->set_release_time_ms(0.015);
+
+	b2cfg->set_ratio(R);
+	b2cfg->set_threshold(T-4.0);
+	b2cfg->set_fixed_gain(-2.0);
+	b2cfg->set_knee_width(0.0);
+	b2cfg->set_attack_time_ms(0.001);
+	b2cfg->set_release_time_ms(0.0003);
+
+	b3cfg->set_ratio(R);
+	b3cfg->set_threshold(T-6.0);
+	b3cfg->set_fixed_gain(-2.0);
+	b3cfg->set_knee_width(0.0);
+	b3cfg->set_attack_time_ms(0.0001);
+	b3cfg->set_release_time_ms(0.0003);
+
+	b4cfg->set_ratio(R);
+	b4cfg->set_threshold(T-8.0);
+	b4cfg->set_fixed_gain(-2.0);
+	b4cfg->set_knee_width(0.0);
+	b4cfg->set_attack_time_ms(0.00001);
+	b4cfg->set_release_time_ms(0.00003);
+
+	b5cfg->set_ratio(R);
+	b5cfg->set_threshold(T-10.0);
+	b5cfg->set_fixed_gain(1.0);
+	b5cfg->set_knee_width(0.0);
+	b5cfg->set_attack_time_ms(0.000001);
+	b5cfg->set_release_time_ms(0.000003);
+
+	m_complim->init(cfg);
 
 	m_meter_post_complim_b0 = new PluginMeter("METER_POST_COMPLIM_B0", m_sample_rate, m_buffer_size);
 	m_meter_post_complim_b0->init(cfgdummy);
@@ -276,10 +347,26 @@ fmsmoov::MasterBypassGetResponse ProcessorCore::get_master_bypass(const fmsmoov:
 
 fmsmoov::GainSetResponse ProcessorCore::set_gain(const fmsmoov::GainSetCommand& cmd) {
 	fmsmoov::GainSetResponse rsp;
+	fmsmoov::PluginConfigResponse pcr;
+	fmsmoov::PluginConfig cfg;
 
 	switch(cmd.which()) {
 	case fmsmoov::GainControlType::MAIN_IN:
-		m_gain_input->set_gain(cmd.gain());
+
+		if(cmd.has_gain()){
+			cfg.mutable_gain()->set_l(cmd.gain());
+			cfg.mutable_gain()->set_r(cmd.gain());
+		}
+		else if(cmd.has_gain_pair()) {
+			cfg.mutable_gain()->set_l(cmd.gain_pair().l());
+			cfg.mutable_gain()->set_r(cmd.gain_pair().r());
+		}
+		else {
+			LOGE("Unknown gain type");
+		}
+
+		pcr = m_gain_input->do_change_cfg(cfg);
+
 		break;
 	case fmsmoov::GainControlType::MAIN_OUT:
 		break;

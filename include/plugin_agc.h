@@ -24,7 +24,7 @@ public:
 	virtual ~PluginAGC();
 	virtual int do_process();
 	virtual bool do_init(const fmsmoov::PluginConfig& cfg);
-	virtual bool do_change_cfg(const fmsmoov::PluginConfig& cfg);
+	virtual fmsmoov::PluginConfigResponse do_change_cfg(const fmsmoov::PluginConfig& cfg);
 	void do_set_aux_input_bufs(vector<AudioBuf*>* bufs);
 	virtual void finalize_buffer_init();
 	float get_gs_avg();

@@ -15,7 +15,7 @@ public:
 	PluginStereoEnhance(const std::string& _name, uint32_t samprate, uint32_t bufsize);
 	virtual ~PluginStereoEnhance();
 	virtual int do_process();
-	virtual bool do_change_cfg(const fmsmoov::PluginConfig& cfg);
+	virtual fmsmoov::PluginConfigResponse do_change_cfg(const fmsmoov::PluginConfig& cfg);
 	virtual bool do_init(const fmsmoov::PluginConfig& cfg);
 	virtual void do_set_aux_input_bufs(vector<AudioBuf*>* bufs);
 	virtual void finalize_buffer_init();

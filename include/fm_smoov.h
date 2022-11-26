@@ -13,6 +13,8 @@
 #include "common_defs.h"
 #include "spdlog/spdlog.h"
 
+#include "yaml-cpp/yaml.h"
+
 #include "plugin_30Hz_hpf.h"
 #include "plugin_gain.h"
 

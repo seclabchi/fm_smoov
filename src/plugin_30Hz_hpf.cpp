@@ -28,9 +28,9 @@ bool Plugin30HzHpf::do_init(const fmsmoov::PluginConfig& cfg) {
 	return true;
 }
 
-bool Plugin30HzHpf::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
-
-	return true;
+fmsmoov::PluginConfigResponse Plugin30HzHpf::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+	return pcr;
 }
 
 void Plugin30HzHpf::do_set_aux_input_bufs(vector<AudioBuf*>* bufs) {

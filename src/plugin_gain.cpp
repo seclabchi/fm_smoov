@@ -6,6 +6,9 @@
  */
 
 #include <plugin_gain.h>
+#include "Prefs.h"
+
+static Prefs* prefs;
 
 PluginGain::PluginGain(string name, uint32_t samprate, uint32_t bufsize) : ProcessorPlugin(name, samprate, bufsize) {
 	LOGT("PluginGain CTOR");
@@ -13,6 +16,7 @@ PluginGain::PluginGain(string name, uint32_t samprate, uint32_t bufsize) : Proce
 	m_gain_R = 1.0;
 	m_gainlog_L = 0.0;
 	m_gainlog_R = 0.0;
+	prefs = Prefs::get_instance();
 }
 
 PluginGain::~PluginGain() {
@@ -20,11 +24,20 @@ PluginGain::~PluginGain() {
 }
 
 bool PluginGain::do_init(const fmsmoov::PluginConfig& cfg) {
+	m_gain_L = powf(10, cfg.gain().l()/20.0);
+	m_gain_R = powf(10, cfg.gain().r()/20.0);
 	return true;
 }
 
-bool PluginGain::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
-	return true;
+fmsmoov::PluginConfigResponse PluginGain::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+
+	m_gain_L = powf(10, cfg.gain().l()/20.0);
+	m_gain_R = powf(10, cfg.gain().r()/20.0);
+
+	prefs->set_gain_input(m_gain_L);
+
+	return pcr;
 }
 
 void PluginGain::do_set_aux_input_bufs(vector<AudioBuf*>* bufs) {
@@ -44,12 +57,6 @@ int PluginGain::do_process() {
 	}
 
 	return 0;
-}
-
-void PluginGain::set_gain(double gain) {
-	m_gain_L = powf(10, gain/20.0);
-	m_gain_R = powf(10, gain/20.0);
-	return;
 }
 
 float PluginGain::get_gain() {

@@ -51,6 +51,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.cross.c.linker.1577418906" name="Cross GCC Linker" superClass="cdt.managedbuild.tool.gnu.cross.c.linker"/>
 							<tool command="g++ -v" commandLinePattern="${COMMAND} ${FLAGS} ${OUTPUT_FLAG} ${OUTPUT_PREFIX}${OUTPUT} ${INPUTS} " id="cdt.managedbuild.tool.gnu.cross.cpp.linker.555262391" name="Cross G++ Linker" superClass="cdt.managedbuild.tool.gnu.cross.cpp.linker">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.link.option.libs.1598802678" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" useByScannerDiscovery="false" valueType="libs">
+									<listOptionValue builtIn="false" value="yaml-cpp"/>
 									<listOptionValue builtIn="false" value="zmqpp"/>
 									<listOptionValue builtIn="false" value="zmq"/>
 									<listOptionValue builtIn="false" value="gssapi_krb5"/>

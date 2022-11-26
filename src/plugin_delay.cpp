@@ -28,8 +28,9 @@ int PluginDelay::do_process() {
 	}
 }
 
-bool PluginDelay::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
-	return true;
+fmsmoov::PluginConfigResponse PluginDelay::do_change_cfg(const fmsmoov::PluginConfig& cfg) {
+	fmsmoov::PluginConfigResponse pcr;
+	return pcr;
 }
 
 bool PluginDelay::do_init(const fmsmoov::PluginConfig& cfg) {
