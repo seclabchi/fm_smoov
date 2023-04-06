@@ -49,6 +49,7 @@ private:
 
 	float inabsL, inabsR;
 	float indBL, indBR;
+	float sc, gc, gs, gsPrev, inLev;
 	float scL, scR;
 	float gcL, gcR;
 	float gsL, gsR;

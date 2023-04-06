@@ -66,6 +66,9 @@ ProcessorCore::ProcessorCore(uint32_t sample_rate, uint32_t buffer_size) :
 	m_bass_enhancer = new PluginBassEnhancer("BASS_ENHANCER", m_sample_rate, m_buffer_size);
 	m_bass_enhancer->init(cfgdummy);
 
+	m_precomp_eq = new PluginPrecompEq("PRECOMP_EQ", m_sample_rate, m_buffer_size);
+	m_precomp_eq->init(cfgdummy);
+
 	m_crossover = new PluginCrossover("CROSSOVER", m_sample_rate, m_buffer_size);
 	m_crossover->init(cfgdummy);
 
@@ -102,49 +105,49 @@ ProcessorCore::ProcessorCore(uint32_t sample_rate, uint32_t buffer_size) :
 	//comp_b5 = new Compressor(R, T-15, 1.0, 0.0, 0.000001, 0.000003, m_bufsize, m_samprate, "b5");
 
 	float R = 1.8;
-	float T = -32.0;
+	float T = -46.0;
 
 	b0cfg->set_ratio(R);
-	b0cfg->set_threshold(T);
-	b0cfg->set_fixed_gain(-3.0);
+	b0cfg->set_threshold(T+9.0);
+	b0cfg->set_fixed_gain(-6.0);
 	b0cfg->set_knee_width(0.0);
-	b0cfg->set_attack_time_ms(0.045);
-	b0cfg->set_release_time_ms(0.070);
+	b0cfg->set_attack_time_ms(0.080);
+	b0cfg->set_release_time_ms(0.150);
 
 	b1cfg->set_ratio(R);
-	b1cfg->set_threshold(T-2.0);
-	b1cfg->set_fixed_gain(-2.0);
+	b1cfg->set_threshold(T+3.0);
+	b1cfg->set_fixed_gain(-3.0);
 	b1cfg->set_knee_width(0.0);
-	b1cfg->set_attack_time_ms(0.005);
-	b1cfg->set_release_time_ms(0.015);
+	b1cfg->set_attack_time_ms(0.025);
+	b1cfg->set_release_time_ms(0.040);
 
 	b2cfg->set_ratio(R);
-	b2cfg->set_threshold(T-4.0);
-	b2cfg->set_fixed_gain(-2.0);
+	b2cfg->set_threshold(T);
+	b2cfg->set_fixed_gain(0.0);
 	b2cfg->set_knee_width(0.0);
-	b2cfg->set_attack_time_ms(0.001);
-	b2cfg->set_release_time_ms(0.0003);
+	b2cfg->set_attack_time_ms(0.007);
+	b2cfg->set_release_time_ms(0.0014);
 
 	b3cfg->set_ratio(R);
-	b3cfg->set_threshold(T-6.0);
-	b3cfg->set_fixed_gain(-2.0);
+	b3cfg->set_threshold(T);
+	b3cfg->set_fixed_gain(0.0);
 	b3cfg->set_knee_width(0.0);
-	b3cfg->set_attack_time_ms(0.0001);
-	b3cfg->set_release_time_ms(0.0003);
+	b3cfg->set_attack_time_ms(0.003);
+	b3cfg->set_release_time_ms(0.006);
 
 	b4cfg->set_ratio(R);
-	b4cfg->set_threshold(T-8.0);
-	b4cfg->set_fixed_gain(-2.0);
+	b4cfg->set_threshold(T);
+	b4cfg->set_fixed_gain(0.0);
 	b4cfg->set_knee_width(0.0);
-	b4cfg->set_attack_time_ms(0.00001);
-	b4cfg->set_release_time_ms(0.00003);
+	b4cfg->set_attack_time_ms(0.0001);
+	b4cfg->set_release_time_ms(0.0002);
 
 	b5cfg->set_ratio(R);
-	b5cfg->set_threshold(T-10.0);
-	b5cfg->set_fixed_gain(1.0);
+	b5cfg->set_threshold(T);
+	b5cfg->set_fixed_gain(2.0);
 	b5cfg->set_knee_width(0.0);
-	b5cfg->set_attack_time_ms(0.000001);
-	b5cfg->set_release_time_ms(0.000003);
+	b5cfg->set_attack_time_ms(0.00005);
+	b5cfg->set_release_time_ms(0.0001);
 
 	m_complim->init(cfg);
 
@@ -174,17 +177,19 @@ ProcessorCore::ProcessorCore(uint32_t sample_rate, uint32_t buffer_size) :
 	m_gain_input->set_input(m_meter_main_in->get_output());
 	m_meter_post_input_gain->set_input(m_gain_input->get_output());
 
-	//m_30Hz_hpf->set_input(m_meter_post_input_gain->get_output());
-	m_phase_rotator->set_input(m_meter_post_input_gain->get_output());
+	m_30Hz_hpf->set_input(m_meter_post_input_gain->get_output());
+	m_phase_rotator->set_input(m_30Hz_hpf->get_output());
 
 	m_agc_front->set_input(m_phase_rotator->get_output());
 	m_agc_front->set_aux_input_bufs(m_meter_post_input_gain->get_aux_output_bufs());
 
 	m_stereo_enhance->set_input(m_agc_front->get_output());
 
-	m_bass_enhancer->set_input(m_bass_enhancer->get_output());
+	m_bass_enhancer->set_input(m_stereo_enhance->get_output());
 
-	m_crossover->set_input(m_stereo_enhance->get_output());
+	m_precomp_eq->set_input(m_bass_enhancer->get_output());
+
+	m_crossover->set_input(m_precomp_eq->get_output());
 
 	m_meter_post_crossover_b0->set_input(m_crossover->get_aux_output_bufs(0, 2));
 	m_meter_post_crossover_b1->set_input(m_crossover->get_aux_output_bufs(2, 2));
@@ -247,11 +252,12 @@ void ProcessorCore::process() {
 	else {
 		m_gain_input->process();
 		m_meter_post_input_gain->process();
-		//m_30Hz_hpf->process();
+		m_30Hz_hpf->process();
 		m_phase_rotator->process();
 		m_agc_front->process();
 		m_stereo_enhance->process();
 		m_bass_enhancer->process();
+		m_precomp_eq->process();
 		m_crossover->process();
 		m_meter_post_crossover_b0->process();
 		m_meter_post_crossover_b1->process();

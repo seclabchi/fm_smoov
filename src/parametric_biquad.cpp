@@ -43,6 +43,13 @@ void ParametricBiquad::calculate_coeffs() {
     double V = powf(10, (fabs(peak_gain) / 20.0));
     double K = tan(M_PI * (fcut/fsamp));
     double norm = 0.0;
+    double root2 = 1/Q;
+    double V0 = powf(10, (peak_gain/20));
+
+	//Invert gain if a cut
+	if(V0 < 1.0f) {
+		V0 = 1.0f/V0;
+	}
 
     if(!type.compare("lowpass")) {
         norm = 1 / (1 + K / Q + K * K);
@@ -67,6 +74,38 @@ void ParametricBiquad::calculate_coeffs() {
         b2 = 1;
         a1 = b1;
         a2 = b0;
+    }
+    else if(!type.compare("bassshelf")) {
+    	if(peak_gain > 0) {
+    		b0 = (1 + sqrt(V0)*root2*K + V0*powf(K,2)) / (1 + root2*K + powf(K,2));
+			b1 = (2 * (V0*powf(K,2) - 1) ) / (1 + root2*K + powf(K,2));
+			b2 = (1 - sqrt(V0)*root2*K + V0*powf(K,2)) / (1 + root2*K + powf(K,2));
+			a1 = (2 * (powf(K,2) - 1) ) / (1 + root2*K + powf(K,2));
+			a2 = (1 - root2*K + powf(K,2)) / (1 + root2*K + powf(K,2));
+    	}
+    	else {
+    	    b0 = (1 + root2*K + powf(K,2)) / (1 + root2*sqrt(V0)*K + V0*powf(K,2));
+    	    b1 = (2 * (powf(K,2) - 1) ) / (1 + root2*sqrt(V0)*K + V0*powf(K,2));
+    	    b2 = (1 - root2*K + powf(K,2)) / (1 + root2*sqrt(V0)*K + V0*powf(K,2));
+    	    a1 = (2 * (V0*powf(K,2) - 1) ) / (1 + root2*sqrt(V0)*K + V0*powf(K,2));
+    	    a2 = (1 - root2*sqrt(V0)*K + V0*powf(K,2)) / (1 + root2*sqrt(V0)*K + V0*powf(K,2));
+    	}
+    }
+    else if(!type.compare("trebleshelf")) {
+    	if(peak_gain > 0) {
+    		b0 = (V0 + root2*sqrt(V0)*K + powf(K,2)) / (1 + root2*K + powf(K,2));
+			b1 = (2 * (powf(K,2) - V0) ) / (1 + root2*K + powf(K,2));
+			b2 = (V0 - root2*sqrt(V0)*K + powf(K,2)) / (1 + root2*K + powf(K,2));
+			a1 = (2 * (powf(K,2) - 1) ) / (1 + root2*K + powf(K,2));
+			a2 = (1 - root2*K + powf(K,2)) / (1 + root2*K + powf(K,2));
+    	}
+    	else {
+    	    b0 = (1 + root2*K + powf(K,2)) / (V0 + root2*sqrt(V0)*K + powf(K,2));
+    	    b1 = (2 * (powf(K,2) - 1) ) / (V0 + root2*sqrt(V0)*K + powf(K,2));
+    	    b2 = (1 - root2*K + powf(K,2)) / (V0 + root2*sqrt(V0)*K + powf(K,2));
+    	    a1 = (2 * ((powf(K,2))/V0 - 1) ) / (1 + root2/sqrt(V0)*K + (powf(K,2))/V0);
+    	    a2 = (1 - root2/sqrt(V0)*K + (powf(K,2))/V0) / (1 + root2/sqrt(V0)*K + (powf(K,2))/V0);
+    	}
     }
     else {
         //TODO: what to do here

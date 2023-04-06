@@ -11,7 +11,7 @@ PluginAGC::PluginAGC(string name, uint32_t samprate, uint32_t bufsize) : Process
 	LOGT("PluginAGC CTOR");
 	//TODO: change defaults
 	m_GT = 0.0;
-	m_TL = -28.0;
+	m_TL = -24.0;
 	//Tms = 8685 / (dB/S)
 	//m_Tatt = 17.37;  // for 0.5 dB/sec attack time
 	//m_Trel = 17.37;  // for 0.5 dB/sec release time
@@ -21,7 +21,7 @@ PluginAGC::PluginAGC(string name, uint32_t samprate, uint32_t bufsize) : Process
 	m_alphaA = expf(-logf(9.0)/(m_samprate * m_Tatt));
 	m_alphaR = expf(-logf(9.0)/(m_samprate * m_Trel));
 	m_alpha_gate = expf(-logf(9.0)/(m_samprate * m_Tatt_gate));
-	m_gate_level = -15.0;  //relative to target rate
+	m_gate_level = -20.0;  //relative to target rate
 	//m_alphaA = 1 - expf(-1/(m_samprate * m_Tatt));
 	//m_alphaR = 1 - expf(-1/(m_samprate * m_Trel));
 	m_gs_avg = 0.0;

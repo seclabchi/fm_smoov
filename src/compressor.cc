@@ -46,6 +46,7 @@ void Compressor::set(float _R, float _T, float _G, float _W, float _Tatt, float 
 	//previous gain smoothing values
 	gsLprev = 0.0;
 	gsRprev = 0.0;
+	gsPrev = 0.0;
 
 	//makeup gain
 	M = -(T - (T/R)); //dB
@@ -59,7 +60,45 @@ void Compressor::process(float* inL, float* inR, float* inLevL, float* inLevR, f
 
 	for(i = 0; i < m_bufsize; i++)
 	{
-		//Tadj = T - (1.0 * agc_adj[i]);
+		if(inLevL[i] >= inLevR[i]) {
+			inLev = inLevL[i];
+		}
+		else {
+			inLev = inLevR[i];
+		}
+
+		if(inLev < T) {
+			R = 1.0;
+		}
+		else {
+			R = 1.5 + (0.13235 * (inLev - T));
+		}
+
+		M = -(T - (T/R));
+
+		sc = T + ((inLev - T)/R);
+		gc = sc - inLev;
+
+		if(gc < gsPrev)
+		{
+		  gs = alphaA*gsPrev + (1-alphaA)*gc;
+		}
+		else if(gc > gsPrev)
+		{
+		  gs = alphaR*gsPrev + (1-alphaR)*gc;
+		}
+
+		gsPrev = gs;
+
+		comp[i] = gs;
+		m_total_comp += gs;
+
+		M = 16.0;
+
+		outL[i] = inL[i] * powf(10.0, (gs + G + M)/20.0);
+		outR[i] = inR[i] * powf(10.0, (gs + G + M)/20.0);
+
+/*		//Tadj = T - (1.0 * agc_adj[i]);
 		Tadj = T;
 		//makeup gain
 		M = -(Tadj - (Tadj/R)); //dB
@@ -77,11 +116,11 @@ void Compressor::process(float* inL, float* inR, float* inLevL, float* inLevR, f
 		else
 		{
 			if(inLevL[i] <= Tadj) {
-				R = 1.8;
+				R = 1.0;
 			}
 			else {
-				R = 1.8;
-				//R = 1.5 + (0.13235 * (inLevL[i] - Tadj));
+				//R = 1.8;
+				R = 1.5 + (0.13235 * (inLevL[i] - Tadj));
 			}
 			scL = Tadj + ((inLevL[i] - Tadj)/R);
 		}
@@ -98,11 +137,11 @@ void Compressor::process(float* inL, float* inR, float* inLevL, float* inLevR, f
 		else
 		{
 			if(inLevR[i] <= Tadj) {
-				R = 1.8;
+				R = 1.0;
 			}
 			else {
-				R = 1.8;
-				//R = 1.5 + (0.13235 * (inLevR[i] - Tadj));
+				//R = 1.8;
+				R = 1.5 + (0.13235 * (inLevR[i] - Tadj));
 			}
 			scR = Tadj + ((inLevR[i] - Tadj)/R);
 		}
@@ -147,6 +186,7 @@ void Compressor::process(float* inL, float* inR, float* inLevL, float* inLevR, f
 
 		outL[i] = inL[i] * powf(10.0, (gsL + G + M)/20.0);
 		outR[i] = inR[i] * powf(10.0, (gsR + G + M)/20.0);
+		*/
 	}
 
 	m_total_comp = m_total_comp / m_bufsize;

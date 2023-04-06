@@ -19,6 +19,7 @@
 #include "plugin_agc.h"
 #include "plugin_stereo_enhance.h"
 #include "plugin_bass_enhancer.h"
+#include "plugin_precomp_eq.h"
 #include "plugin_crossover.h"
 #include "plugin_compressor_limiter.h"
 #include "plugin_delay.h"
@@ -71,6 +72,7 @@ private:
 	PluginAGC* m_agc_front;
 	PluginStereoEnhance* m_stereo_enhance;
 	PluginBassEnhancer* m_bass_enhancer;
+	PluginPrecompEq* m_precomp_eq;
 	PluginCrossover* m_crossover;
 	PluginMeter* m_meter_post_crossover_b0;
 	PluginMeter* m_meter_post_crossover_b1;

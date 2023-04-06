@@ -48,6 +48,7 @@ PluginBassEnhancer::~PluginBassEnhancer() {
 }
 
 int PluginBassEnhancer::do_process() {
+	m_enabled = false;
 
 	if(m_enabled) {
 		cross_loL->process(in_L, incross_lo_outL);
